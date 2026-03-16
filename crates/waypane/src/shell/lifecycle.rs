@@ -32,6 +32,7 @@ pub fn run_app(shell: Shell) -> ExitCode {
 
     let shell = Rc::new(shell);
     app.connect_activate(move |app| {
+        #[allow(clippy::non_minimal_cfg)]
         #[cfg(any(feature = "hyprland"))]
         crate::modules::wm::start_listener();
 
