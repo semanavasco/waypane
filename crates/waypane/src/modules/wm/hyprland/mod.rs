@@ -3,23 +3,54 @@ pub mod utils;
 pub mod windows;
 pub mod workspaces;
 
-use std::thread;
-
-use async_channel::Receiver;
+use async_channel::{Receiver, Sender, TrySendError};
 use hyprland::{event_listener::EventListener, shared::WorkspaceType};
 use mlua::{IntoLua, Lua, Value as LuaValue};
+use monitors::{ActiveMonitor, get_monitors};
+use std::{
+    sync::{
+        Arc,
+        atomic::{AtomicUsize, Ordering},
+    },
+    thread,
+};
 use waypane_macros::LuaModule;
-
-use monitors::get_monitors;
-use windows::{get_active_window, kill_active_win, toggle_floating, toggle_fs};
+use windows::{Window, get_active_window, kill_active_win, toggle_floating, toggle_fs};
 use workspaces::{
-    get_workspaces, mv_active_to_ws, mv_active_to_ws_silent, switch_prev_ws, switch_ws,
+    Workspace, get_workspaces, mv_active_to_ws, mv_active_to_ws_silent, switch_prev_ws, switch_ws,
     switch_ws_named, switch_ws_rel, toggle_special_ws,
 };
 
-use monitors::ActiveMonitor;
-use windows::Window;
-use workspaces::Workspace;
+const EVENT_QUEUE_CAPACITY: usize = 100;
+
+fn enqueue_event(
+    sender: &Sender<(String, HyprlandEvent)>,
+    queue: &Receiver<(String, HyprlandEvent)>,
+    dropped_events: &AtomicUsize,
+    signal: &str,
+    event: (String, HyprlandEvent),
+) {
+    match sender.try_send(event) {
+        Ok(()) => {}
+        Err(TrySendError::Full(event)) => {
+            // Keep latest state relevant by dropping the oldest queued event under pressure.
+            let _ = queue.try_recv();
+            let _ = sender.try_send(event);
+
+            let dropped = dropped_events.fetch_add(1, Ordering::Relaxed) + 1;
+            if dropped == 1 || dropped.is_multiple_of(100) {
+                tracing::warn!(
+                    "Hyprland event queue full (capacity: {}), dropped oldest events total: {}",
+                    EVENT_QUEUE_CAPACITY,
+                    dropped
+                );
+            }
+        }
+        Err(TrySendError::Closed(_)) => {
+            tracing::warn!("Failed to send {} event: receiver closed", signal);
+        }
+    }
+}
 
 /// The `hyprland` module, which provides functions for querying Hyprland state and dispatching
 /// commands, as well as forwarding events from the Hyprland IPC listener.
@@ -107,7 +138,9 @@ fn parse_ws(name: WorkspaceType) -> String {
 /// The thread runs until the Hyprland IPC socket closes or an unrecoverable error occurs, at which
 /// point an error is logged and the thread exits.
 pub fn start_listener() -> Receiver<(String, HyprlandEvent)> {
-    let (sender, receiver) = async_channel::unbounded();
+    let (sender, receiver) = async_channel::bounded(EVENT_QUEUE_CAPACITY);
+    let queue = receiver.clone();
+    let dropped_events = Arc::new(AtomicUsize::new(0));
 
     thread::spawn(move || {
         let mut listener = EventListener::new();
@@ -117,10 +150,16 @@ pub fn start_listener() -> Receiver<(String, HyprlandEvent)> {
         macro_rules! add_event {
             ($method:ident, $signal:expr, $data:ident => $event:expr) => {
                 let s = sender.clone();
+                let queue = queue.clone();
+                let dropped_events = dropped_events.clone();
                 listener.$method(move |$data| {
-                    if s.send_blocking(($signal.to_string(), $event)).is_err() {
-                        tracing::warn!("Failed to send {} event", $signal);
-                    }
+                    enqueue_event(
+                        &s,
+                        &queue,
+                        dropped_events.as_ref(),
+                        $signal,
+                        ($signal.to_string(), $event),
+                    );
                 });
             };
         }
