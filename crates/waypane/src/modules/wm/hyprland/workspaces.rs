@@ -49,7 +49,8 @@ pub struct WorkspaceInfo {
 impl IntoLua for WorkspaceInfo {
     fn into_lua(self, lua: &Lua) -> mlua::Result<LuaValue> {
         let table = lua.create_table()?;
-        table.set("workspace", self.workspace)?;
+        table.set("id", self.workspace.id)?;
+        table.set("name", self.workspace.name)?;
         table.set("monitor", self.monitor)?;
         table.set("windows", self.windows)?;
         table.set("last_window_title", self.last_window_title)?;

@@ -62,7 +62,7 @@ local function workspaces_widget(state, update_active_workspace)
 
     local workspaces = waypane.hyprland.getWorkspaces() or {}
     table.sort(workspaces, function(a, b)
-      return a.workspace.id < b.workspace.id
+      return a.id < b.id
     end)
 
     local btns = {}
@@ -70,7 +70,7 @@ local function workspaces_widget(state, update_active_workspace)
       local on_my_monitor = not state.monitor or ws_info.monitor == state.monitor.name
 
       if on_my_monitor then
-        local id = ws_info.workspace.id
+        local id = ws_info.id
         if type(id) == "number" and id > 0 then
           table.insert(btns, workspace_button(id, id == state.active_workspace:get()))
         end
