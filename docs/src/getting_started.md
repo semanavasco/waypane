@@ -2,7 +2,7 @@
 
 This guide will help you set up and run your first waypane configuration.
 
-For now, waypane can only be installed from source.
+`waypane` is available on crates.io as an early alpha (`0.0.1-alpha.1`).
 
 ## Prerequisites
 
@@ -14,7 +14,8 @@ Before building waypane, ensure you have the following installed:
 - **Lua**: The Lua interpreter and development libraries (`lua5.4`).
 - **Wayland**: A Wayland compositor (Hyprland is recommended for full feature support).
 
-> **Note:** The exact package names may vary depending on your Linux distribution. Please refer to your distribution's package manager for the correct names.
+> [!NOTE]
+> The exact package names may vary depending on your Linux distribution. Please refer to your distribution's package manager for the correct names.
 
 ### Building
 
@@ -31,21 +32,27 @@ cd waypane
 Then, build the project using Cargo:
 
 ```bash
-cargo build --release --no-default-features
+cargo build --release
 ```
 
-Or with the **-\-features** flag to enable additional features (currently only `hyprland` available):
+Or with the **-\-features** flag to enable Hyprland integration:
 
 ```bash
-cargo build --release --no-default-features --features hyprland
+cargo build --release --features hyprland
 ```
 
 ### Installation
 
-You can also install waypane system-wide using Cargo:
+You can install waypane system-wide from crates.io:
 
 ```bash
-cargo install --path crates/waypane --no-default-features --features hyprland
+cargo install waypane --version 0.0.1-alpha.1 --features hyprland
+```
+
+Or install the base crate without any module integration:
+
+```bash
+cargo install waypane --version 0.0.1-alpha.1
 ```
 
 ## Running your First Widget
@@ -74,7 +81,8 @@ waypane gen-stubs > stubs.lua
 
 Place this file in your project directory. If you're using the [Lua Language Server](https://luals.github.io/), it will automatically pick up the definitions.
 
-> **Note:** You may need an additional `.luarc.json` file to supress warnings about undefined globals. Here's an example:
+> [!NOTE]
+> You may need an additional `.luarc.json` file to supress warnings about undefined globals. Here's an example:
 >
 > ```json
 > {

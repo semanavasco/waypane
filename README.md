@@ -4,6 +4,22 @@ waypane is a Wayland toolkit made in Rust for building custom desktop widgets an
 
 Documentation including **installation instructions**, **API reference**, etc, can be found [here](https://semanavasco.com/waypane).
 
+## Installation
+
+`waypane` is published as an early alpha release (`0.0.1-alpha.1`).
+
+Install from crates.io:
+
+```bash
+cargo install waypane --version 0.0.1-alpha.1
+```
+
+Or, with a module integration (e.g., Hyprland):
+
+```bash
+cargo install waypane --version 0.0.1-alpha.1 --features hyprland
+```
+
 ## Usage
 
 Run with a configuration file:

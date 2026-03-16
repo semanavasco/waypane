@@ -1,7 +1,16 @@
 [package]
 name = "waypane"
-version = "0.1.0"
+version = "0.0.1-alpha.1"
 edition = "2024"
+description = "A Wayland toolkit for building custom desktop widgets and bars in Lua"
+license = "MIT"
+repository = "https://github.com/semanavasco/waypane"
+documentation = "https://semanavasco.com/waypane"
+homepage = "https://semanavasco.com/waypane"
+readme = "../../README.md"
+keywords = ["wayland", "lua", "gtk4", "widgets", "unixporn"]
+categories = ["command-line-utilities", "gui"]
+rust-version = "1.88.0"
 
 [dependencies]
 anyhow = "1.0.101"
@@ -9,15 +18,15 @@ async-channel = "2.5.0"
 clap = { version = "4.5.59", features = ["derive"] }
 gtk4 = "0.10.3"
 gtk4-layer-shell = "0.7.1"
-hyprland = { git = "https://github.com/hyprland-community/hyprland-rs", branch = "master", optional = true }
+hyprland = { version = "0.4.0-beta.3", optional = true }
 inventory = "0.3.22"
 mlua = { version = "0.11.6", features = ["lua54", "send"] }
 tracing = "0.1.44"
 tracing-subscriber = { version = "0.3.22", features = ["env-filter"] }
-
-waypane-macros = { path = "../waypane-macros" }
+# waypane-macros = { version = "0.0.1-alpha.1", path = "../waypane-macros" }
+waypane-macros = "0.0.1-alpha.1"
 
 [features]
-default = ["hyprland"]
+default = []
 
 hyprland = ["dep:hyprland"]
