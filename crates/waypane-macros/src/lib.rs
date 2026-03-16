@@ -17,15 +17,19 @@ pub fn derive_stubbed(input: TokenStream) -> TokenStream {
 
     // Override lua_name if #[lua_class(name = "...")] is provided
     for attr in &input.attrs {
-        if attr.path().is_ident("lua_class") {
-            let _ = attr.parse_nested_meta(|meta| {
+        if attr.path().is_ident("lua_class")
+            && let Err(err) = attr.parse_nested_meta(|meta| {
                 if meta.path.is_ident("name") {
                     let value = meta.value()?;
                     let s: LitStr = value.parse()?;
                     lua_name = s.value();
+                    Ok(())
+                } else {
+                    Err(meta.error("Unsupported #[lua_class] key. Expected: name = \"...\""))
                 }
-                Ok(())
-            });
+            })
+        {
+            return err.to_compile_error().into();
         }
     }
 
@@ -49,25 +53,21 @@ pub fn derive_stubbed(input: TokenStream) -> TokenStream {
 
             for attr in &field.attrs {
                 // Process #[lua_attr(...)] attributes on the field
-                if attr.path().is_ident("lua_attr") {
-                    let _ = attr.parse_nested_meta(|meta| {
+                if attr.path().is_ident("lua_attr")
+                    && let Err(err) = attr.parse_nested_meta(|meta| {
                         // Check for simple attributes
                         if meta.path.is_ident("parent") {
                             is_parent = true;
-                        }
-
-                        if meta.path.is_ident("optional") {
+                            Ok(())
+                        } else if meta.path.is_ident("optional") {
                             is_optional = true;
-                        }
-
-                        // Check for attributes with values
-                        if meta.path.is_ident("name") {
+                            Ok(())
+                        } else if meta.path.is_ident("name") {
                             let value = meta.value()?;
                             let s: LitStr = value.parse()?;
                             custom_name = s.value();
-                        }
-
-                        if meta.path.is_ident("default") {
+                            Ok(())
+                        } else if meta.path.is_ident("default") {
                             let expr: Expr = meta.value()?.parse()?;
 
                             if let Expr::Lit(expr_lit) = &expr
@@ -77,9 +77,19 @@ pub fn derive_stubbed(input: TokenStream) -> TokenStream {
                             } else {
                                 default_val = Some(quote!(#expr).to_string());
                             }
+                            Ok(())
+                        } else {
+                            Err(meta.error(
+                                "Unsupported #[lua_attr] key. Expected one of: parent, optional, name, default",
+                            ))
                         }
-                        Ok(())
-                    });
+                    }) {
+                        return syn::Error::new_spanned(
+                            attr,
+                            format!("Invalid #[lua_attr(...)] attribute: {}", err),
+                        )
+                        .to_compile_error()
+                        .into();
                 }
             }
 
@@ -250,30 +260,32 @@ pub fn lua_func(attr: TokenStream, item: TokenStream) -> TokenStream {
             let value = meta.value()?;
             let s: LitStr = value.parse()?;
             skip_args.insert(s.value());
-        }
-
-        if meta.path.is_ident("name") {
+            Ok(())
+        } else if meta.path.is_ident("name") {
             let value = meta.value()?;
             let s: LitStr = value.parse()?;
             name_str = s.value();
-        }
-
-        if meta.path.is_ident("module") {
+            Ok(())
+        } else if meta.path.is_ident("module") {
             let value = meta.value()?;
             let s: LitStr = value.parse()?;
             module = Some(s.value());
-        }
-
-        if meta.path.is_ident("class") {
+            Ok(())
+        } else if meta.path.is_ident("class") {
             let value = meta.value()?;
             let s: LitStr = value.parse()?;
             class = Some(s.value());
+            Ok(())
+        } else {
+            Err(meta.error(
+                "Unsupported #[lua_func(...)] key. Expected one of: skip, name, module, class",
+            ))
         }
-
-        Ok(())
     });
 
-    let _ = attr_parser.parse(attr);
+    if let Err(err) = attr_parser.parse(attr) {
+        return err.to_compile_error().into();
+    }
 
     let fn_type = if let Some(class) = class {
         quote! { crate::lua::stubs::FnType::Method { class: #class } }
@@ -302,40 +314,61 @@ pub fn lua_func(attr: TokenStream, item: TokenStream) -> TokenStream {
             let mut ty = None;
             let mut doc = None;
 
-            let _ = attr.parse_nested_meta(|meta| {
+            if let Err(err) = attr.parse_nested_meta(|meta| {
                 if meta.path.is_ident("name") {
                     let value = meta.value()?;
                     let s: LitStr = value.parse()?;
                     arg_name = s.value();
+                    Ok(())
                 } else if meta.path.is_ident("ty") {
                     let value = meta.value()?;
                     let s: LitStr = value.parse()?;
                     ty = Some(s.value());
+                    Ok(())
                 } else if meta.path.is_ident("doc") {
                     let value = meta.value()?;
                     let s: LitStr = value.parse()?;
                     doc = Some(s.value());
+                    Ok(())
+                } else {
+                    Err(meta.error("Unsupported #[arg(...)] key. Expected one of: name, ty, doc"))
                 }
-                Ok(())
-            });
+            }) {
+                return syn::Error::new_spanned(
+                    attr,
+                    format!("Invalid #[arg(...)] attribute: {}", err),
+                )
+                .to_compile_error()
+                .into();
+            }
 
             if !arg_name.is_empty() {
                 arg_overrides.insert(arg_name, ArgOverride { ty, doc });
             }
             indices_to_remove.push(i);
         } else if attr.path().is_ident("ret") {
-            let _ = attr.parse_nested_meta(|meta| {
+            if let Err(err) = attr.parse_nested_meta(|meta| {
                 if meta.path.is_ident("ty") {
                     let value = meta.value()?;
                     let s: LitStr = value.parse()?;
                     ret_ty_override = Some(s.value());
+                    Ok(())
                 } else if meta.path.is_ident("doc") {
                     let value = meta.value()?;
                     let s: LitStr = value.parse()?;
                     ret_doc_override = Some(s.value());
+                    Ok(())
+                } else {
+                    Err(meta.error("Unsupported #[ret(...)] key. Expected one of: ty, doc"))
                 }
-                Ok(())
-            });
+            }) {
+                return syn::Error::new_spanned(
+                    attr,
+                    format!("Invalid #[ret(...)] attribute: {}", err),
+                )
+                .to_compile_error()
+                .into();
+            }
             indices_to_remove.push(i);
         }
     }
@@ -434,15 +467,19 @@ pub fn derive_widget_builder(input: TokenStream) -> TokenStream {
     let doc = extract_doc(&input.attrs);
 
     for attr in &input.attrs {
-        if attr.path().is_ident("lua_class") {
-            let _ = attr.parse_nested_meta(|meta| {
+        if attr.path().is_ident("lua_class")
+            && let Err(err) = attr.parse_nested_meta(|meta| {
                 if meta.path.is_ident("name") {
                     let value = meta.value()?;
                     let s: LitStr = value.parse()?;
                     class_name = s.value();
+                    Ok(())
+                } else {
+                    Err(meta.error("Unsupported #[lua_class] key. Expected: name = \"...\""))
                 }
-                Ok(())
-            });
+            })
+        {
+            return err.to_compile_error().into();
         }
     }
 
@@ -482,21 +519,24 @@ pub fn derive_lua_module(input: TokenStream) -> TokenStream {
     let mut parent = quote! { None };
 
     for attr in &input.attrs {
-        if attr.path().is_ident("lua_module") {
-            let _ = attr.parse_nested_meta(|meta| {
+        if attr.path().is_ident("lua_module")
+            && let Err(err) = attr.parse_nested_meta(|meta| {
                 if meta.path.is_ident("name") {
                     let value = meta.value()?;
                     let s: LitStr = value.parse()?;
                     name = s.value();
-                }
-
-                if meta.path.is_ident("parent") {
+                    Ok(())
+                } else if meta.path.is_ident("parent") {
                     let value = meta.value()?;
                     let s: LitStr = value.parse()?;
                     parent = quote! { Some(#s) };
+                    Ok(())
+                } else {
+                    Err(meta.error("Unsupported #[lua_module] key. Expected one of: name, parent"))
                 }
-                Ok(())
-            });
+            })
+        {
+            return err.to_compile_error().into();
         }
     }
 
