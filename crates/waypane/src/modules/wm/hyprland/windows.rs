@@ -1,3 +1,4 @@
+use super::{utils::call_dispatch, workspaces::Workspace};
 use hyprland::{
     data::{Client, FullscreenMode},
     dispatch::{DispatchType, FullscreenType},
@@ -5,8 +6,6 @@ use hyprland::{
 };
 use mlua::{IntoLua, Lua, Value as LuaValue};
 use waypane_macros::{LuaClass, lua_func};
-
-use super::{utils::call_dispatch, workspaces::Workspace};
 
 /// Basic information about a window, including its title and class.
 #[derive(LuaClass)]

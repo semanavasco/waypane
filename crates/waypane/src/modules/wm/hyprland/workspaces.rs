@@ -1,3 +1,4 @@
+use super::utils::call_dispatch;
 use hyprland::{
     data::Workspaces,
     dispatch::{DispatchType, WorkspaceIdentifierWithSpecial},
@@ -5,8 +6,6 @@ use hyprland::{
 };
 use mlua::{IntoLua, Lua, Value as LuaValue};
 use waypane_macros::{LuaClass, lua_func};
-
-use super::utils::call_dispatch;
 
 /// Basic information about a workspace, including its ID and name.
 #[derive(LuaClass)]
@@ -33,17 +32,17 @@ impl IntoLua for Workspace {
 #[lua_class(name = "HyprlandWorkspaceInfo")]
 pub struct WorkspaceInfo {
     #[lua_attr(parent)]
-    workspace: Workspace,
+    pub workspace: Workspace,
     /// The name of the monitor this workspace is on.
-    monitor: String,
+    pub monitor: String,
     /// The number of windows currently on this workspace.
-    windows: u16,
+    pub windows: u16,
     /// The title of the last focused window on this workspace.
-    last_window_title: String,
+    pub last_window_title: String,
     /// Whether this workspace is currently in fullscreen mode.
-    fullscreen: bool,
+    pub fullscreen: bool,
     /// The unique identifier of the monitor this workspace is on.
-    monitor_id: Option<i128>,
+    pub monitor_id: Option<i128>,
 }
 
 impl IntoLua for WorkspaceInfo {

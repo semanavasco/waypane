@@ -1,11 +1,10 @@
+use super::workspaces::Workspace;
 use hyprland::{
     data::Monitors,
     shared::{HyprData, HyprDataVec},
 };
 use mlua::{IntoLua, Lua, Value as LuaValue};
 use waypane_macros::{LuaClass, lua_func};
-
-use super::workspaces::Workspace;
 
 /// Basic information about an active monitor, including its name and the name of the active
 /// workspace.
@@ -35,25 +34,25 @@ impl IntoLua for ActiveMonitor {
 #[lua_class(name = "HyprlandMonitorInfo")]
 pub struct MonitorInfo {
     /// The unique identifier for the monitor.
-    id: i128,
+    pub id: i128,
     /// The name of the monitor, as configured in Hyprland.
-    name: String,
+    pub name: String,
     /// Whether this monitor is currently focused (i.e., has the active workspace).
-    focused: bool,
+    pub focused: bool,
     /// The width of the monitor in pixels.
-    width: i32,
+    pub width: i32,
     /// The height of the monitor in pixels.
-    height: i32,
+    pub height: i32,
     /// The x-coordinate of the monitor's top-left corner.
-    x: i32,
+    pub x: i32,
     /// The y-coordinate of the monitor's top-left corner.
-    y: i32,
+    pub y: i32,
     /// The refresh rate of the monitor in Hz.
-    refresh_rate: f32,
+    pub refresh_rate: f32,
     /// The UI scale factor for the monitor.
-    scale: f32,
+    pub scale: f32,
     /// Basic information about the currently active workspace on this monitor.
-    active_workspace: Workspace,
+    pub active_workspace: Workspace,
 }
 
 impl IntoLua for MonitorInfo {
