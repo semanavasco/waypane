@@ -4,7 +4,6 @@
 
 local function create_state(monitor)
   local active_workspace = waypane.state(1)
-  local active_window_title = waypane.state("")
 
   local function update_active_workspace()
     local monitors = waypane.hyprland.getMonitors() or {}
@@ -18,11 +17,6 @@ local function create_state(monitor)
 
   local function load_initial_state()
     update_active_workspace()
-
-    local window = waypane.hyprland.getActiveWindow() or {}
-    if window and window.title then
-      active_window_title:set(window.title)
-    end
   end
 
   load_initial_state()
@@ -30,9 +24,7 @@ local function create_state(monitor)
   return {
     monitor = monitor,
     active_workspace = active_workspace,
-    active_window_title = active_window_title,
-  },
-    update_active_workspace
+  }, update_active_workspace
 end
 
 -- widgets -------------------------------------------------------------------
@@ -107,20 +99,6 @@ local function workspaces_widget(state, update_active_workspace)
         waypane.hyprland.switchWorkspaceRelative(1)
       end
     end,
-  })
-end
-
-local function title_widget(state)
-  waypane.onSignal("hyprland::active_window_changed", function(window)
-    if window and window.title then
-      state.active_window_title:set(window.title)
-    end
-  end)
-
-  return Label({
-    text = state.active_window_title,
-    id = "window-title",
-    valign = "center",
   })
 end
 
@@ -232,7 +210,10 @@ shell:window("main-bar", {
       valign = "center",
       children = {
         workspaces_widget(state, update_active_workspace),
-        title_widget(state),
+        HyprlandActiveWindowLabel({
+          id = "window-title",
+          valign = "center",
+        }),
         spacer(),
         clock_widget(),
         date_widget(),

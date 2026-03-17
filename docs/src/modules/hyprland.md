@@ -112,6 +112,19 @@ Active monitor information, used in the `hyprland::active_monitor_changed` signa
 - **`toggleFullscreen()`**: Toggles the fullscreen state of the active window.
 - **`killActiveWindow()`**: Closes the currently focused window.
 
+### Example: Workspace Switcher
+
+```lua
+local function workspace_button(id)
+  return Button({
+    child = Label({ text = tostring(id) }),
+    on_click = function()
+      waypane.hyprland.switchWorkspace(id)
+    end,
+  })
+end
+```
+
 ## Signals
 
 You can subscribe to these events using `waypane.onSignal()`.
@@ -134,15 +147,21 @@ You can subscribe to these events using `waypane.onSignal()`.
 | `hyprland::fullscreen_changed`     | `boolean`               | Fired when the active window's fullscreen state toggles. |
 | `hyprland::active_monitor_changed` | `HyprlandActiveMonitor` | Fired when focus moves to a different monitor.           |
 
-## Example: Workspace Switcher
+## Widgets
+
+The Hyprland module provides specialized widgets that automatically react to compositor events.
+
+### `HyprlandActiveWindowLabelWidget`
+
+A specialized version of the [`Label`](../widgets/label.md) widget that automatically updates its text to show the title of the currently focused window.
+
+It supports all [common widget properties](../widgets/common.md).
+
+#### Example
 
 ```lua
-local function workspace_button(id)
-  return Button({
-    child = Label({ text = tostring(id) }),
-    on_click = function()
-      waypane.hyprland.switchWorkspace(id)
-    end,
-  })
-end
+local title = HyprlandActiveWindowLabel({
+  id = "window-title",
+  valign = "center",
+})
 ```

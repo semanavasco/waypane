@@ -1,5 +1,6 @@
 pub mod monitors;
 pub mod utils;
+mod widgets;
 pub mod windows;
 pub mod workspaces;
 
