@@ -21,7 +21,7 @@ waypane = {}
 --- Data: `HyprlandWorkspace`
 --- - `hyprland::workspace_renamed` : Emitted when a workspace is given a new name.
 --- Data: `HyprlandWorkspace`
---- - `hyprland::active_window` : Emitted when the focused window changes.
+--- - `hyprland::active_window_changed` : Emitted when the focused window changes.
 --- Data: `HyprlandWindow`
 --- - `hyprland::fullscreen_changed` : Emitted when the active window's fullscreen state toggles.
 --- Data: `boolean`

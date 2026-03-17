@@ -111,7 +111,7 @@ local function workspaces_widget(state, update_active_workspace)
 end
 
 local function title_widget(state)
-  waypane.onSignal("hyprland::active_window", function(window)
+  waypane.onSignal("hyprland::active_window_changed", function(window)
     if window and window.title then
       state.active_window_title:set(window.title)
     end

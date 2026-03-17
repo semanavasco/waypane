@@ -34,7 +34,7 @@ Detailed workspace information, returned by `getWorkspaces()`.
 
 ### `HyprlandWindow`
 
-Basic window information, used in the `hyprland::active_window` signal data.
+Basic window information, used in the `hyprland::active_window_changed` signal data.
 
 | Field   | Type     | Description              |
 | ------- | -------- | ------------------------ |
@@ -130,7 +130,7 @@ You can subscribe to these events using `waypane.onSignal()`.
 
 | Signal                             | Data Type               | Description                                              |
 | ---------------------------------- | ----------------------- | -------------------------------------------------------- |
-| `hyprland::active_window`          | `HyprlandWindow`        | Fired when the focused window changes.                   |
+| `hyprland::active_window_changed`  | `HyprlandWindow`        | Fired when the focused window changes.                   |
 | `hyprland::fullscreen_changed`     | `boolean`               | Fired when the active window's fullscreen state toggles. |
 | `hyprland::active_monitor_changed` | `HyprlandActiveMonitor` | Fired when focus moves to a different monitor.           |
 
