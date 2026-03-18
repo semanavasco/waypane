@@ -1,0 +1,1357 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>waypane documentation</title>
+        <meta name="robots" content="noindex">
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="favicon-8114d1fc.png">
+        <link rel="stylesheet" href="css/variables-8adf115d.css">
+        <link rel="stylesheet" href="css/general-2459343d.css">
+        <link rel="stylesheet" href="css/chrome-ae938929.css">
+        <link rel="stylesheet" href="css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex-138c84c2.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc-159f6911.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">waypane documentation</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="introduction"><a class="header" href="#introduction">Introduction</a></h1>
+<p>waypane is a Wayland toolkit made in <a href="https://rust-lang.org">Rust</a> for building custom desktop widgets and bars in Lua. It provides a simple API to create and manage GTK-based widgets, handle events, and interact with the Wayland compositor.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="getting-started"><a class="header" href="#getting-started">Getting Started</a></h1>
+<p>This guide will help you set up and run your first waypane configuration.</p>
+<p><code>waypane</code> is available on crates.io as an early alpha (<code>0.0.1-alpha.1</code>).</p>
+<h2 id="prerequisites"><a class="header" href="#prerequisites">Prerequisites</a></h2>
+<p>Before building waypane, ensure you have the following installed:</p>
+<ul>
+<li><strong>Rust</strong>: The Rust toolchain (use <a href="https://rustup.rs/">rustup</a> to install).</li>
+<li><strong>GTK4</strong>: The development libraries for GTK4.</li>
+<li><strong>gtk4-layer-shell</strong>: The development libraries for gtk4-layer-shell.</li>
+<li><strong>Lua</strong>: The Lua interpreter and development libraries (<code>lua5.4</code>).</li>
+<li><strong>Wayland</strong>: A Wayland compositor (Hyprland is recommended for full feature support).</li>
+</ul>
+<blockquote class="blockquote-tag blockquote-tag-note">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>Note</p>
+<p>The exact package names may vary depending on your Linux distribution. Please refer to your distribution’s package manager for the correct names.</p>
+</blockquote>
+<h3 id="building"><a class="header" href="#building">Building</a></h3>
+<p>Start by cloning the repository and navigating into it:</p>
+<pre><code class="language-bash">git clone https://github.com/semanavasco/waypane.git
+</code></pre>
+<pre><code class="language-bash">cd waypane
+</code></pre>
+<p>Then, build the project using Cargo:</p>
+<pre><code class="language-bash">cargo build --release
+</code></pre>
+<p>Or with the <strong>--features</strong> flag to enable Hyprland integration:</p>
+<pre><code class="language-bash">cargo build --release --features hyprland
+</code></pre>
+<h3 id="installation"><a class="header" href="#installation">Installation</a></h3>
+<p>You can install waypane system-wide from crates.io:</p>
+<pre><code class="language-bash">cargo install waypane --version 0.0.1-alpha.1 --features hyprland
+</code></pre>
+<p>Or install the base crate without any module integration:</p>
+<pre><code class="language-bash">cargo install waypane --version 0.0.1-alpha.1
+</code></pre>
+<h2 id="running-your-first-widget"><a class="header" href="#running-your-first-widget">Running your First Widget</a></h2>
+<p>waypane requires a Lua configuration file to define its UI and behavior. You can run it by passing the path to your config:</p>
+<pre><code class="language-bash">waypane run examples/bar.lua
+</code></pre>
+<p>You can also set the log level using the <code>-l</code> or <code>--log-level</code> flag (defaults to <code>info</code>):</p>
+<pre><code class="language-bash">waypane run examples/bar.lua --log-level debug
+</code></pre>
+<p>Available log levels are: <code>error</code>, <code>warn</code>, <code>info</code>, <code>debug</code>, and <code>trace</code>. Pass nonsense value to disable logging entirely (e.g. <code>none</code>).</p>
+<h2 id="ide-integration-recommended"><a class="header" href="#ide-integration-recommended">IDE Integration (Recommended)</a></h2>
+<p>To get autocompletion and type hints in your Lua editor, generate a stubs file:</p>
+<pre><code class="language-bash">waypane gen-stubs &gt; stubs.lua
+</code></pre>
+<p>Place this file in your project directory. If you’re using the <a href="https://luals.github.io/">Lua Language Server</a>, it will automatically pick up the definitions.</p>
+<blockquote class="blockquote-tag blockquote-tag-note">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>Note</p>
+<p>You may need an additional <code>.luarc.json</code> file to supress warnings about undefined globals. Here’s an example:</p>
+<pre><code class="language-json">{
+  "diagnostics": {
+    "globals": ["Label", "Container", "Button", ..., "waypane"]
+  }
+}
+</code></pre>
+</blockquote>
+<h2 id="basic-config-structure"><a class="header" href="#basic-config-structure">Basic Config Structure</a></h2>
+<p>A minimal waypane configuration file (<code>config.lua</code>) looks like this:</p>
+<pre><code class="language-lua">local shell = waypane.shell({
+  title = "My Bar",
+})
+
+shell:window("main-window", {
+  layer = "top",
+  anchors = { top = true, left = true, right = true },
+
+  layout = Label({
+    text = "Hello, waypane!",
+  })
+})
+
+return shell
+</code></pre>
+<p>Save this to a file and run it with waypane to see your first widget in action!</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="core-concepts"><a class="header" href="#core-concepts">Core Concepts</a></h1>
+<p>waypane is built around a few fundamental concepts that work together to create a dynamic desktop environment.</p>
+<h2 id="the-shell"><a class="header" href="#the-shell">The Shell</a></h2>
+<p>The <code>Shell</code> is the top-level object in your configuration. It manages global settings like the application title and any custom CSS styles you want to apply. It also acts as a container for your window definitions.</p>
+<p>A typical configuration returns a <code>Shell</code> object at the end of the file.</p>
+<pre><code class="language-lua">local shell = waypane.shell({
+  title = "My Desktop",
+  style = "style.css",
+})
+
+-- Define windows here
+
+return shell
+</code></pre>
+<h2 id="windows"><a class="header" href="#windows">Windows</a></h2>
+<p>A <code>Window</code> represents a single UI element on your desktop, such as a status bar, a dashboard, or a standalone widget. Windows are defined using the <code>shell:window</code> method and specify their layer, placement, and layout.</p>
+<p>Windows can be configured to appear on specific monitors or all of them. Their layout is defined by providing a main Widget, or a function that returns one.</p>
+<h2 id="widgets"><a class="header" href="#widgets">Widgets</a></h2>
+<p><code>Widgets</code> are the building blocks of your UI. waypane provides a variety of built-in widgets like <code>Label</code>, <code>Button</code>, <code>Container</code>, <code>Icon</code>, and more. Widgets are declarative, meaning you describe their state and properties, and waypane handles the rendering and updates.</p>
+<p>Many widget properties can be <strong>reactive</strong>, meaning they automatically update when the underlying data changes.</p>
+<h2 id="reactive-state"><a class="header" href="#reactive-state">Reactive State</a></h2>
+<p><code>State</code> is a core part of waypane’s dynamic nature. By using <code>waypane.state()</code>, you can create observable data points that widgets can subscribe to. When the state changes, any widget property bound to that state will automatically refresh.</p>
+<pre><code class="language-lua">local time = waypane.state(os.date("%H:%M"))
+
+-- Later, when `time`'s internal value changes, the label will update automatically
+local my_label = Label({
+  text = time,
+})
+</code></pre>
+<h2 id="signals-and-events"><a class="header" href="#signals-and-events">Signals and Events</a></h2>
+<p><code>Signals</code> are a way to react to asynchronous events, such as workspace changes in Hyprland or custom events emitted by your own scripts. You can use <code>waypane.onSignal()</code> to register callbacks for specific signals, allowing your UI to respond to the desktop environment in real-time.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="lua-api"><a class="header" href="#lua-api">Lua API</a></h1>
+<p><code>waypane</code> exposes a Lua API that allows you to define your desktop environment’s structure, behavior, and appearance. The API is designed to be intuitive and powerful, leveraging Lua’s flexibility to provide a seamless development experience.</p>
+<p>This section covers the core components of the Lua API:</p>
+<ul>
+<li><strong><a href="#shell--windows">Shell &amp; Windows</a></strong>: Defining the overall structure of your desktop environment, including how to create windows and manage their layout.</li>
+<li><strong><a href="#global-functions">Global Functions</a></strong>: Functions available in the global Lua scope, primarily for widget creation.</li>
+<li><strong><a href="#state-management">State Management</a></strong>: How to create and use reactive state to build dynamic UIs.</li>
+<li><strong><a href="#timers">Timers</a></strong>: Working with intervals and timeouts for time-based updates.</li>
+<li><strong><a href="#signals">Signals</a></strong>: Subscribing to and emitting events to react to the desktop environment.</li>
+</ul>
+<h2 id="the-waypane-table"><a class="header" href="#the-waypane-table">The <code>waypane</code> Table</a></h2>
+<p>Most of the core functionality is organized under the global <code>waypane</code> table. This includes functions for creating the shell, managing state, and interacting with modules like Hyprland.</p>
+<pre><code class="language-lua">-- Example usage
+local shell = waypane.shell({ title = "My Bar" })
+local my_state = waypane.state(0)
+</code></pre>
+<h2 id="type-hints--autocompletion"><a class="header" href="#type-hints--autocompletion">Type Hints &amp; Autocompletion</a></h2>
+<p>To get the most out of the Lua API, it is highly recommended to use the <code>gen-stubs</code> command to generate type definitions for your IDE. This will provide you with autocompletion, type checking, and inline documentation as you write your scripts.</p>
+<pre><code class="language-bash">waypane gen-stubs &gt; stubs.lua
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="shell--windows"><a class="header" href="#shell--windows">Shell &amp; Windows</a></h1>
+<p>The <code>Shell</code> and <code>Window</code> objects are the top-level structures used to define your <code>waypane</code> configuration.</p>
+<h2 id="the-shell-1"><a class="header" href="#the-shell-1">The Shell</a></h2>
+<p>The <code>Shell</code> object is created using <code>waypane.shell()</code>. It manages global settings and acts as a container for your windows.</p>
+<h3 id="properties"><a class="header" href="#properties">Properties</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Property</th><th>Type</th><th>Default</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>title</code></td><td><code>string</code></td><td><code>"waypane"</code></td><td>The application title, used as the GTK application ID.</td></tr>
+<tr><td><code>style</code></td><td><code>string</code></td><td></td><td>An optional path to a global CSS stylesheet.</td></tr>
+</tbody>
+</table>
+</div>
+<pre><code class="language-lua">local shell = waypane.shell({
+  title = "My Bar",
+  style = "style.css",
+})
+</code></pre>
+<h2 id="windows-1"><a class="header" href="#windows-1">Windows</a></h2>
+<p>A <code>Window</code> is defined using the <code>shell:window(name, config)</code> method. Each window represents a standalone UI element on the screen.</p>
+<h3 id="window-configuration-properties"><a class="header" href="#window-configuration-properties">Window Configuration Properties</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Property</th><th>Type</th><th>Default</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>monitors</code></td><td><code>string[]</code></td><td></td><td>A list of monitor names (e.g., <code>{"eDP-1", "DP-1"}</code>). If omitted, the window appears on all monitors.</td></tr>
+<tr><td><code>layer</code></td><td><code>"background" | "bottom" | "top" | "overlay"</code></td><td><strong>required</strong></td><td>The layer where the window should be placed.</td></tr>
+<tr><td><code>exclusive_zone</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Whether the window should reserve space on the screen (e.g., a status bar that shifts other windows).</td></tr>
+<tr><td><code>anchors</code></td><td><a href="#anchors"><code>Anchors</code></a></td><td></td><td>A table specifying which edges of the screen the window should be anchored to.</td></tr>
+<tr><td><code>margins</code></td><td><a href="#margins"><code>Margins</code></a></td><td></td><td>Margins around the window when anchored.</td></tr>
+<tr><td><code>layout</code></td><td><code>function(monitor) | Widget</code></td><td><strong>required</strong></td><td>A function that returns a widget tree, or a single static widget. The function receives a <code>monitor</code> object as an argument.</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="monitor-information"><a class="header" href="#monitor-information">Monitor Information</a></h3>
+<p>When <code>layout</code> is a function, it receives a <code>monitor</code> table with the following fields:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Field</th><th>Type</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>name</code></td><td><code>string</code></td><td>The connector name (e.g., “eDP-1”).</td></tr>
+<tr><td><code>id</code></td><td><code>number</code></td><td>The unique identifier for the monitor.</td></tr>
+<tr><td><code>width</code></td><td><code>number</code></td><td>Monitor width in pixels.</td></tr>
+<tr><td><code>height</code></td><td><code>number</code></td><td>Monitor height in pixels.</td></tr>
+<tr><td><code>scale</code></td><td><code>number</code></td><td>UI scale factor.</td></tr>
+<tr><td><code>refresh_rate</code></td><td><code>number</code></td><td>Refresh rate in Hz.</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="anchors"><a class="header" href="#anchors">Anchors</a></h3>
+<p>A table specifying which edges of the screen the window should be anchored to. All fields default to <code>false</code>.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Field</th><th>Type</th><th>Default</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>top</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Anchor to the top edge of the screen.</td></tr>
+<tr><td><code>bottom</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Anchor to the bottom edge of the screen.</td></tr>
+<tr><td><code>left</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Anchor to the left edge of the screen.</td></tr>
+<tr><td><code>right</code></td><td><code>boolean</code></td><td><code>false</code></td><td>Anchor to the right edge of the screen.</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="margins"><a class="header" href="#margins">Margins</a></h3>
+<p>A table specifying pixel margins from each edge. All fields default to <code>0</code>. This type is also used by the <a href="#common-widget-properties">Common Widget Properties</a>.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Field</th><th>Type</th><th>Default</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>top</code></td><td><code>number</code></td><td><code>0</code></td><td>Margin from the top in pixels.</td></tr>
+<tr><td><code>bottom</code></td><td><code>number</code></td><td><code>0</code></td><td>Margin from the bottom in pixels.</td></tr>
+<tr><td><code>left</code></td><td><code>number</code></td><td><code>0</code></td><td>Margin from the left in pixels.</td></tr>
+<tr><td><code>right</code></td><td><code>number</code></td><td><code>0</code></td><td>Margin from the right in pixels.</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="window-visibility"><a class="header" href="#window-visibility">Window Visibility</a></h2>
+<p>The visibility of a window is automatically managed based on its root widget. If the root widget’s <code>visible</code> property is set to <code>false</code>, the window will be hidden from the compositor. This is particularly useful for creating togglable UI elements.</p>
+<h3 id="example-togglable-dashboard"><a class="header" href="#example-togglable-dashboard">Example: Togglable Dashboard</a></h3>
+<pre><code class="language-lua">local is_visible = waypane.state(false)
+
+shell:window("dashboard", {
+  layer = "overlay",
+  anchors = { top = true, bottom = true, left = true, right = true },
+  layout = Container({
+    visible = is_visible,
+    children = {
+      Label({ text = "Dashboard Content" })
+    }
+  })
+})
+
+-- Toggle visibility elsewhere
+waypane.onSignal("toggle_dashboard", function()
+  is_visible:set(not is_visible:get())
+end)
+</code></pre>
+<h3 id="complete-configuration-example"><a class="header" href="#complete-configuration-example">Complete Configuration Example</a></h3>
+<p>A typical <code>config.lua</code> returns the shell object:</p>
+<pre><code class="language-lua">local shell = waypane.shell({ title = "My Desktop" })
+
+shell:window("bar", {
+  layer = "top",
+  exclusive_zone = true,
+  anchors = { top = true, left = true, right = true },
+  layout = Label({ text = "Hello!" })
+})
+
+return shell
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="global-functions"><a class="header" href="#global-functions">Global Functions</a></h1>
+<p><code>waypane</code> provides a set of global functions that are primarily used to construct widgets. These functions are available directly in your Lua configuration file without any prefixes.</p>
+<h2 id="widget-constructors"><a class="header" href="#widget-constructors">Widget Constructors</a></h2>
+<p>Each widget constructor takes a single table as an argument, which defines its properties and behavior.</p>
+<h3 id="labelprops"><a class="header" href="#labelprops"><code>Label(props)</code></a></h3>
+<p>Creates a new <code>Label</code> widget for displaying text.
+<a href="#label">See Label for more details</a>.</p>
+<h3 id="buttonprops"><a class="header" href="#buttonprops"><code>Button(props)</code></a></h3>
+<p>Creates a clickable <code>Button</code> widget.
+<a href="#button">See Button for more details</a>.</p>
+<h3 id="containerprops"><a class="header" href="#containerprops"><code>Container(props)</code></a></h3>
+<p>Creates a <code>Container</code> widget for organizing other widgets.
+<a href="#container">See Container for more details</a>.</p>
+<h3 id="iconprops"><a class="header" href="#iconprops"><code>Icon(props)</code></a></h3>
+<p>Creates an <code>Icon</code> widget for displaying GTK icons.
+<a href="#icon">See Icon for more details</a>.</p>
+<h3 id="imageprops"><a class="header" href="#imageprops"><code>Image(props)</code></a></h3>
+<p>Creates an <code>Image</code> widget for displaying images from file paths.
+<a href="#image">See Image for more details</a>.</p>
+<h3 id="progressbarprops"><a class="header" href="#progressbarprops"><code>ProgressBar(props)</code></a></h3>
+<p>Creates a <code>ProgressBar</code> widget for visualizing progress.
+<a href="#progressbar">See ProgressBar for more details</a>.</p>
+<h3 id="sliderprops"><a class="header" href="#sliderprops"><code>Slider(props)</code></a></h3>
+<p>Creates a <code>Slider</code> widget for selecting a value from a range.
+<a href="#slider">See Slider for more details</a>.</p>
+<h2 id="usage-example"><a class="header" href="#usage-example">Usage Example</a></h2>
+<pre><code class="language-lua">local my_label = Label({
+  text = "Hello, waypane!",
+  halign = "center",
+})
+
+local my_button = Button({
+  child = my_label,
+  on_click = function()
+    print("Button clicked!")
+  end,
+})
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="state-management"><a class="header" href="#state-management">State Management</a></h1>
+<p>Reactive state is at the heart of <code>waypane</code>. It allows you to create data points that your widgets can “watch”, automatically updating themselves whenever the data changes.</p>
+<h2 id="creating-state"><a class="header" href="#creating-state">Creating State</a></h2>
+<p>You can create a new state object using the <code>waypane.state()</code> function. You can provide an initial value for the state.</p>
+<pre><code class="language-lua">local my_state = waypane.state("initial value")
+</code></pre>
+<h2 id="getting-and-setting-state"><a class="header" href="#getting-and-setting-state">Getting and Setting State</a></h2>
+<p>State objects have <code>get()</code> and <code>set()</code> methods:</p>
+<ul>
+<li><code>my_state:get()</code>: Returns the current value of the state.</li>
+<li><code>my_state:set(new_value)</code>: Updates the state with a new value and triggers updates for any bound widgets.</li>
+</ul>
+<pre><code class="language-lua">local count = waypane.state(0)
+
+print(count:get()) -- Output: 0
+
+count:set(1)
+print(count:get()) -- Output: 1
+</code></pre>
+<h2 id="binding-state-to-widgets"><a class="header" href="#binding-state-to-widgets">Binding State to Widgets</a></h2>
+<p>Many widget properties (like a Label’s <code>text</code> or a Container’s <code>children</code>) can accept a state object instead of a static value. When the state changes, the widget property will automatically update.</p>
+<pre><code class="language-lua">local title_state = waypane.state("My Widget")
+
+local my_label = Label({
+  text = title_state,
+})
+
+-- Later...
+title_state:set("Updated Title") -- The label's text will automatically update to "Updated Title"
+</code></pre>
+<h2 id="transforming-state"><a class="header" href="#transforming-state">Transforming State</a></h2>
+<p>You can create a “transformed” version of a state object using the <code>:as()</code> method. This allows you to derive a new value from an existing state without manually managing multiple state objects.</p>
+<p>The <code>:as()</code> method takes a function that receives the current state value and returns the transformed value.</p>
+<pre><code class="language-lua">local count = waypane.state(5)
+
+-- Create a derived state that formats the count
+local label_text = count:as(function(val)
+  return "The count is: " .. tostring(val)
+end)
+
+local my_label = Label({
+  text = label_text,
+})
+
+-- Later...
+count:set(10) -- The label will automatically update to "The count is: 10"
+</code></pre>
+<h2 id="dynamic-children"><a class="header" href="#dynamic-children">Dynamic Children</a></h2>
+<p>Containers can also use reactive state for their <code>children</code> property. This is a powerful way to create dynamic lists or grids of widgets that can grow or shrink based on external data.</p>
+<pre><code class="language-lua">local items = waypane.state({ "A", "B", "C" })
+
+local my_container = Container({
+  children = items:as(function(list)
+    local labels = {}
+    for _, item in ipairs(list) do
+      table.insert(labels, Label({ text = item }))
+    end
+    return labels
+  end),
+})
+
+-- Adding an item to the list will automatically rebuild the container's children
+local current = items:get()
+table.insert(current, "D")
+items:set(current)
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="timers"><a class="header" href="#timers">Timers</a></h1>
+<p><code>waypane</code> provides a set of timer functions that allow you to execute Lua code after a delay or at regular intervals. These timers are integrated with the GTK main loop, ensuring they don’t block the UI thread.</p>
+<h2 id="waypanesettimeoutcallback-milliseconds"><a class="header" href="#waypanesettimeoutcallback-milliseconds"><code>waypane.setTimeout(callback, milliseconds)</code></a></h2>
+<p>Executes a callback function once after a specified delay.</p>
+<ul>
+<li><strong>callback</strong>: The function to execute.</li>
+<li><strong>milliseconds</strong>: The delay in milliseconds.</li>
+<li><strong>Returns</strong>: A <code>CancelHandle</code>.</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre><code class="language-lua">local handle = waypane.setTimeout(function()
+  print("This message appears after 2 seconds!")
+end, 2000)
+
+-- You can cancel it before it fires:
+handle:cancel()
+</code></pre>
+<h2 id="waypanesetintervalcallback-milliseconds"><a class="header" href="#waypanesetintervalcallback-milliseconds"><code>waypane.setInterval(callback, milliseconds)</code></a></h2>
+<p>Executes a callback function repeatedly at a specified interval.</p>
+<ul>
+<li><strong>callback</strong>: The function to execute.</li>
+<li><strong>milliseconds</strong>: The interval in milliseconds.</li>
+<li><strong>Returns</strong>: A <code>CancelHandle</code>.</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre><code class="language-lua">local handle = waypane.setInterval(function()
+  print("This message appears every second!")
+end, 1000)
+
+-- Stop the interval later:
+handle:cancel()
+</code></pre>
+<h2 id="cancelhandle"><a class="header" href="#cancelhandle">CancelHandle</a></h2>
+<p>The <code>CancelHandle</code> returned by timer functions has a single method:</p>
+<ul>
+<li>
+<p><strong><code>:cancel()</code></strong>: Stops the timer or interval.</p>
+<p><em>If called on a <code>setTimeout</code> that has already fired or an interval that has already been cancelled, it does nothing.</em></p>
+</li>
+</ul>
+<h2 id="example-periodic-update"><a class="header" href="#example-periodic-update">Example: Periodic Update</a></h2>
+<p>Timers are commonly used to update state values periodically, such as for a clock widget.</p>
+<pre><code class="language-lua">local time_state = waypane.state(os.date("%H:%M:%S"))
+
+local timer = waypane.setInterval(function()
+  time_state:set(os.date("%H:%M:%S"))
+end, 1000)
+
+-- If you ever need to stop the clock:
+-- timer:cancel()
+
+local clock_label = Label({
+  text = time_state,
+})
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="signals"><a class="header" href="#signals">Signals</a></h1>
+<p><code>waypane</code> uses a signal-based event system that allows your Lua scripts to react to events from the desktop environment (like Hyprland workspace changes) or to communicate between different parts of your configuration.</p>
+<h2 id="waypaneonsignalsignals-callback"><a class="header" href="#waypaneonsignalsignals-callback"><code>waypane.onSignal(signals, callback)</code></a></h2>
+<p>Listens for one or more signals and calls the provided callback when they are emitted.</p>
+<ul>
+<li><strong>signals</strong> (<code>string | string[]</code>): The name or names of the signals to listen for.</li>
+<li><strong>callback</strong> (<code>function(data)</code>): The function to execute when a signal is emitted. Receives any data passed with the signal.</li>
+<li><strong>Returns</strong>: A <code>CancelHandle</code>.</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre><code class="language-lua">local handle = waypane.onSignal("hyprland::workspace_changed", function(workspace)
+  print("Active workspace changed to: " .. workspace.name)
+end)
+
+-- Stop listening later:
+handle:cancel()
+
+-- You can also listen for multiple signals at once
+waypane.onSignal({ "event_a", "event_b" }, function(data)
+  print("Signal emitted: " .. tostring(data))
+end)
+</code></pre>
+<h2 id="waypaneemitsignalsignal-data"><a class="header" href="#waypaneemitsignalsignal-data"><code>waypane.emitSignal(signal, data)</code></a></h2>
+<p>Emits a custom signal with the given name and an optional data payload.</p>
+<ul>
+<li><strong>signal</strong> (<code>string</code>): The name of the signal to emit.</li>
+<li><strong>data</strong> (<code>any</code>): Optional data to include with the signal. Can be any Lua value.</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre><code class="language-lua">-- Emit a custom signal
+waypane.emitSignal("my_event", { message = "Hello from Lua!" })
+
+-- Elsewhere in your script...
+waypane.onSignal("my_event", function(payload)
+  print(payload.message)
+end)
+</code></pre>
+<h2 id="cancelhandle-1"><a class="header" href="#cancelhandle-1">CancelHandle</a></h2>
+<p>The <code>CancelHandle</code> returned by <code>onSignal</code> has a single method:</p>
+<ul>
+<li>
+<p><strong><code>:cancel()</code></strong>: Unsubscribes the callback from all signals it was listening to.</p>
+<p><em>If already cancelled, it does nothing.</em></p>
+</li>
+</ul>
+<h2 id="built-in-signals"><a class="header" href="#built-in-signals">Built-in Signals</a></h2>
+<p>Modules (like Hyprland), may emit signals automatically. For a full list of these, see the <a href="#hyprland-module">Hyprland Module</a> documentation.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="widgets-1"><a class="header" href="#widgets-1">Widgets</a></h1>
+<p>Widgets are the building blocks of your <code>waypane</code> UI. Each widget represents a single element, such as a text label, a clickable button, or a container for other widgets.</p>
+<h2 id="base-widgets"><a class="header" href="#base-widgets">Base Widgets</a></h2>
+<ul>
+<li><strong><a href="#label">Label</a></strong>: A simple widget that displays a text label.</li>
+<li><strong><a href="#button">Button</a></strong>: A clickable button widget.</li>
+<li><strong><a href="#container">Container</a></strong>: A container widget that can hold multiple child widgets, arranged either horizontally or vertically.</li>
+<li><strong><a href="#icon">Icon</a></strong>: A widget that displays a GTK icon.</li>
+<li><strong><a href="#image">Image</a></strong>: A widget that displays an image from a file path.</li>
+<li><strong><a href="#progressbar">ProgressBar</a></strong>: A widget that displays a progress bar.</li>
+<li><strong><a href="#slider">Slider</a></strong>: A widget that allows users to select a value from a range by sliding a handle.</li>
+</ul>
+<h2 id="common-properties"><a class="header" href="#common-properties"><a href="#common-widget-properties">Common Properties</a></a></h2>
+<p>All widgets share a common set of properties for alignment, visibility, expansion, and more. Understanding these common properties will help you effectively layout and style your UI.</p>
+<h2 id="creating-a-widget-tree"><a class="header" href="#creating-a-widget-tree">Creating a Widget Tree</a></h2>
+<p>Widgets are defined declaratively in your Lua configuration. You can nest widgets to create complex layouts.</p>
+<pre><code class="language-lua">local my_ui = Container({
+  orientation = "vertical",
+  spacing = 10,
+  children = {
+    Label({ text = "Title" }),
+    Button({
+      child = Label({ text = "Click Me" }),
+      on_click = function() print("Button clicked!") end,
+    }),
+  },
+})
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="common-widget-properties"><a class="header" href="#common-widget-properties">Common Widget Properties</a></h1>
+<p>Every widget in <code>waypane</code> shares a set of common properties that you can use to customize its appearance, layout, and behavior. These properties are always available when you’re defining a widget.</p>
+<h2 id="basic-properties"><a class="header" href="#basic-properties">Basic Properties</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Property</th><th>Type</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>id</code></td><td><code>string | State&lt;string&gt;</code></td><td>Widget ID, used for CSS styling and querying.</td></tr>
+<tr><td><code>class_list</code></td><td><code>string[] | State&lt;string[]&gt;</code></td><td>List of CSS classes applied to the widget.</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="layout-properties"><a class="header" href="#layout-properties">Layout Properties</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Property</th><th>Type</th><th>Default</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>halign</code></td><td><code>"start" | "center" | "end" | "fill" | "baseline" | State</code></td><td></td><td>Horizontal alignment for the widget.</td></tr>
+<tr><td><code>valign</code></td><td><code>"start" | "center" | "end" | "fill" | "baseline" | State</code></td><td></td><td>Vertical alignment for the widget.</td></tr>
+<tr><td><code>hexpand</code></td><td><code>boolean | State&lt;boolean&gt;</code></td><td><code>false</code></td><td>Whether the widget expands to fill available horizontal space.</td></tr>
+<tr><td><code>vexpand</code></td><td><code>boolean | State&lt;boolean&gt;</code></td><td><code>false</code></td><td>Whether the widget expands to fill available vertical space.</td></tr>
+<tr><td><code>margins</code></td><td><a href="#margins"><code>Margins</code></a><code> | State</code></td><td></td><td>Margins around the widget.</td></tr>
+<tr><td><code>width_request</code></td><td><code>number | State&lt;number&gt;</code></td><td><code>-1</code></td><td>Width request for the widget.</td></tr>
+<tr><td><code>height_request</code></td><td><code>number | State&lt;number&gt;</code></td><td><code>-1</code></td><td>Height request for the widget.</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="behavior-properties"><a class="header" href="#behavior-properties">Behavior Properties</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Property</th><th>Type</th><th>Default</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>visible</code></td><td><code>boolean | State&lt;boolean&gt;</code></td><td><code>true</code></td><td>Whether the widget is visible.</td></tr>
+<tr><td><code>focusable</code></td><td><code>boolean | State&lt;boolean&gt;</code></td><td><code>true</code></td><td>Whether the widget can receive keyboard focus.</td></tr>
+<tr><td><code>tooltip</code></td><td><code>string | State&lt;string&gt;</code></td><td></td><td>Tooltip markup text for the widget.</td></tr>
+<tr><td><code>sensitive</code></td><td><code>boolean | State&lt;boolean&gt;</code></td><td><code>true</code></td><td>Whether the widget should be sensitive to user input.</td></tr>
+<tr><td><code>on_scroll</code></td><td><code>function(dx, dy)</code></td><td></td><td>Function to execute when scrolling over the widget. Receives (dx, dy) as arguments.</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="css-styling"><a class="header" href="#css-styling">CSS Styling</a></h2>
+<p>All widgets can be styled using standard CSS. You can target them by their ID (<code>#my-widget</code>) or their classes (<code>.my-class</code>).</p>
+<pre><code class="language-lua">local my_label = Label({
+  id = "status-label",
+  class_list = { "important", "alert" },
+  text = "Status: OK",
+})
+</code></pre>
+<p>In your CSS file:</p>
+<pre><code class="language-css">#status-label {
+  color: #fff;
+}
+
+.important {
+  font-weight: bold;
+}
+
+.alert {
+  color: #ff0000;
+}
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="label"><a class="header" href="#label">Label</a></h1>
+<p>A simple widget that displays a text label.</p>
+<h2 id="properties-1"><a class="header" href="#properties-1">Properties</a></h2>
+<p>In addition to the <a href="#common-widget-properties">Common Properties</a>, <code>Label</code> has the following properties:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Property</th><th>Type</th><th>Default</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>text</code></td><td><code>string | State&lt;string&gt;</code></td><td><strong>required</strong></td><td>The text content of the label. Can be a static string or a dynamic expression that evaluates to a string.</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="examples"><a class="header" href="#examples">Examples</a></h2>
+<h3 id="static-text"><a class="header" href="#static-text">Static Text</a></h3>
+<pre><code class="language-lua">local my_label = Label({
+  text = "Hello, world!",
+  halign = "center",
+})
+</code></pre>
+<h3 id="dynamic-text"><a class="header" href="#dynamic-text">Dynamic Text</a></h3>
+<pre><code class="language-lua">local time_state = waypane.state(os.date("%H:%M"))
+
+local clock_label = Label({
+  text = time_state,
+})
+
+-- Update the state every minute
+waypane.setInterval(function()
+  time_state:set(os.date("%H:%M"))
+end, 60000)
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="button"><a class="header" href="#button">Button</a></h1>
+<p>A clickable button widget.</p>
+<h2 id="properties-2"><a class="header" href="#properties-2">Properties</a></h2>
+<p>In addition to the <a href="#common-widget-properties">Common Properties</a>, <code>Button</code> has the following properties:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Property</th><th>Type</th><th>Default</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>child</code></td><td><code>Widget</code></td><td><strong>required</strong></td><td>The child widget to display inside the button.</td></tr>
+<tr><td><code>on_click</code></td><td><code>function()</code></td><td><strong>required</strong></td><td>Function to execute when the button is clicked.</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="examples-1"><a class="header" href="#examples-1">Examples</a></h2>
+<h3 id="clickable-label"><a class="header" href="#clickable-label">Clickable Label</a></h3>
+<pre><code class="language-lua">local my_button = Button({
+  child = Label({ text = "Click Me" }),
+  on_click = function()
+    print("The button was clicked!")
+  end,
+})
+</code></pre>
+<h3 id="clickable-icon"><a class="header" href="#clickable-icon">Clickable Icon</a></h3>
+<pre><code class="language-lua">local my_button = Button({
+  child = Icon({ name = "firefox", size = 32 }),
+  on_click = function()
+    os.execute("firefox &amp;")
+  end,
+})
+</code></pre>
+<h3 id="using-common-properties"><a class="header" href="#using-common-properties">Using Common Properties</a></h3>
+<p>You can apply common properties to customize the button’s appearance and behavior.</p>
+<pre><code class="language-lua">local my_button = Button({
+  id = "my-button",
+  class_list = { "primary" },
+  child = Label({ text = "Submit" }),
+  on_click = function()
+    print("Submitting...")
+  end,
+})
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="container"><a class="header" href="#container">Container</a></h1>
+<p>A container widget that can hold multiple child widgets, arranged either horizontally or vertically.</p>
+<h2 id="properties-3"><a class="header" href="#properties-3">Properties</a></h2>
+<p>In addition to the <a href="#common-widget-properties">Common Properties</a>, <code>Container</code> has the following properties:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Property</th><th>Type</th><th>Default</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>orientation</code></td><td><code>"horizontal" | "vertical"</code></td><td><strong>required</strong></td><td>The direction in which to arrange the children.</td></tr>
+<tr><td><code>spacing</code></td><td><code>number</code></td><td><code>0</code></td><td>The spacing between child widgets, in pixels.</td></tr>
+<tr><td><code>children</code></td><td><code>Widget[] | State&lt;Widget[]&gt;</code></td><td></td><td>A list of widgets to include in the container. If a state object is provided, the children will rebuild automatically when the state changes.</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="examples-2"><a class="header" href="#examples-2">Examples</a></h2>
+<h3 id="horizontal-bar"><a class="header" href="#horizontal-bar">Horizontal Bar</a></h3>
+<pre><code class="language-lua">local my_bar = Container({
+  orientation = "horizontal",
+  spacing = 10,
+  children = {
+    Label({ text = "Item 1" }),
+    Label({ text = "Item 2" }),
+    Label({ text = "Item 3" }),
+  },
+})
+</code></pre>
+<h3 id="vertical-list"><a class="header" href="#vertical-list">Vertical List</a></h3>
+<pre><code class="language-lua">local my_list = Container({
+  orientation = "vertical",
+  spacing = 5,
+  children = {
+    Button({ child = Label({ text = "Home" }) }),
+    Button({ child = Label({ text = "Settings" }) }),
+    Button({ child = Label({ text = "Exit" }) }),
+  },
+})
+</code></pre>
+<h3 id="dynamic-children-1"><a class="header" href="#dynamic-children-1">Dynamic Children</a></h3>
+<p>You can use reactive state to create dynamic containers.</p>
+<pre><code class="language-lua">local items_state = waypane.state({ "A", "B" })
+
+local my_container = Container({
+  orientation = "horizontal",
+  children = items_state:as(function(list)
+    local labels = {}
+    for _, item in ipairs(list) do
+      table.insert(labels, Label({ text = item }))
+    end
+    return labels
+  end),
+})
+
+-- Adding an item will update the container
+items_state:set({ "A", "B", "C" })
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="icon"><a class="header" href="#icon">Icon</a></h1>
+<p>A widget that displays a GTK icon.</p>
+<h2 id="properties-4"><a class="header" href="#properties-4">Properties</a></h2>
+<p>In addition to the <a href="#common-widget-properties">Common Properties</a>, <code>Icon</code> has the following properties:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Property</th><th>Type</th><th>Default</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>name</code></td><td><code>string | State&lt;string&gt;</code></td><td><strong>required</strong></td><td>The name of the icon to display (e.g. <code>"audio-volume-high"</code>).</td></tr>
+<tr><td><code>size</code></td><td><code>number | State&lt;number&gt;</code></td><td><code>24</code></td><td>The size of the icon in pixels.</td></tr>
+<tr><td><code>use_fallback</code></td><td><code>boolean | State&lt;boolean&gt;</code></td><td><code>true</code></td><td>Whether to use a fallback icon if the specified icon name is not found.</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="examples-3"><a class="header" href="#examples-3">Examples</a></h2>
+<h3 id="basic-icon"><a class="header" href="#basic-icon">Basic Icon</a></h3>
+<pre><code class="language-lua">local my_icon = Icon({
+  name = "audio-volume-high",
+  size = 32,
+})
+</code></pre>
+<h3 id="dynamic-icon-name"><a class="header" href="#dynamic-icon-name">Dynamic Icon Name</a></h3>
+<p>You can use reactive state to change the icon based on external data.</p>
+<pre><code class="language-lua">local volume_state = waypane.state(50)
+
+local volume_icon = Icon({
+  name = volume_state:as(function(val)
+    if val == 0 then return "audio-volume-muted" end
+    if val &lt; 33 then return "audio-volume-low" end
+    if val &lt; 66 then return "audio-volume-medium" end
+    return "audio-volume-high"
+  end),
+  size = 24,
+})
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="image"><a class="header" href="#image">Image</a></h1>
+<p>A widget that displays an image from a file path.</p>
+<h2 id="properties-5"><a class="header" href="#properties-5">Properties</a></h2>
+<p>In addition to the <a href="#common-widget-properties">Common Properties</a>, <code>Image</code> has the following properties:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Property</th><th>Type</th><th>Default</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>src</code></td><td><code>string | State&lt;string&gt;</code></td><td><strong>required</strong></td><td>The file path to the image. Relative paths are resolved against the config file directory.</td></tr>
+<tr><td><code>alternative_text</code></td><td><code>string | State&lt;string&gt;</code></td><td></td><td>The alternative textual description for the picture.</td></tr>
+<tr><td><code>keep_aspect_ratio</code></td><td><code>boolean | State&lt;boolean&gt;</code></td><td><code>true</code></td><td>Whether to maintain the aspect ratio of the image.</td></tr>
+<tr><td><code>can_shrink</code></td><td><code>boolean | State&lt;boolean&gt;</code></td><td><code>true</code></td><td>Whether the image can be shrunk to smaller than its original size.</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="examples-4"><a class="header" href="#examples-4">Examples</a></h2>
+<h3 id="local-image"><a class="header" href="#local-image">Local Image</a></h3>
+<pre><code class="language-lua">local my_image = Image({
+  src = "assets/logo.png",
+  width_request = 100,
+  height_request = 100,
+})
+</code></pre>
+<h3 id="absolute-path"><a class="header" href="#absolute-path">Absolute Path</a></h3>
+<pre><code class="language-lua">local my_image = Image({
+  src = "/home/user/Pictures/wallpaper.jpg",
+  keep_aspect_ratio = true,
+})
+</code></pre>
+<h3 id="dynamic-image"><a class="header" href="#dynamic-image">Dynamic Image</a></h3>
+<p>You can change the image source based on reactive state.</p>
+<pre><code class="language-lua">local profile_pic_state = waypane.state("assets/default.png")
+
+local user_avatar = Image({
+  src = profile_pic_state,
+  width_request = 48,
+  height_request = 48,
+})
+
+-- Later...
+profile_pic_state:set("assets/user-1.png")
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="progressbar"><a class="header" href="#progressbar">ProgressBar</a></h1>
+<p>A widget that displays a progress bar.</p>
+<h2 id="properties-6"><a class="header" href="#properties-6">Properties</a></h2>
+<p>In addition to the <a href="#common-widget-properties">Common Properties</a>, <code>ProgressBar</code> has the following properties:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Property</th><th>Type</th><th>Default</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>fraction</code></td><td><code>number | State&lt;number&gt;</code></td><td><code>0.0</code></td><td>The fraction of the progress bar that is filled (<code>0.0</code>–<code>1.0</code>).</td></tr>
+<tr><td><code>text</code></td><td><code>string | State&lt;string&gt;</code></td><td></td><td>The text to display over the progress bar if provided.</td></tr>
+<tr><td><code>inverted</code></td><td><code>boolean | State&lt;boolean&gt;</code></td><td><code>false</code></td><td>Whether the progress bar is inverted.</td></tr>
+<tr><td><code>orientation</code></td><td><code>"horizontal" | "vertical" | State&lt;string&gt;</code></td><td><code>"horizontal"</code></td><td>The orientation of the progress bar.</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="examples-5"><a class="header" href="#examples-5">Examples</a></h2>
+<h3 id="static-progress"><a class="header" href="#static-progress">Static Progress</a></h3>
+<pre><code class="language-lua">local my_bar = ProgressBar({
+  fraction = 0.5,
+  text = "50%",
+})
+</code></pre>
+<h3 id="dynamic-progress"><a class="header" href="#dynamic-progress">Dynamic Progress</a></h3>
+<p>You can use reactive state to update the progress bar based on external data.</p>
+<pre><code class="language-lua">local cpu_state = waypane.state(0.1)
+
+local cpu_bar = ProgressBar({
+  fraction = cpu_state,
+  text = cpu_state:as(function(val)
+    return string.format("CPU: %.0f%%", val * 100)
+  end),
+})
+
+-- Update the CPU state periodically...
+</code></pre>
+<h3 id="vertical-inverted-bar"><a class="header" href="#vertical-inverted-bar">Vertical Inverted Bar</a></h3>
+<pre><code class="language-lua">local volume_bar = ProgressBar({
+  orientation = "vertical",
+  inverted = true,
+  fraction = 0.7,
+})
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="slider"><a class="header" href="#slider">Slider</a></h1>
+<p>A widget that allows users to select a value from a range by sliding a handle.</p>
+<h2 id="properties-7"><a class="header" href="#properties-7">Properties</a></h2>
+<p>In addition to the <a href="#common-widget-properties">Common Properties</a>, <code>Slider</code> has the following properties:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Property</th><th>Type</th><th>Default</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>value</code></td><td><code>number | State&lt;number&gt;</code></td><td><code>0.0</code></td><td>The current value of the slider.</td></tr>
+<tr><td><code>min</code></td><td><code>number | State&lt;number&gt;</code></td><td><code>0.0</code></td><td>The minimum value of the slider.</td></tr>
+<tr><td><code>max</code></td><td><code>number | State&lt;number&gt;</code></td><td><code>100.0</code></td><td>The maximum value of the slider.</td></tr>
+<tr><td><code>step</code></td><td><code>number | State&lt;number&gt;</code></td><td><code>1.0</code></td><td>The step increment for the slider.</td></tr>
+<tr><td><code>page_step</code></td><td><code>number | State&lt;number&gt;</code></td><td><code>10.0</code></td><td>The page step increment for the slider.</td></tr>
+<tr><td><code>digits</code></td><td><code>number | State&lt;number&gt;</code></td><td><code>1</code></td><td>The number of decimal digits for the slider value.</td></tr>
+<tr><td><code>draw_value</code></td><td><code>boolean | State&lt;boolean&gt;</code></td><td><code>true</code></td><td>Whether to draw the current value next to the slider.</td></tr>
+<tr><td><code>orientation</code></td><td><code>"horizontal" | "vertical" | State&lt;string&gt;</code></td><td><code>"horizontal"</code></td><td>The orientation of the slider.</td></tr>
+<tr><td><code>on_change</code></td><td><code>function(value)</code></td><td><strong>required</strong></td><td>A callback that triggers when the slider’s value changes. Receives the new value as argument.</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="examples-6"><a class="header" href="#examples-6">Examples</a></h2>
+<h3 id="volume-slider"><a class="header" href="#volume-slider">Volume Slider</a></h3>
+<pre><code class="language-lua">local volume_state = waypane.state(50)
+
+local volume_slider = Slider({
+  min = 0,
+  max = 100,
+  value = volume_state,
+  on_change = function(val)
+    volume_state:set(val)
+    os.execute(string.format("pamixer --set-volume %.0f", val))
+  end,
+})
+</code></pre>
+<h3 id="vertical-brightness-slider"><a class="header" href="#vertical-brightness-slider">Vertical Brightness Slider</a></h3>
+<pre><code class="language-lua">local brightness_slider = Slider({
+  orientation = "vertical",
+  min = 0,
+  max = 100,
+  value = 50,
+  draw_value = false,
+  on_change = function(val)
+    os.execute(string.format("brightnessctl s %.0f%%", val))
+  end,
+})
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="styling"><a class="header" href="#styling">Styling</a></h1>
+<p><code>waypane</code> uses standard CSS for styling its widgets. This provides a powerful and flexible way to customize the appearance of your desktop environment.</p>
+<h2 id="applying-css"><a class="header" href="#applying-css">Applying CSS</a></h2>
+<p>You can apply CSS by providing a path to a CSS file when creating your shell object. This stylesheet will be applied to all windows.</p>
+<pre><code class="language-lua">local shell = waypane.shell({
+  title = "My Bar",
+  style = "style.css",
+})
+</code></pre>
+<h2 id="targeting-widgets"><a class="header" href="#targeting-widgets">Targeting Widgets</a></h2>
+<p>Widgets can be targeted in CSS using their IDs or classes.</p>
+<ul>
+<li><strong>ID</strong>: Target a specific widget with its unique <code>id</code> property using <code>#id</code>.</li>
+<li><strong>Class</strong>: Target one or more widgets with their <code>class_list</code> property using <code>.class</code>.</li>
+</ul>
+<h3 id="example"><a class="header" href="#example">Example</a></h3>
+<p>In your Lua config:</p>
+<pre><code class="language-lua">local my_label = Label({
+  id = "status-label",
+  class_list = { "important", "alert" },
+  text = "Status: OK",
+})
+</code></pre>
+<p>In your CSS file:</p>
+<pre><code class="language-css">#status-label {
+  color: #fff;
+  background-color: #333;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.important {
+  font-weight: bold;
+}
+
+.alert {
+  color: #ff0000;
+}
+</code></pre>
+<h2 id="supported-properties"><a class="header" href="#supported-properties">Supported Properties</a></h2>
+<p>Standard CSS properties supported by GTK4 can be used. This includes:</p>
+<ul>
+<li>
+<p><code>color</code>, <code>background-color</code></p>
+</li>
+<li>
+<p><code>font-family</code>, <code>font-size</code>, <code>font-weight</code></p>
+</li>
+<li>
+<p><code>margin</code>, <code>padding</code></p>
+</li>
+<li>
+<p><code>border</code>, <code>border-radius</code></p>
+</li>
+<li>
+<p><code>min-width</code>, <code>min-height</code></p>
+<p>…</p>
+</li>
+</ul>
+<h2 id="css-selectors"><a class="header" href="#css-selectors">CSS Selectors</a></h2>
+<p>You can use complex CSS selectors to target widgets based on their hierarchy.</p>
+<pre><code class="language-css">/* Target all labels inside a container with the class 'my-container' */
+.my-container label {
+  color: #aaa;
+}
+</code></pre>
+<h2 id="resources"><a class="header" href="#resources">Resources</a></h2>
+<p>For more information on the specific CSS properties supported by GTK4, refer to the <a href="https://docs.gtk.org/gtk4/css-properties.html">GTK4 CSS Properties documentation</a>.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="modules"><a class="header" href="#modules">Modules</a></h1>
+<p><code>waypane</code> can be extended with modules that provide integration with external tools and services. These modules typically expose a set of Lua functions and signals.</p>
+<h2 id="built-in-modules"><a class="header" href="#built-in-modules">Built-in Modules</a></h2>
+<ul>
+<li><strong><a href="#hyprland-module">Hyprland</a></strong>: Deep integration with the Hyprland window manager, allowing you to react to workspace changes, window focus, and more.</li>
+</ul>
+<h2 id="using-modules"><a class="header" href="#using-modules">Using Modules</a></h2>
+<p>Modules are available as sub-tables of the global <code>waypane</code> table.</p>
+<pre><code class="language-lua">-- Using the Hyprland module
+local workspaces = waypane.hyprland.getWorkspaces()
+</code></pre>
+<h2 id="community-modules"><a class="header" href="#community-modules">Community Modules</a></h2>
+<p>In the future, <code>waypane</code> may support a plugin system or a community-driven set of modules. If you’re interested in developing your own module, check out the source code of the Hyprland module as a reference.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="hyprland-module"><a class="header" href="#hyprland-module">Hyprland Module</a></h1>
+<p>The <code>hyprland</code> module provides deep integration with the Hyprland window manager. It allows you to query the state of workspaces, windows, and monitors, as well as dispatch commands and react to compositor events via signals.</p>
+<h2 id="usage"><a class="header" href="#usage">Usage</a></h2>
+<p>The Hyprland module is available under the <code>waypane.hyprland</code> table.</p>
+<h2 id="types"><a class="header" href="#types">Types</a></h2>
+<p>The Hyprland module defines several types that are used across its functions and signals.</p>
+<h3 id="hyprlandworkspace"><a class="header" href="#hyprlandworkspace"><code>HyprlandWorkspace</code></a></h3>
+<p>Basic workspace identification, used in signal event data.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Field</th><th>Type</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>id</code></td><td><code>number</code></td><td>The unique identifier for the workspace.</td></tr>
+<tr><td><code>name</code></td><td><code>string</code></td><td>The name of the workspace.</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="hyprlandworkspaceinfo"><a class="header" href="#hyprlandworkspaceinfo"><code>HyprlandWorkspaceInfo</code></a></h3>
+<p>Detailed workspace information, returned by <code>getWorkspaces()</code>.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Field</th><th>Type</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>workspace</code></td><td><code>HyprlandWorkspace</code></td><td>Basic workspace identification (id and name).</td></tr>
+<tr><td><code>monitor</code></td><td><code>string</code></td><td>The name of the monitor this workspace is on.</td></tr>
+<tr><td><code>windows</code></td><td><code>number</code></td><td>The number of windows currently on this workspace.</td></tr>
+<tr><td><code>last_window_title</code></td><td><code>string</code></td><td>The title of the last focused window on this workspace.</td></tr>
+<tr><td><code>fullscreen</code></td><td><code>boolean</code></td><td>Whether this workspace is currently in fullscreen mode.</td></tr>
+<tr><td><code>monitor_id</code></td><td><code>number?</code></td><td>The unique identifier of the monitor, if available.</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="hyprlandwindow"><a class="header" href="#hyprlandwindow"><code>HyprlandWindow</code></a></h3>
+<p>Basic window information, used in the <code>hyprland::active_window</code> signal data.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Field</th><th>Type</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>title</code></td><td><code>string</code></td><td>The title of the window.</td></tr>
+<tr><td><code>class</code></td><td><code>string</code></td><td>The class of the window.</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="hyprlandactivewindowinfo"><a class="header" href="#hyprlandactivewindowinfo"><code>HyprlandActiveWindowInfo</code></a></h3>
+<p>Detailed window information, returned by <code>getActiveWindow()</code>.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Field</th><th>Type</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>address</code></td><td><code>string</code></td><td>The unique hex address of the window.</td></tr>
+<tr><td><code>title</code></td><td><code>string</code></td><td>The title of the active window.</td></tr>
+<tr><td><code>initial_title</code></td><td><code>string</code></td><td>The initial title of the window when it was created.</td></tr>
+<tr><td><code>class</code></td><td><code>string</code></td><td>The class of the active window.</td></tr>
+<tr><td><code>initial_class</code></td><td><code>string</code></td><td>The initial class of the window when it was created.</td></tr>
+<tr><td><code>pid</code></td><td><code>number</code></td><td>The process ID of the active window.</td></tr>
+<tr><td><code>monitor</code></td><td><code>number?</code></td><td>The ID of the monitor the window is on, if available.</td></tr>
+<tr><td><code>workspace</code></td><td><code>HyprlandWorkspace</code></td><td>The workspace the window is on.</td></tr>
+<tr><td><code>width</code></td><td><code>number</code></td><td>The width of the window in pixels.</td></tr>
+<tr><td><code>height</code></td><td><code>number</code></td><td>The height of the window in pixels.</td></tr>
+<tr><td><code>x</code></td><td><code>number</code></td><td>The x-coordinate of the window’s top-left corner.</td></tr>
+<tr><td><code>y</code></td><td><code>number</code></td><td>The y-coordinate of the window’s top-left corner.</td></tr>
+<tr><td><code>floating</code></td><td><code>boolean</code></td><td>Whether the window is currently floating.</td></tr>
+<tr><td><code>fullscreen</code></td><td><code>boolean</code></td><td>Whether the window is in fullscreen mode.</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="hyprlandmonitorinfo"><a class="header" href="#hyprlandmonitorinfo"><code>HyprlandMonitorInfo</code></a></h3>
+<p>Monitor information, returned by <code>getMonitors()</code>.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Field</th><th>Type</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>id</code></td><td><code>number</code></td><td>The unique identifier for the monitor.</td></tr>
+<tr><td><code>name</code></td><td><code>string</code></td><td>The name of the monitor, as configured in Hyprland.</td></tr>
+<tr><td><code>focused</code></td><td><code>boolean</code></td><td>Whether this monitor is currently focused.</td></tr>
+<tr><td><code>width</code></td><td><code>number</code></td><td>The width of the monitor in pixels.</td></tr>
+<tr><td><code>height</code></td><td><code>number</code></td><td>The height of the monitor in pixels.</td></tr>
+<tr><td><code>x</code></td><td><code>number</code></td><td>The x-coordinate of the monitor’s top-left corner.</td></tr>
+<tr><td><code>y</code></td><td><code>number</code></td><td>The y-coordinate of the monitor’s top-left corner.</td></tr>
+<tr><td><code>refresh_rate</code></td><td><code>number</code></td><td>The refresh rate of the monitor in Hz.</td></tr>
+<tr><td><code>scale</code></td><td><code>number</code></td><td>The UI scale factor for the monitor.</td></tr>
+<tr><td><code>active_workspace</code></td><td><code>HyprlandWorkspace</code></td><td>The currently active workspace on this monitor.</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="hyprlandactivemonitor"><a class="header" href="#hyprlandactivemonitor"><code>HyprlandActiveMonitor</code></a></h3>
+<p>Active monitor information, used in the <code>hyprland::active_monitor_changed</code> signal data.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Field</th><th>Type</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>monitor</code></td><td><code>string</code></td><td>The name of the monitor.</td></tr>
+<tr><td><code>workspace</code></td><td><code>string?</code></td><td>The name of the workspace on the monitor, if available.</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="functions"><a class="header" href="#functions">Functions</a></h2>
+<h3 id="querying-state"><a class="header" href="#querying-state">Querying State</a></h3>
+<ul>
+<li><strong><code>getWorkspaces()</code></strong> → <code>HyprlandWorkspaceInfo[]</code>: Returns a list of all current workspaces.</li>
+<li><strong><code>getActiveWindow()</code></strong> → <code>HyprlandActiveWindowInfo | nil</code>: Returns information about the currently focused window, or <code>nil</code> if no window is focused.</li>
+<li><strong><code>getMonitors()</code></strong> → <code>HyprlandMonitorInfo[]</code>: Returns a list of all connected monitors.</li>
+</ul>
+<h3 id="workspace-management"><a class="header" href="#workspace-management">Workspace Management</a></h3>
+<ul>
+<li><strong><code>switchWorkspace(id)</code></strong>: Switches focus to the workspace with the given numerical ID.</li>
+<li><strong><code>switchWorkspaceRelative(offset)</code></strong>: Switches focus to a workspace relative to the current one (e.g., <code>1</code> for next, <code>-1</code> for previous).</li>
+<li><strong><code>switchWorkspaceNamed(name)</code></strong>: Switches focus to the workspace with the given name.</li>
+<li><strong><code>switchToPreviousWorkspace()</code></strong>: Switches focus back to the previously active workspace.</li>
+<li><strong><code>toggleSpecialWorkspace(name)</code></strong>: Toggles the visibility of a special workspace (scratchpad). If <code>name</code> is <code>nil</code>, the default special workspace is used.</li>
+</ul>
+<h3 id="window-management"><a class="header" href="#window-management">Window Management</a></h3>
+<ul>
+<li><strong><code>moveActiveToWorkspace(id)</code></strong>: Moves the currently focused window to the workspace with the given ID and switches focus to that workspace.</li>
+<li><strong><code>moveActiveToWorkspaceSilent(id)</code></strong>: Moves the focused window to the workspace with the given ID without changing the current workspace focus.</li>
+<li><strong><code>toggleFloating()</code></strong>: Toggles the floating state of the active window.</li>
+<li><strong><code>toggleFullscreen()</code></strong>: Toggles the fullscreen state of the active window.</li>
+<li><strong><code>killActiveWindow()</code></strong>: Closes the currently focused window.</li>
+</ul>
+<h2 id="signals-1"><a class="header" href="#signals-1">Signals</a></h2>
+<p>You can subscribe to these events using <code>waypane.onSignal()</code>.</p>
+<h3 id="workspace-events"><a class="header" href="#workspace-events">Workspace Events</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Signal</th><th>Data Type</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>hyprland::workspace_changed</code></td><td><code>HyprlandWorkspace</code></td><td>Fired when focus moves to a different workspace.</td></tr>
+<tr><td><code>hyprland::workspace_added</code></td><td><code>HyprlandWorkspace</code></td><td>Fired when a new workspace is created.</td></tr>
+<tr><td><code>hyprland::workspace_deleted</code></td><td><code>HyprlandWorkspace</code></td><td>Fired when a workspace is destroyed.</td></tr>
+<tr><td><code>hyprland::workspace_moved</code></td><td><code>HyprlandWorkspace</code></td><td>Fired when a workspace is moved to another monitor.</td></tr>
+<tr><td><code>hyprland::workspace_renamed</code></td><td><code>HyprlandWorkspace</code></td><td>Fired when a workspace is renamed.</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="window--monitor-events"><a class="header" href="#window--monitor-events">Window &amp; Monitor Events</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Signal</th><th>Data Type</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>hyprland::active_window</code></td><td><code>HyprlandWindow</code></td><td>Fired when the focused window changes.</td></tr>
+<tr><td><code>hyprland::fullscreen_changed</code></td><td><code>boolean</code></td><td>Fired when the active window’s fullscreen state toggles.</td></tr>
+<tr><td><code>hyprland::active_monitor_changed</code></td><td><code>HyprlandActiveMonitor</code></td><td>Fired when focus moves to a different monitor.</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="example-workspace-switcher"><a class="header" href="#example-workspace-switcher">Example: Workspace Switcher</a></h2>
+<pre><code class="language-lua">local function workspace_button(id)
+  return Button({
+    child = Label({ text = tostring(id) }),
+    on_click = function()
+      waypane.hyprland.switchWorkspace(id)
+    end,
+  })
+end
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr-ef4e11c1.min.js"></script>
+        <script src="mark-09e88c2c.min.js"></script>
+        <script src="searcher-c2a407aa.js"></script>
+
+        <script src="clipboard-1626706a.min.js"></script>
+        <script src="highlight-abc7f01d.js"></script>
+        <script src="book-a0b12cfe.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="theme/version-picker-088e0619.js"></script>
+
+        <script>
+        window.addEventListener('load', function() {
+            window.setTimeout(window.print, 100);
+        });
+        </script>
+
+
+    </div>
+    </body>
+</html>
