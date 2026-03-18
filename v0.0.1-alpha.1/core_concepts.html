@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>State Management - waypane documentation</title>
+        <title>Core Concepts - waypane documentation</title>
 
 
         <!-- Custom HTML head -->
@@ -12,33 +12,33 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff">
 
-        <link rel="icon" href="../favicon-de23e50b.svg">
-        <link rel="shortcut icon" href="../favicon-8114d1fc.png">
-        <link rel="stylesheet" href="../css/variables-8adf115d.css">
-        <link rel="stylesheet" href="../css/general-2459343d.css">
-        <link rel="stylesheet" href="../css/chrome-ae938929.css">
-        <link rel="stylesheet" href="../css/print-9e4910d8.css" media="print">
+        <link rel="icon" href="favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="favicon-8114d1fc.png">
+        <link rel="stylesheet" href="css/variables-8adf115d.css">
+        <link rel="stylesheet" href="css/general-2459343d.css">
+        <link rel="stylesheet" href="css/chrome-ae938929.css">
+        <link rel="stylesheet" href="css/print-9e4910d8.css" media="print">
 
         <!-- Fonts -->
-        <link rel="stylesheet" href="../fonts/fonts-9644e21d.css">
+        <link rel="stylesheet" href="fonts/fonts-9644e21d.css">
 
         <!-- Highlight.js Stylesheets -->
-        <link rel="stylesheet" id="mdbook-highlight-css" href="../highlight-493f70e1.css">
-        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../tomorrow-night-4c0ae647.css">
-        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../ayu-highlight-3fdfc3ac.css">
+        <link rel="stylesheet" id="mdbook-highlight-css" href="highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="ayu-highlight-3fdfc3ac.css">
 
         <!-- Custom theme stylesheets -->
 
 
         <!-- Provide site root and default themes to javascript -->
         <script>
-            const path_to_root = "../";
+            const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-138c84c2.js";
+            window.path_to_searchindex_js = "searchindex-138c84c2.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../toc-159f6911.js"></script>
+        <script src="toc-159f6911.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -105,7 +105,7 @@
             <!-- populated by js -->
             <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
             <noscript>
-                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
             </noscript>
             <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
@@ -140,7 +140,7 @@
                     <h1 class="menu-title">waypane documentation</h1>
 
                     <div class="right-buttons">
-                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
                             <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
                         </a>
 
@@ -174,82 +174,47 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <h1 id="state-management"><a class="header" href="#state-management">State Management</a></h1>
-<p>Reactive state is at the heart of <code>waypane</code>. It allows you to create data points that your widgets can “watch”, automatically updating themselves whenever the data changes.</p>
-<h2 id="creating-state"><a class="header" href="#creating-state">Creating State</a></h2>
-<p>You can create a new state object using the <code>waypane.state()</code> function. You can provide an initial value for the state.</p>
-<pre><code class="language-lua">local my_state = waypane.state("initial value")
+                        <h1 id="core-concepts"><a class="header" href="#core-concepts">Core Concepts</a></h1>
+<p>waypane is built around a few fundamental concepts that work together to create a dynamic desktop environment.</p>
+<h2 id="the-shell"><a class="header" href="#the-shell">The Shell</a></h2>
+<p>The <code>Shell</code> is the top-level object in your configuration. It manages global settings like the application title and any custom CSS styles you want to apply. It also acts as a container for your window definitions.</p>
+<p>A typical configuration returns a <code>Shell</code> object at the end of the file.</p>
+<pre><code class="language-lua">local shell = waypane.shell({
+  title = "My Desktop",
+  style = "style.css",
+})
+
+-- Define windows here
+
+return shell
 </code></pre>
-<h2 id="getting-and-setting-state"><a class="header" href="#getting-and-setting-state">Getting and Setting State</a></h2>
-<p>State objects have <code>get()</code> and <code>set()</code> methods:</p>
-<ul>
-<li><code>my_state:get()</code>: Returns the current value of the state.</li>
-<li><code>my_state:set(new_value)</code>: Updates the state with a new value and triggers updates for any bound widgets.</li>
-</ul>
-<pre><code class="language-lua">local count = waypane.state(0)
+<h2 id="windows"><a class="header" href="#windows">Windows</a></h2>
+<p>A <code>Window</code> represents a single UI element on your desktop, such as a status bar, a dashboard, or a standalone widget. Windows are defined using the <code>shell:window</code> method and specify their layer, placement, and layout.</p>
+<p>Windows can be configured to appear on specific monitors or all of them. Their layout is defined by providing a main Widget, or a function that returns one.</p>
+<h2 id="widgets"><a class="header" href="#widgets">Widgets</a></h2>
+<p><code>Widgets</code> are the building blocks of your UI. waypane provides a variety of built-in widgets like <code>Label</code>, <code>Button</code>, <code>Container</code>, <code>Icon</code>, and more. Widgets are declarative, meaning you describe their state and properties, and waypane handles the rendering and updates.</p>
+<p>Many widget properties can be <strong>reactive</strong>, meaning they automatically update when the underlying data changes.</p>
+<h2 id="reactive-state"><a class="header" href="#reactive-state">Reactive State</a></h2>
+<p><code>State</code> is a core part of waypane’s dynamic nature. By using <code>waypane.state()</code>, you can create observable data points that widgets can subscribe to. When the state changes, any widget property bound to that state will automatically refresh.</p>
+<pre><code class="language-lua">local time = waypane.state(os.date("%H:%M"))
 
-print(count:get()) -- Output: 0
-
-count:set(1)
-print(count:get()) -- Output: 1
-</code></pre>
-<h2 id="binding-state-to-widgets"><a class="header" href="#binding-state-to-widgets">Binding State to Widgets</a></h2>
-<p>Many widget properties (like a Label’s <code>text</code> or a Container’s <code>children</code>) can accept a state object instead of a static value. When the state changes, the widget property will automatically update.</p>
-<pre><code class="language-lua">local title_state = waypane.state("My Widget")
-
+-- Later, when `time`'s internal value changes, the label will update automatically
 local my_label = Label({
-  text = title_state,
+  text = time,
 })
-
--- Later...
-title_state:set("Updated Title") -- The label's text will automatically update to "Updated Title"
 </code></pre>
-<h2 id="transforming-state"><a class="header" href="#transforming-state">Transforming State</a></h2>
-<p>You can create a “transformed” version of a state object using the <code>:as()</code> method. This allows you to derive a new value from an existing state without manually managing multiple state objects.</p>
-<p>The <code>:as()</code> method takes a function that receives the current state value and returns the transformed value.</p>
-<pre><code class="language-lua">local count = waypane.state(5)
-
--- Create a derived state that formats the count
-local label_text = count:as(function(val)
-  return "The count is: " .. tostring(val)
-end)
-
-local my_label = Label({
-  text = label_text,
-})
-
--- Later...
-count:set(10) -- The label will automatically update to "The count is: 10"
-</code></pre>
-<h2 id="dynamic-children"><a class="header" href="#dynamic-children">Dynamic Children</a></h2>
-<p>Containers can also use reactive state for their <code>children</code> property. This is a powerful way to create dynamic lists or grids of widgets that can grow or shrink based on external data.</p>
-<pre><code class="language-lua">local items = waypane.state({ "A", "B", "C" })
-
-local my_container = Container({
-  children = items:as(function(list)
-    local labels = {}
-    for _, item in ipairs(list) do
-      table.insert(labels, Label({ text = item }))
-    end
-    return labels
-  end),
-})
-
--- Adding an item to the list will automatically rebuild the container's children
-local current = items:get()
-table.insert(current, "D")
-items:set(current)
-</code></pre>
+<h2 id="signals-and-events"><a class="header" href="#signals-and-events">Signals and Events</a></h2>
+<p><code>Signals</code> are a way to react to asynchronous events, such as workspace changes in Hyprland or custom events emitted by your own scripts. You can use <code>waypane.onSignal()</code> to register callbacks for specific signals, allowing your UI to respond to the desktop environment in real-time.</p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="../lua_api/globals.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="getting_started.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                             </a>
 
-                            <a rel="next prefetch" href="../lua_api/timers.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="lua_api/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                             </a>
 
@@ -259,11 +224,11 @@ items:set(current)
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="../lua_api/globals.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="getting_started.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                     </a>
 
-                    <a rel="next prefetch" href="../lua_api/timers.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="lua_api/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                     </a>
             </nav>
@@ -283,15 +248,16 @@ items:set(current)
         </script>
 
 
-        <script src="../elasticlunr-ef4e11c1.min.js"></script>
-        <script src="../mark-09e88c2c.min.js"></script>
-        <script src="../searcher-c2a407aa.js"></script>
+        <script src="elasticlunr-ef4e11c1.min.js"></script>
+        <script src="mark-09e88c2c.min.js"></script>
+        <script src="searcher-c2a407aa.js"></script>
 
-        <script src="../clipboard-1626706a.min.js"></script>
-        <script src="../highlight-abc7f01d.js"></script>
-        <script src="../book-a0b12cfe.js"></script>
+        <script src="clipboard-1626706a.min.js"></script>
+        <script src="highlight-abc7f01d.js"></script>
+        <script src="book-a0b12cfe.js"></script>
 
         <!-- Custom JS scripts -->
+        <script src="theme/version-picker-088e0619.js"></script>
 
 
 

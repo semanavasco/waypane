@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Styling - waypane documentation</title>
+        <title>Introduction - waypane documentation</title>
 
 
         <!-- Custom HTML head -->
@@ -174,84 +174,15 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <h1 id="styling"><a class="header" href="#styling">Styling</a></h1>
-<p><code>waypane</code> uses standard CSS for styling its widgets. This provides a powerful and flexible way to customize the appearance of your desktop environment.</p>
-<h2 id="applying-css"><a class="header" href="#applying-css">Applying CSS</a></h2>
-<p>You can apply CSS by providing a path to a CSS file when creating your shell object. This stylesheet will be applied to all windows.</p>
-<pre><code class="language-lua">local shell = waypane.shell({
-  title = "My Bar",
-  style = "style.css",
-})
-</code></pre>
-<h2 id="targeting-widgets"><a class="header" href="#targeting-widgets">Targeting Widgets</a></h2>
-<p>Widgets can be targeted in CSS using their IDs or classes.</p>
-<ul>
-<li><strong>ID</strong>: Target a specific widget with its unique <code>id</code> property using <code>#id</code>.</li>
-<li><strong>Class</strong>: Target one or more widgets with their <code>class_list</code> property using <code>.class</code>.</li>
-</ul>
-<h3 id="example"><a class="header" href="#example">Example</a></h3>
-<p>In your Lua config:</p>
-<pre><code class="language-lua">local my_label = Label({
-  id = "status-label",
-  class_list = { "important", "alert" },
-  text = "Status: OK",
-})
-</code></pre>
-<p>In your CSS file:</p>
-<pre><code class="language-css">#status-label {
-  color: #fff;
-  background-color: #333;
-  padding: 5px;
-  border-radius: 5px;
-}
-
-.important {
-  font-weight: bold;
-}
-
-.alert {
-  color: #ff0000;
-}
-</code></pre>
-<h2 id="supported-properties"><a class="header" href="#supported-properties">Supported Properties</a></h2>
-<p>Standard CSS properties supported by GTK4 can be used. This includes:</p>
-<ul>
-<li>
-<p><code>color</code>, <code>background-color</code></p>
-</li>
-<li>
-<p><code>font-family</code>, <code>font-size</code>, <code>font-weight</code></p>
-</li>
-<li>
-<p><code>margin</code>, <code>padding</code></p>
-</li>
-<li>
-<p><code>border</code>, <code>border-radius</code></p>
-</li>
-<li>
-<p><code>min-width</code>, <code>min-height</code></p>
-<p>…</p>
-</li>
-</ul>
-<h2 id="css-selectors"><a class="header" href="#css-selectors">CSS Selectors</a></h2>
-<p>You can use complex CSS selectors to target widgets based on their hierarchy.</p>
-<pre><code class="language-css">/* Target all labels inside a container with the class 'my-container' */
-.my-container label {
-  color: #aaa;
-}
-</code></pre>
-<h2 id="resources"><a class="header" href="#resources">Resources</a></h2>
-<p>For more information on the specific CSS properties supported by GTK4, refer to the <a href="https://docs.gtk.org/gtk4/css-properties.html">GTK4 CSS Properties documentation</a>.</p>
+                        <h1 id="introduction"><a class="header" href="#introduction">Introduction</a></h1>
+<p>waypane is a Wayland toolkit made in <a href="https://rust-lang.org">Rust</a> for building custom desktop widgets and bars in Lua. It provides a simple API to create and manage GTK-based widgets, handle events, and interact with the Wayland compositor.</p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="widgets/slider.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
-                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
-                            </a>
 
-                            <a rel="next prefetch" href="modules/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="getting_started.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                             </a>
 
@@ -261,11 +192,8 @@
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="widgets/slider.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
-                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
-                    </a>
 
-                    <a rel="next prefetch" href="modules/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="getting_started.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                     </a>
             </nav>
@@ -294,6 +222,7 @@
         <script src="book-a0b12cfe.js"></script>
 
         <!-- Custom JS scripts -->
+        <script src="theme/version-picker-088e0619.js"></script>
 
 
 

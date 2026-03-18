@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Image - waypane documentation</title>
+        <title>Modules - waypane documentation</title>
 
 
         <!-- Custom HTML head -->
@@ -174,60 +174,29 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <h1 id="image"><a class="header" href="#image">Image</a></h1>
-<p>A widget that displays an image from a file path.</p>
-<h2 id="properties"><a class="header" href="#properties">Properties</a></h2>
-<p>In addition to the <a href="./common.html">Common Properties</a>, <code>Image</code> has the following properties:</p>
-<div class="table-wrapper">
-<table>
-<thead>
-<tr><th>Property</th><th>Type</th><th>Default</th><th>Description</th></tr>
-</thead>
-<tbody>
-<tr><td><code>src</code></td><td><code>string | State&lt;string&gt;</code></td><td><strong>required</strong></td><td>The file path to the image. Relative paths are resolved against the config file directory.</td></tr>
-<tr><td><code>alternative_text</code></td><td><code>string | State&lt;string&gt;</code></td><td></td><td>The alternative textual description for the picture.</td></tr>
-<tr><td><code>keep_aspect_ratio</code></td><td><code>boolean | State&lt;boolean&gt;</code></td><td><code>true</code></td><td>Whether to maintain the aspect ratio of the image.</td></tr>
-<tr><td><code>can_shrink</code></td><td><code>boolean | State&lt;boolean&gt;</code></td><td><code>true</code></td><td>Whether the image can be shrunk to smaller than its original size.</td></tr>
-</tbody>
-</table>
-</div>
-<h2 id="examples"><a class="header" href="#examples">Examples</a></h2>
-<h3 id="local-image"><a class="header" href="#local-image">Local Image</a></h3>
-<pre><code class="language-lua">local my_image = Image({
-  src = "assets/logo.png",
-  width_request = 100,
-  height_request = 100,
-})
+                        <h1 id="modules"><a class="header" href="#modules">Modules</a></h1>
+<p><code>waypane</code> can be extended with modules that provide integration with external tools and services. These modules typically expose a set of Lua functions and signals.</p>
+<h2 id="built-in-modules"><a class="header" href="#built-in-modules">Built-in Modules</a></h2>
+<ul>
+<li><strong><a href="./hyprland.html">Hyprland</a></strong>: Deep integration with the Hyprland window manager, allowing you to react to workspace changes, window focus, and more.</li>
+</ul>
+<h2 id="using-modules"><a class="header" href="#using-modules">Using Modules</a></h2>
+<p>Modules are available as sub-tables of the global <code>waypane</code> table.</p>
+<pre><code class="language-lua">-- Using the Hyprland module
+local workspaces = waypane.hyprland.getWorkspaces()
 </code></pre>
-<h3 id="absolute-path"><a class="header" href="#absolute-path">Absolute Path</a></h3>
-<pre><code class="language-lua">local my_image = Image({
-  src = "/home/user/Pictures/wallpaper.jpg",
-  keep_aspect_ratio = true,
-})
-</code></pre>
-<h3 id="dynamic-image"><a class="header" href="#dynamic-image">Dynamic Image</a></h3>
-<p>You can change the image source based on reactive state.</p>
-<pre><code class="language-lua">local profile_pic_state = waypane.state("assets/default.png")
-
-local user_avatar = Image({
-  src = profile_pic_state,
-  width_request = 48,
-  height_request = 48,
-})
-
--- Later...
-profile_pic_state:set("assets/user-1.png")
-</code></pre>
+<h2 id="community-modules"><a class="header" href="#community-modules">Community Modules</a></h2>
+<p>In the future, <code>waypane</code> may support a plugin system or a community-driven set of modules. If you’re interested in developing your own module, check out the source code of the Hyprland module as a reference.</p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="../widgets/icon.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="../styling.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                             </a>
 
-                            <a rel="next prefetch" href="../widgets/progress_bar.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="../modules/hyprland.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                             </a>
 
@@ -237,11 +206,11 @@ profile_pic_state:set("assets/user-1.png")
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="../widgets/icon.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="../styling.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                     </a>
 
-                    <a rel="next prefetch" href="../widgets/progress_bar.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="../modules/hyprland.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                     </a>
             </nav>
@@ -270,6 +239,7 @@ profile_pic_state:set("assets/user-1.png")
         <script src="../book-a0b12cfe.js"></script>
 
         <!-- Custom JS scripts -->
+        <script src="../theme/version-picker-088e0619.js"></script>
 
 
 

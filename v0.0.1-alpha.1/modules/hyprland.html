@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Common Properties - waypane documentation</title>
+        <title>Hyprland - waypane documentation</title>
 
 
         <!-- Custom HTML head -->
@@ -174,85 +174,186 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <h1 id="common-widget-properties"><a class="header" href="#common-widget-properties">Common Widget Properties</a></h1>
-<p>Every widget in <code>waypane</code> shares a set of common properties that you can use to customize its appearance, layout, and behavior. These properties are always available when you’re defining a widget.</p>
-<h2 id="basic-properties"><a class="header" href="#basic-properties">Basic Properties</a></h2>
+                        <h1 id="hyprland-module"><a class="header" href="#hyprland-module">Hyprland Module</a></h1>
+<p>The <code>hyprland</code> module provides deep integration with the Hyprland window manager. It allows you to query the state of workspaces, windows, and monitors, as well as dispatch commands and react to compositor events via signals.</p>
+<h2 id="usage"><a class="header" href="#usage">Usage</a></h2>
+<p>The Hyprland module is available under the <code>waypane.hyprland</code> table.</p>
+<h2 id="types"><a class="header" href="#types">Types</a></h2>
+<p>The Hyprland module defines several types that are used across its functions and signals.</p>
+<h3 id="hyprlandworkspace"><a class="header" href="#hyprlandworkspace"><code>HyprlandWorkspace</code></a></h3>
+<p>Basic workspace identification, used in signal event data.</p>
 <div class="table-wrapper">
 <table>
 <thead>
-<tr><th>Property</th><th>Type</th><th>Description</th></tr>
+<tr><th>Field</th><th>Type</th><th>Description</th></tr>
 </thead>
 <tbody>
-<tr><td><code>id</code></td><td><code>string | State&lt;string&gt;</code></td><td>Widget ID, used for CSS styling and querying.</td></tr>
-<tr><td><code>class_list</code></td><td><code>string[] | State&lt;string[]&gt;</code></td><td>List of CSS classes applied to the widget.</td></tr>
+<tr><td><code>id</code></td><td><code>number</code></td><td>The unique identifier for the workspace.</td></tr>
+<tr><td><code>name</code></td><td><code>string</code></td><td>The name of the workspace.</td></tr>
 </tbody>
 </table>
 </div>
-<h2 id="layout-properties"><a class="header" href="#layout-properties">Layout Properties</a></h2>
+<h3 id="hyprlandworkspaceinfo"><a class="header" href="#hyprlandworkspaceinfo"><code>HyprlandWorkspaceInfo</code></a></h3>
+<p>Detailed workspace information, returned by <code>getWorkspaces()</code>.</p>
 <div class="table-wrapper">
 <table>
 <thead>
-<tr><th>Property</th><th>Type</th><th>Default</th><th>Description</th></tr>
+<tr><th>Field</th><th>Type</th><th>Description</th></tr>
 </thead>
 <tbody>
-<tr><td><code>halign</code></td><td><code>"start" | "center" | "end" | "fill" | "baseline" | State</code></td><td></td><td>Horizontal alignment for the widget.</td></tr>
-<tr><td><code>valign</code></td><td><code>"start" | "center" | "end" | "fill" | "baseline" | State</code></td><td></td><td>Vertical alignment for the widget.</td></tr>
-<tr><td><code>hexpand</code></td><td><code>boolean | State&lt;boolean&gt;</code></td><td><code>false</code></td><td>Whether the widget expands to fill available horizontal space.</td></tr>
-<tr><td><code>vexpand</code></td><td><code>boolean | State&lt;boolean&gt;</code></td><td><code>false</code></td><td>Whether the widget expands to fill available vertical space.</td></tr>
-<tr><td><code>margins</code></td><td><a href="../lua_api/shell_windows.html#margins"><code>Margins</code></a><code> | State</code></td><td></td><td>Margins around the widget.</td></tr>
-<tr><td><code>width_request</code></td><td><code>number | State&lt;number&gt;</code></td><td><code>-1</code></td><td>Width request for the widget.</td></tr>
-<tr><td><code>height_request</code></td><td><code>number | State&lt;number&gt;</code></td><td><code>-1</code></td><td>Height request for the widget.</td></tr>
+<tr><td><code>workspace</code></td><td><code>HyprlandWorkspace</code></td><td>Basic workspace identification (id and name).</td></tr>
+<tr><td><code>monitor</code></td><td><code>string</code></td><td>The name of the monitor this workspace is on.</td></tr>
+<tr><td><code>windows</code></td><td><code>number</code></td><td>The number of windows currently on this workspace.</td></tr>
+<tr><td><code>last_window_title</code></td><td><code>string</code></td><td>The title of the last focused window on this workspace.</td></tr>
+<tr><td><code>fullscreen</code></td><td><code>boolean</code></td><td>Whether this workspace is currently in fullscreen mode.</td></tr>
+<tr><td><code>monitor_id</code></td><td><code>number?</code></td><td>The unique identifier of the monitor, if available.</td></tr>
 </tbody>
 </table>
 </div>
-<h2 id="behavior-properties"><a class="header" href="#behavior-properties">Behavior Properties</a></h2>
+<h3 id="hyprlandwindow"><a class="header" href="#hyprlandwindow"><code>HyprlandWindow</code></a></h3>
+<p>Basic window information, used in the <code>hyprland::active_window</code> signal data.</p>
 <div class="table-wrapper">
 <table>
 <thead>
-<tr><th>Property</th><th>Type</th><th>Default</th><th>Description</th></tr>
+<tr><th>Field</th><th>Type</th><th>Description</th></tr>
 </thead>
 <tbody>
-<tr><td><code>visible</code></td><td><code>boolean | State&lt;boolean&gt;</code></td><td><code>true</code></td><td>Whether the widget is visible.</td></tr>
-<tr><td><code>focusable</code></td><td><code>boolean | State&lt;boolean&gt;</code></td><td><code>true</code></td><td>Whether the widget can receive keyboard focus.</td></tr>
-<tr><td><code>tooltip</code></td><td><code>string | State&lt;string&gt;</code></td><td></td><td>Tooltip markup text for the widget.</td></tr>
-<tr><td><code>sensitive</code></td><td><code>boolean | State&lt;boolean&gt;</code></td><td><code>true</code></td><td>Whether the widget should be sensitive to user input.</td></tr>
-<tr><td><code>on_scroll</code></td><td><code>function(dx, dy)</code></td><td></td><td>Function to execute when scrolling over the widget. Receives (dx, dy) as arguments.</td></tr>
+<tr><td><code>title</code></td><td><code>string</code></td><td>The title of the window.</td></tr>
+<tr><td><code>class</code></td><td><code>string</code></td><td>The class of the window.</td></tr>
 </tbody>
 </table>
 </div>
-<h2 id="css-styling"><a class="header" href="#css-styling">CSS Styling</a></h2>
-<p>All widgets can be styled using standard CSS. You can target them by their ID (<code>#my-widget</code>) or their classes (<code>.my-class</code>).</p>
-<pre><code class="language-lua">local my_label = Label({
-  id = "status-label",
-  class_list = { "important", "alert" },
-  text = "Status: OK",
-})
-</code></pre>
-<p>In your CSS file:</p>
-<pre><code class="language-css">#status-label {
-  color: #fff;
-}
-
-.important {
-  font-weight: bold;
-}
-
-.alert {
-  color: #ff0000;
-}
+<h3 id="hyprlandactivewindowinfo"><a class="header" href="#hyprlandactivewindowinfo"><code>HyprlandActiveWindowInfo</code></a></h3>
+<p>Detailed window information, returned by <code>getActiveWindow()</code>.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Field</th><th>Type</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>address</code></td><td><code>string</code></td><td>The unique hex address of the window.</td></tr>
+<tr><td><code>title</code></td><td><code>string</code></td><td>The title of the active window.</td></tr>
+<tr><td><code>initial_title</code></td><td><code>string</code></td><td>The initial title of the window when it was created.</td></tr>
+<tr><td><code>class</code></td><td><code>string</code></td><td>The class of the active window.</td></tr>
+<tr><td><code>initial_class</code></td><td><code>string</code></td><td>The initial class of the window when it was created.</td></tr>
+<tr><td><code>pid</code></td><td><code>number</code></td><td>The process ID of the active window.</td></tr>
+<tr><td><code>monitor</code></td><td><code>number?</code></td><td>The ID of the monitor the window is on, if available.</td></tr>
+<tr><td><code>workspace</code></td><td><code>HyprlandWorkspace</code></td><td>The workspace the window is on.</td></tr>
+<tr><td><code>width</code></td><td><code>number</code></td><td>The width of the window in pixels.</td></tr>
+<tr><td><code>height</code></td><td><code>number</code></td><td>The height of the window in pixels.</td></tr>
+<tr><td><code>x</code></td><td><code>number</code></td><td>The x-coordinate of the window’s top-left corner.</td></tr>
+<tr><td><code>y</code></td><td><code>number</code></td><td>The y-coordinate of the window’s top-left corner.</td></tr>
+<tr><td><code>floating</code></td><td><code>boolean</code></td><td>Whether the window is currently floating.</td></tr>
+<tr><td><code>fullscreen</code></td><td><code>boolean</code></td><td>Whether the window is in fullscreen mode.</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="hyprlandmonitorinfo"><a class="header" href="#hyprlandmonitorinfo"><code>HyprlandMonitorInfo</code></a></h3>
+<p>Monitor information, returned by <code>getMonitors()</code>.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Field</th><th>Type</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>id</code></td><td><code>number</code></td><td>The unique identifier for the monitor.</td></tr>
+<tr><td><code>name</code></td><td><code>string</code></td><td>The name of the monitor, as configured in Hyprland.</td></tr>
+<tr><td><code>focused</code></td><td><code>boolean</code></td><td>Whether this monitor is currently focused.</td></tr>
+<tr><td><code>width</code></td><td><code>number</code></td><td>The width of the monitor in pixels.</td></tr>
+<tr><td><code>height</code></td><td><code>number</code></td><td>The height of the monitor in pixels.</td></tr>
+<tr><td><code>x</code></td><td><code>number</code></td><td>The x-coordinate of the monitor’s top-left corner.</td></tr>
+<tr><td><code>y</code></td><td><code>number</code></td><td>The y-coordinate of the monitor’s top-left corner.</td></tr>
+<tr><td><code>refresh_rate</code></td><td><code>number</code></td><td>The refresh rate of the monitor in Hz.</td></tr>
+<tr><td><code>scale</code></td><td><code>number</code></td><td>The UI scale factor for the monitor.</td></tr>
+<tr><td><code>active_workspace</code></td><td><code>HyprlandWorkspace</code></td><td>The currently active workspace on this monitor.</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="hyprlandactivemonitor"><a class="header" href="#hyprlandactivemonitor"><code>HyprlandActiveMonitor</code></a></h3>
+<p>Active monitor information, used in the <code>hyprland::active_monitor_changed</code> signal data.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Field</th><th>Type</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>monitor</code></td><td><code>string</code></td><td>The name of the monitor.</td></tr>
+<tr><td><code>workspace</code></td><td><code>string?</code></td><td>The name of the workspace on the monitor, if available.</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="functions"><a class="header" href="#functions">Functions</a></h2>
+<h3 id="querying-state"><a class="header" href="#querying-state">Querying State</a></h3>
+<ul>
+<li><strong><code>getWorkspaces()</code></strong> → <code>HyprlandWorkspaceInfo[]</code>: Returns a list of all current workspaces.</li>
+<li><strong><code>getActiveWindow()</code></strong> → <code>HyprlandActiveWindowInfo | nil</code>: Returns information about the currently focused window, or <code>nil</code> if no window is focused.</li>
+<li><strong><code>getMonitors()</code></strong> → <code>HyprlandMonitorInfo[]</code>: Returns a list of all connected monitors.</li>
+</ul>
+<h3 id="workspace-management"><a class="header" href="#workspace-management">Workspace Management</a></h3>
+<ul>
+<li><strong><code>switchWorkspace(id)</code></strong>: Switches focus to the workspace with the given numerical ID.</li>
+<li><strong><code>switchWorkspaceRelative(offset)</code></strong>: Switches focus to a workspace relative to the current one (e.g., <code>1</code> for next, <code>-1</code> for previous).</li>
+<li><strong><code>switchWorkspaceNamed(name)</code></strong>: Switches focus to the workspace with the given name.</li>
+<li><strong><code>switchToPreviousWorkspace()</code></strong>: Switches focus back to the previously active workspace.</li>
+<li><strong><code>toggleSpecialWorkspace(name)</code></strong>: Toggles the visibility of a special workspace (scratchpad). If <code>name</code> is <code>nil</code>, the default special workspace is used.</li>
+</ul>
+<h3 id="window-management"><a class="header" href="#window-management">Window Management</a></h3>
+<ul>
+<li><strong><code>moveActiveToWorkspace(id)</code></strong>: Moves the currently focused window to the workspace with the given ID and switches focus to that workspace.</li>
+<li><strong><code>moveActiveToWorkspaceSilent(id)</code></strong>: Moves the focused window to the workspace with the given ID without changing the current workspace focus.</li>
+<li><strong><code>toggleFloating()</code></strong>: Toggles the floating state of the active window.</li>
+<li><strong><code>toggleFullscreen()</code></strong>: Toggles the fullscreen state of the active window.</li>
+<li><strong><code>killActiveWindow()</code></strong>: Closes the currently focused window.</li>
+</ul>
+<h2 id="signals"><a class="header" href="#signals">Signals</a></h2>
+<p>You can subscribe to these events using <code>waypane.onSignal()</code>.</p>
+<h3 id="workspace-events"><a class="header" href="#workspace-events">Workspace Events</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Signal</th><th>Data Type</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>hyprland::workspace_changed</code></td><td><code>HyprlandWorkspace</code></td><td>Fired when focus moves to a different workspace.</td></tr>
+<tr><td><code>hyprland::workspace_added</code></td><td><code>HyprlandWorkspace</code></td><td>Fired when a new workspace is created.</td></tr>
+<tr><td><code>hyprland::workspace_deleted</code></td><td><code>HyprlandWorkspace</code></td><td>Fired when a workspace is destroyed.</td></tr>
+<tr><td><code>hyprland::workspace_moved</code></td><td><code>HyprlandWorkspace</code></td><td>Fired when a workspace is moved to another monitor.</td></tr>
+<tr><td><code>hyprland::workspace_renamed</code></td><td><code>HyprlandWorkspace</code></td><td>Fired when a workspace is renamed.</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="window--monitor-events"><a class="header" href="#window--monitor-events">Window &amp; Monitor Events</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Signal</th><th>Data Type</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>hyprland::active_window</code></td><td><code>HyprlandWindow</code></td><td>Fired when the focused window changes.</td></tr>
+<tr><td><code>hyprland::fullscreen_changed</code></td><td><code>boolean</code></td><td>Fired when the active window’s fullscreen state toggles.</td></tr>
+<tr><td><code>hyprland::active_monitor_changed</code></td><td><code>HyprlandActiveMonitor</code></td><td>Fired when focus moves to a different monitor.</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="example-workspace-switcher"><a class="header" href="#example-workspace-switcher">Example: Workspace Switcher</a></h2>
+<pre><code class="language-lua">local function workspace_button(id)
+  return Button({
+    child = Label({ text = tostring(id) }),
+    on_click = function()
+      waypane.hyprland.switchWorkspace(id)
+    end,
+  })
+end
 </code></pre>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="../widgets/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="../modules/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                             </a>
 
-                            <a rel="next prefetch" href="../widgets/label.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
-                            </a>
 
                         <div style="clear: both"></div>
                     </nav>
@@ -260,13 +361,10 @@
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="../widgets/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="../modules/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                     </a>
 
-                    <a rel="next prefetch" href="../widgets/label.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
-                    </a>
             </nav>
 
         </div>
@@ -293,6 +391,7 @@
         <script src="../book-a0b12cfe.js"></script>
 
         <!-- Custom JS scripts -->
+        <script src="../theme/version-picker-088e0619.js"></script>
 
 
 

@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Slider - waypane documentation</title>
+        <title>Lua API - waypane documentation</title>
 
 
         <!-- Custom HTML head -->
@@ -174,64 +174,36 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <h1 id="slider"><a class="header" href="#slider">Slider</a></h1>
-<p>A widget that allows users to select a value from a range by sliding a handle.</p>
-<h2 id="properties"><a class="header" href="#properties">Properties</a></h2>
-<p>In addition to the <a href="./common.html">Common Properties</a>, <code>Slider</code> has the following properties:</p>
-<div class="table-wrapper">
-<table>
-<thead>
-<tr><th>Property</th><th>Type</th><th>Default</th><th>Description</th></tr>
-</thead>
-<tbody>
-<tr><td><code>value</code></td><td><code>number | State&lt;number&gt;</code></td><td><code>0.0</code></td><td>The current value of the slider.</td></tr>
-<tr><td><code>min</code></td><td><code>number | State&lt;number&gt;</code></td><td><code>0.0</code></td><td>The minimum value of the slider.</td></tr>
-<tr><td><code>max</code></td><td><code>number | State&lt;number&gt;</code></td><td><code>100.0</code></td><td>The maximum value of the slider.</td></tr>
-<tr><td><code>step</code></td><td><code>number | State&lt;number&gt;</code></td><td><code>1.0</code></td><td>The step increment for the slider.</td></tr>
-<tr><td><code>page_step</code></td><td><code>number | State&lt;number&gt;</code></td><td><code>10.0</code></td><td>The page step increment for the slider.</td></tr>
-<tr><td><code>digits</code></td><td><code>number | State&lt;number&gt;</code></td><td><code>1</code></td><td>The number of decimal digits for the slider value.</td></tr>
-<tr><td><code>draw_value</code></td><td><code>boolean | State&lt;boolean&gt;</code></td><td><code>true</code></td><td>Whether to draw the current value next to the slider.</td></tr>
-<tr><td><code>orientation</code></td><td><code>"horizontal" | "vertical" | State&lt;string&gt;</code></td><td><code>"horizontal"</code></td><td>The orientation of the slider.</td></tr>
-<tr><td><code>on_change</code></td><td><code>function(value)</code></td><td><strong>required</strong></td><td>A callback that triggers when the slider’s value changes. Receives the new value as argument.</td></tr>
-</tbody>
-</table>
-</div>
-<h2 id="examples"><a class="header" href="#examples">Examples</a></h2>
-<h3 id="volume-slider"><a class="header" href="#volume-slider">Volume Slider</a></h3>
-<pre><code class="language-lua">local volume_state = waypane.state(50)
-
-local volume_slider = Slider({
-  min = 0,
-  max = 100,
-  value = volume_state,
-  on_change = function(val)
-    volume_state:set(val)
-    os.execute(string.format("pamixer --set-volume %.0f", val))
-  end,
-})
+                        <h1 id="lua-api"><a class="header" href="#lua-api">Lua API</a></h1>
+<p><code>waypane</code> exposes a Lua API that allows you to define your desktop environment’s structure, behavior, and appearance. The API is designed to be intuitive and powerful, leveraging Lua’s flexibility to provide a seamless development experience.</p>
+<p>This section covers the core components of the Lua API:</p>
+<ul>
+<li><strong><a href="./shell_windows.html">Shell &amp; Windows</a></strong>: Defining the overall structure of your desktop environment, including how to create windows and manage their layout.</li>
+<li><strong><a href="./globals.html">Global Functions</a></strong>: Functions available in the global Lua scope, primarily for widget creation.</li>
+<li><strong><a href="./state.html">State Management</a></strong>: How to create and use reactive state to build dynamic UIs.</li>
+<li><strong><a href="./timers.html">Timers</a></strong>: Working with intervals and timeouts for time-based updates.</li>
+<li><strong><a href="./signals.html">Signals</a></strong>: Subscribing to and emitting events to react to the desktop environment.</li>
+</ul>
+<h2 id="the-waypane-table"><a class="header" href="#the-waypane-table">The <code>waypane</code> Table</a></h2>
+<p>Most of the core functionality is organized under the global <code>waypane</code> table. This includes functions for creating the shell, managing state, and interacting with modules like Hyprland.</p>
+<pre><code class="language-lua">-- Example usage
+local shell = waypane.shell({ title = "My Bar" })
+local my_state = waypane.state(0)
 </code></pre>
-<h3 id="vertical-brightness-slider"><a class="header" href="#vertical-brightness-slider">Vertical Brightness Slider</a></h3>
-<pre><code class="language-lua">local brightness_slider = Slider({
-  orientation = "vertical",
-  min = 0,
-  max = 100,
-  value = 50,
-  draw_value = false,
-  on_change = function(val)
-    os.execute(string.format("brightnessctl s %.0f%%", val))
-  end,
-})
+<h2 id="type-hints--autocompletion"><a class="header" href="#type-hints--autocompletion">Type Hints &amp; Autocompletion</a></h2>
+<p>To get the most out of the Lua API, it is highly recommended to use the <code>gen-stubs</code> command to generate type definitions for your IDE. This will provide you with autocompletion, type checking, and inline documentation as you write your scripts.</p>
+<pre><code class="language-bash">waypane gen-stubs &gt; stubs.lua
 </code></pre>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="../widgets/progress_bar.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="../core_concepts.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                             </a>
 
-                            <a rel="next prefetch" href="../styling.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="../lua_api/shell_windows.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                             </a>
 
@@ -241,11 +213,11 @@ local volume_slider = Slider({
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="../widgets/progress_bar.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="../core_concepts.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                     </a>
 
-                    <a rel="next prefetch" href="../styling.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="../lua_api/shell_windows.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                     </a>
             </nav>
@@ -274,6 +246,7 @@ local volume_slider = Slider({
         <script src="../book-a0b12cfe.js"></script>
 
         <!-- Custom JS scripts -->
+        <script src="../theme/version-picker-088e0619.js"></script>
 
 
 

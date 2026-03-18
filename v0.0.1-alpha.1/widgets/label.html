@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Signals - waypane documentation</title>
+        <title>Label - waypane documentation</title>
 
 
         <!-- Custom HTML head -->
@@ -174,63 +174,49 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <h1 id="signals"><a class="header" href="#signals">Signals</a></h1>
-<p><code>waypane</code> uses a signal-based event system that allows your Lua scripts to react to events from the desktop environment (like Hyprland workspace changes) or to communicate between different parts of your configuration.</p>
-<h2 id="waypaneonsignalsignals-callback"><a class="header" href="#waypaneonsignalsignals-callback"><code>waypane.onSignal(signals, callback)</code></a></h2>
-<p>Listens for one or more signals and calls the provided callback when they are emitted.</p>
-<ul>
-<li><strong>signals</strong> (<code>string | string[]</code>): The name or names of the signals to listen for.</li>
-<li><strong>callback</strong> (<code>function(data)</code>): The function to execute when a signal is emitted. Receives any data passed with the signal.</li>
-<li><strong>Returns</strong>: A <code>CancelHandle</code>.</li>
-</ul>
-<p><strong>Example:</strong></p>
-<pre><code class="language-lua">local handle = waypane.onSignal("hyprland::workspace_changed", function(workspace)
-  print("Active workspace changed to: " .. workspace.name)
-end)
-
--- Stop listening later:
-handle:cancel()
-
--- You can also listen for multiple signals at once
-waypane.onSignal({ "event_a", "event_b" }, function(data)
-  print("Signal emitted: " .. tostring(data))
-end)
+                        <h1 id="label"><a class="header" href="#label">Label</a></h1>
+<p>A simple widget that displays a text label.</p>
+<h2 id="properties"><a class="header" href="#properties">Properties</a></h2>
+<p>In addition to the <a href="./common.html">Common Properties</a>, <code>Label</code> has the following properties:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Property</th><th>Type</th><th>Default</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>text</code></td><td><code>string | State&lt;string&gt;</code></td><td><strong>required</strong></td><td>The text content of the label. Can be a static string or a dynamic expression that evaluates to a string.</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="examples"><a class="header" href="#examples">Examples</a></h2>
+<h3 id="static-text"><a class="header" href="#static-text">Static Text</a></h3>
+<pre><code class="language-lua">local my_label = Label({
+  text = "Hello, world!",
+  halign = "center",
+})
 </code></pre>
-<h2 id="waypaneemitsignalsignal-data"><a class="header" href="#waypaneemitsignalsignal-data"><code>waypane.emitSignal(signal, data)</code></a></h2>
-<p>Emits a custom signal with the given name and an optional data payload.</p>
-<ul>
-<li><strong>signal</strong> (<code>string</code>): The name of the signal to emit.</li>
-<li><strong>data</strong> (<code>any</code>): Optional data to include with the signal. Can be any Lua value.</li>
-</ul>
-<p><strong>Example:</strong></p>
-<pre><code class="language-lua">-- Emit a custom signal
-waypane.emitSignal("my_event", { message = "Hello from Lua!" })
+<h3 id="dynamic-text"><a class="header" href="#dynamic-text">Dynamic Text</a></h3>
+<pre><code class="language-lua">local time_state = waypane.state(os.date("%H:%M"))
 
--- Elsewhere in your script...
-waypane.onSignal("my_event", function(payload)
-  print(payload.message)
-end)
+local clock_label = Label({
+  text = time_state,
+})
+
+-- Update the state every minute
+waypane.setInterval(function()
+  time_state:set(os.date("%H:%M"))
+end, 60000)
 </code></pre>
-<h2 id="cancelhandle"><a class="header" href="#cancelhandle">CancelHandle</a></h2>
-<p>The <code>CancelHandle</code> returned by <code>onSignal</code> has a single method:</p>
-<ul>
-<li>
-<p><strong><code>:cancel()</code></strong>: Unsubscribes the callback from all signals it was listening to.</p>
-<p><em>If already cancelled, it does nothing.</em></p>
-</li>
-</ul>
-<h2 id="built-in-signals"><a class="header" href="#built-in-signals">Built-in Signals</a></h2>
-<p>Modules (like Hyprland), may emit signals automatically. For a full list of these, see the <a href="../modules/hyprland.html">Hyprland Module</a> documentation.</p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="../lua_api/timers.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="../widgets/common.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                             </a>
 
-                            <a rel="next prefetch" href="../widgets/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="../widgets/button.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                             </a>
 
@@ -240,11 +226,11 @@ end)
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="../lua_api/timers.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="../widgets/common.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                     </a>
 
-                    <a rel="next prefetch" href="../widgets/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="../widgets/button.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                     </a>
             </nav>
@@ -273,6 +259,7 @@ end)
         <script src="../book-a0b12cfe.js"></script>
 
         <!-- Custom JS scripts -->
+        <script src="../theme/version-picker-088e0619.js"></script>
 
 
 
