@@ -165,3 +165,38 @@ local title = HyprlandActiveWindowLabel({
   valign = "center",
 })
 ```
+
+### `HyprlandWsContainerWidget`
+
+A specialized version of the [`Container`](../widgets/container.md) widget that displays a list of Hyprland workspace buttons. It automatically updates its children whenever workspace or monitor state changes.
+
+It supports all [common widget properties](../widgets/common.md).
+
+#### Properties
+
+| Property                | Type          | Description                                                                                                                        |
+| ----------------------- | ------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| `orientation`           | `Orientation` | The layout orientation of the buttons (`"horizontal"` or `"vertical"`).                                                            |
+| `spacing`               | `number`      | The amount of space between buttons in pixels. Default is `0`.                                                                     |
+| `monitor`               | `string?`     | An optional monitor name to filter workspaces by. If `nil`, workspaces from all monitors are shown.                                |
+| `active_properties`     | `Widget?`     | Optional widget properties to apply to active workspace buttons. **(DO NOT PASS A WIDGET DIRECTLY, ONLY ITS COMMON PROPERTIES)**   |
+| `inactive_properties`   | `Widget?`     | Optional widget properties to apply to inactive workspace buttons. **(DO NOT PASS A WIDGET DIRECTLY, ONLY ITS COMMON PROPERTIES)** |
+| `persistent_workspaces` | `number[]?`   | A list of workspace IDs that should always be shown, even if they have no windows.                                                 |
+| `hide_empty`            | `boolean`     | Whether to hide workspaces that have no windows and are not active. Default is `false`.                                            |
+
+#### Example
+
+```lua
+local workspaces = HyprlandWsContainer({
+  orientation = "horizontal",
+  spacing = 5,
+  monitor = "eDP-1", -- Only show workspaces for this monitor
+  persistent_workspaces = { 1, 2, 3, 4, 5 }, -- Always show at least these
+  active_properties = {
+    class_list = { "ws-button", "active" },
+  },
+  inactive_properties = {
+    class_list = { "ws-button" },
+  },
+})
+```
