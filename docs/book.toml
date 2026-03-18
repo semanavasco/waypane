@@ -2,3 +2,6 @@
 title = "waypane documentation"
 authors = ["semanavasco"]
 language = "en"
+
+[output.html]
+additional-js = ["theme/version-picker.js"]

@@ -4,7 +4,19 @@ on:
   push:
     branches: [main]
     paths: [docs/**]
+    tags: ['v*']
+
   workflow_dispatch:
+    inputs:
+      force_version:
+        description: 'Manually specify the version to build (e.g. v0.0.1-alpha.1)'
+        required: false
+        type: string
+      clean:
+        description: 'Wipe the docs branch before deploying'
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -14,6 +26,29 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Determine version
+        id: vars
+        run: |
+          # Priority: Manual input > Tag > Main
+          if [ -n "${{ github.event.inputs.force_version }}" ]; then
+            VERSION="${{ github.event.inputs.force_version }}"
+            IS_TAG=true
+          elif [[ $GITHUB_REF == refs/tags/* ]]; then
+            VERSION="${GITHUB_REF#refs/tags/}"
+            IS_TAG=true
+          else
+            VERSION="main"
+            IS_TAG=false
+          fi
+          
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "IS_TAG=$IS_TAG" >> $GITHUB_ENV
+          
+          LATEST_TAG=$(git tag -l 'v*' --sort=-v:refname | head -n 1)
+          echo "LATEST_TAG=$LATEST_TAG" >> $GITHUB_ENV
 
       - name: Install mdbook
         uses: peaceiris/actions-mdbook@v2
@@ -23,9 +58,39 @@ jobs:
       - name: Build docs
         run: mdbook build docs
 
+      - name: Prepare Staging Area
+        run: |
+          mkdir -p staging/${{ env.VERSION }}
+          cp -r docs/book/* staging/${{ env.VERSION }}/
+          
+          # If this build is the latest tag, also update the 'latest' folder
+          if [ "${{ env.VERSION }}" = "${{ env.LATEST_TAG }}" ]; then
+            mkdir -p staging/latest
+            cp -r docs/book/* staging/latest/
+          fi
+          
+          # Generate versions.json manifest
+          # Structure: [ "main", "latest", "v0.0.1", ... ]
+          TAGS_JSON=$(git tag -l 'v*' --sort=-v:refname | sed 's/.*/"&"/' | paste -sd "," -)
+          if [ -n "$TAGS_JSON" ]; then
+            echo "[\"main\",\"latest\",$TAGS_JSON]" > staging/versions.json
+          else
+            echo "[\"main\"]" > staging/versions.json
+          fi
+          
+          # Generate root index.html redirect
+          # Points to 'latest' if any tag exists, otherwise 'main'.
+          if [ -n "${{ env.LATEST_TAG }}" ]; then
+            REDIRECT_TO="latest"
+          else
+            REDIRECT_TO="main"
+          fi
+          echo "<meta http-equiv=\"refresh\" content=\"0; url=./$REDIRECT_TO/\">" > staging/index.html
+
       - name: Deploy to docs branch
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs/book
+          publish_dir: ./staging
           publish_branch: docs
+          keep_files: ${{ github.event.inputs.clean != 'true' }}
