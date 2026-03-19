@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-8beaac24.js";
+            window.path_to_searchindex_js = "searchindex-f86fa988.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-91c23d47.js"></script>
@@ -1252,7 +1252,7 @@ local workspaces = waypane.hyprland.getWorkspaces()
 </table>
 </div>
 <h3 id="hyprlandwindow"><a class="header" href="#hyprlandwindow"><code>HyprlandWindow</code></a></h3>
-<p>Basic window information, used in the <code>hyprland::active_window</code> signal data.</p>
+<p>Basic window information, used in the <code>hyprland::active_window_changed</code> signal data.</p>
 <div class="table-wrapper">
 <table>
 <thead>
@@ -1346,6 +1346,16 @@ local workspaces = waypane.hyprland.getWorkspaces()
 <li><strong><code>toggleFullscreen()</code></strong>: Toggles the fullscreen state of the active window.</li>
 <li><strong><code>killActiveWindow()</code></strong>: Closes the currently focused window.</li>
 </ul>
+<h3 id="example-workspace-switcher"><a class="header" href="#example-workspace-switcher">Example: Workspace Switcher</a></h3>
+<pre><code class="language-lua">local function workspace_button(id)
+  return Button({
+    child = Label({ text = tostring(id) }),
+    on_click = function()
+      waypane.hyprland.switchWorkspace(id)
+    end,
+  })
+end
+</code></pre>
 <h2 id="signals-1"><a class="header" href="#signals-1">Signals</a></h2>
 <p>You can subscribe to these events using <code>waypane.onSignal()</code>.</p>
 <h3 id="workspace-events"><a class="header" href="#workspace-events">Workspace Events</a></h3>
@@ -1370,21 +1380,56 @@ local workspaces = waypane.hyprland.getWorkspaces()
 <tr><th>Signal</th><th>Data Type</th><th>Description</th></tr>
 </thead>
 <tbody>
-<tr><td><code>hyprland::active_window</code></td><td><code>HyprlandWindow</code></td><td>Fired when the focused window changes.</td></tr>
+<tr><td><code>hyprland::active_window_changed</code></td><td><code>HyprlandWindow</code></td><td>Fired when the focused window changes.</td></tr>
 <tr><td><code>hyprland::fullscreen_changed</code></td><td><code>boolean</code></td><td>Fired when the active window’s fullscreen state toggles.</td></tr>
 <tr><td><code>hyprland::active_monitor_changed</code></td><td><code>HyprlandActiveMonitor</code></td><td>Fired when focus moves to a different monitor.</td></tr>
 </tbody>
 </table>
 </div>
-<h2 id="example-workspace-switcher"><a class="header" href="#example-workspace-switcher">Example: Workspace Switcher</a></h2>
-<pre><code class="language-lua">local function workspace_button(id)
-  return Button({
-    child = Label({ text = tostring(id) }),
-    on_click = function()
-      waypane.hyprland.switchWorkspace(id)
-    end,
-  })
-end
+<h2 id="widgets-2"><a class="header" href="#widgets-2">Widgets</a></h2>
+<p>The Hyprland module provides specialized widgets that automatically react to compositor events.</p>
+<h3 id="hyprlandactivewindowlabelwidget"><a class="header" href="#hyprlandactivewindowlabelwidget"><code>HyprlandActiveWindowLabelWidget</code></a></h3>
+<p>A specialized version of the <a href="#label"><code>Label</code></a> widget that automatically updates its text to show the title of the currently focused window.</p>
+<p>It supports all <a href="#common-widget-properties">common widget properties</a>.</p>
+<h4 id="example-1"><a class="header" href="#example-1">Example</a></h4>
+<pre><code class="language-lua">local title = HyprlandActiveWindowLabel({
+  id = "window-title",
+  valign = "center",
+})
+</code></pre>
+<h3 id="hyprlandwscontainerwidget"><a class="header" href="#hyprlandwscontainerwidget"><code>HyprlandWsContainerWidget</code></a></h3>
+<p>A specialized version of the <a href="#container"><code>Container</code></a> widget that displays a list of Hyprland workspace buttons. It automatically updates its children whenever workspace or monitor state changes.</p>
+<p>It supports all <a href="#common-widget-properties">common widget properties</a>.</p>
+<h4 id="properties-9"><a class="header" href="#properties-9">Properties</a></h4>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Property</th><th>Type</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>orientation</code></td><td><code>Orientation</code></td><td>The layout orientation of the buttons (<code>"horizontal"</code> or <code>"vertical"</code>).</td></tr>
+<tr><td><code>spacing</code></td><td><code>number</code></td><td>The amount of space between buttons in pixels. Default is <code>0</code>.</td></tr>
+<tr><td><code>monitor</code></td><td><code>string?</code></td><td>An optional monitor name to filter workspaces by. If <code>nil</code>, workspaces from all monitors are shown.</td></tr>
+<tr><td><code>active_properties</code></td><td><code>Widget?</code></td><td>Optional widget properties to apply to active workspace buttons. <strong>(DO NOT PASS A WIDGET DIRECTLY, ONLY ITS COMMON PROPERTIES)</strong></td></tr>
+<tr><td><code>inactive_properties</code></td><td><code>Widget?</code></td><td>Optional widget properties to apply to inactive workspace buttons. <strong>(DO NOT PASS A WIDGET DIRECTLY, ONLY ITS COMMON PROPERTIES)</strong></td></tr>
+<tr><td><code>persistent_workspaces</code></td><td><code>number[]?</code></td><td>A list of workspace IDs that should always be shown, even if they have no windows.</td></tr>
+<tr><td><code>hide_empty</code></td><td><code>boolean</code></td><td>Whether to hide workspaces that have no windows and are not active. Default is <code>false</code>.</td></tr>
+</tbody>
+</table>
+</div>
+<h4 id="example-1-1"><a class="header" href="#example-1-1">Example</a></h4>
+<pre><code class="language-lua">local workspaces = HyprlandWsContainer({
+  orientation = "horizontal",
+  spacing = 5,
+  monitor = "eDP-1", -- Only show workspaces for this monitor
+  persistent_workspaces = { 1, 2, 3, 4, 5 }, -- Always show at least these
+  active_properties = {
+    class_list = { "ws-button", "active" },
+  },
+  inactive_properties = {
+    class_list = { "ws-button" },
+  },
+})
 </code></pre>
 
                     </main>
