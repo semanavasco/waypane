@@ -18,6 +18,10 @@ pub enum Command {
         /// Set the logging level (error, warn, info, debug, trace)
         #[arg(short, long, default_value = "info")]
         log_level: String,
+
+        /// Watch the CSS file for changes and apply them
+        #[arg(long)]
+        watch_css: bool,
     },
     /// Generate Lua stubs for the built-in waypane API
     GenStubs,

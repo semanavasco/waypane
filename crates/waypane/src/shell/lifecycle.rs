@@ -12,7 +12,7 @@ use gtk4_layer_shell::{Edge, LayerShell};
 use std::rc::Rc;
 
 /// Initializes and runs the GTK application based on the provided shell configuration.
-pub fn run_app(shell: Shell) -> ExitCode {
+pub fn run_app(shell: Shell, watch_css: bool) -> ExitCode {
     let app_id = shell.title.to_lowercase().replace(" ", "-");
     let app = Application::builder()
         .application_id(format!("com.github.semanavasco.{}", app_id))
@@ -24,7 +24,7 @@ pub fn run_app(shell: Shell) -> ExitCode {
         if let Some(style_path) = &style_path {
             tracing::info!("Loading style from {}", style_path);
 
-            if let Err(e) = style::load(style_path) {
+            if let Err(e) = style::load(style_path, watch_css) {
                 tracing::error!("Failed to load style: {}", e);
             }
         }

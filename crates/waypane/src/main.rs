@@ -15,7 +15,11 @@ fn main() -> Result<ExitCode> {
     let cli = Cli::parse();
 
     match cli.command {
-        Command::Run { config, log_level } => {
+        Command::Run {
+            config,
+            log_level,
+            watch_css,
+        } => {
             let env_filter = tracing_subscriber::EnvFilter::try_from_default_env()
                 .unwrap_or_else(|_| tracing_subscriber::EnvFilter::new(&log_level));
 
@@ -23,7 +27,7 @@ fn main() -> Result<ExitCode> {
 
             let shell = shell::load(&config)?;
 
-            Ok(lifecycle::run_app(shell))
+            Ok(lifecycle::run_app(shell, watch_css))
         }
         Command::GenStubs => {
             let stubs = lua::gen_stubs()?;
