@@ -36,10 +36,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-138c84c2.js";
+            window.path_to_searchindex_js = "searchindex-8beaac24.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-159f6911.js"></script>
+        <script src="toc-91c23d47.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -454,6 +454,9 @@ return shell
 <h3 id="sliderprops"><a class="header" href="#sliderprops"><code>Slider(props)</code></a></h3>
 <p>Creates a <code>Slider</code> widget for selecting a value from a range.
 <a href="#slider">See Slider for more details</a>.</p>
+<h3 id="stackprops"><a class="header" href="#stackprops"><code>Stack(props)</code></a></h3>
+<p>Creates a <code>Stack</code> widget for holding multiple children and showing one at a time.
+<a href="#stack">See Stack for more details</a>.</p>
 <h2 id="usage-example"><a class="header" href="#usage-example">Usage Example</a></h2>
 <pre><code class="language-lua">local my_label = Label({
   text = "Hello, waypane!",
@@ -650,6 +653,7 @@ end)
 <li><strong><a href="#image">Image</a></strong>: A widget that displays an image from a file path.</li>
 <li><strong><a href="#progressbar">ProgressBar</a></strong>: A widget that displays a progress bar.</li>
 <li><strong><a href="#slider">Slider</a></strong>: A widget that allows users to select a value from a range by sliding a handle.</li>
+<li><strong><a href="#stack">Stack</a></strong>: A container widget that shows one child at a time with optional transitions.</li>
 </ul>
 <h2 id="common-properties"><a class="header" href="#common-properties"><a href="#common-widget-properties">Common Properties</a></a></h2>
 <p>All widgets share a common set of properties for alignment, visibility, expansion, and more. Understanding these common properties will help you effectively layout and style your UI.</p>
@@ -1046,6 +1050,85 @@ local volume_slider = Slider({
   on_change = function(val)
     os.execute(string.format("brightnessctl s %.0f%%", val))
   end,
+})
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="stack"><a class="header" href="#stack">Stack</a></h1>
+<p>A container widget that can hold multiple child widgets, but only shows one at a time. It allows for animated transitions when switching between pages.</p>
+<h2 id="properties-8"><a class="header" href="#properties-8">Properties</a></h2>
+<p>In addition to the <a href="#common-widget-properties">Common Properties</a>, <code>Stack</code> has the following properties:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Property</th><th>Type</th><th>Default</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>pages</code></td><td><a href="#stackpage"><code>StackPage[]</code></a></td><td><strong>required</strong></td><td>A list of pages contained in the stack.</td></tr>
+<tr><td><code>visible_page</code></td><td><code>string | State&lt;string&gt;</code></td><td><strong>required</strong></td><td>The name of the currently visible page.</td></tr>
+<tr><td><code>transition_type</code></td><td><code>StackTransitionType| State&lt;StackTransitionType&gt;</code></td><td><code>"none"</code></td><td>The type of animation used when switching between pages. <a href="#transition-types">See below</a>.</td></tr>
+<tr><td><code>transition_duration</code></td><td><code>number | State&lt;number&gt;</code></td><td><code>200</code></td><td>The duration of the transition animation in milliseconds.</td></tr>
+<tr><td><code>interpolate_size</code></td><td><code>boolean | State&lt;boolean&gt;</code></td><td><code>false</code></td><td>Whether the stack should interpolate its size when switching between pages of different sizes.</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="stackpage"><a class="header" href="#stackpage">StackPage</a></h3>
+<p>A table representing a single page in the stack.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Field</th><th>Type</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>name</code></td><td><code>string</code></td><td>The unique name of the page, used to identify it.</td></tr>
+<tr><td><code>widget</code></td><td><code>Widget</code></td><td>The widget to display when this page is active.</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="stack-transition-types"><a class="header" href="#stack-transition-types">Stack Transition Types</a></h3>
+<p>The following transition types are available as strings:</p>
+<ul>
+<li><code>"none"</code> (default)</li>
+<li><code>"crossfade"</code></li>
+<li><code>"slide-right"</code>, <code>"slide-left"</code>, <code>"slide-up"</code>, <code>"slide-down"</code></li>
+<li><code>"slide-left-right"</code>, <code>"slide-up-down"</code></li>
+<li><code>"over-up"</code>, <code>"over-down"</code>, <code>"over-left"</code>, <code>"over-right"</code></li>
+<li><code>"under-up"</code>, <code>"under-down"</code>, <code>"under-left"</code>, <code>"under-right"</code></li>
+<li><code>"over-up-down"</code>, <code>"over-left-right"</code></li>
+<li><code>"rotate-left"</code>, <code>"rotate-right"</code>, <code>"rotate-left-right"</code></li>
+</ul>
+<h2 id="examples-7"><a class="header" href="#examples-7">Examples</a></h2>
+<h3 id="basic-tab-like-switcher"><a class="header" href="#basic-tab-like-switcher">Basic Tab-like Switcher</a></h3>
+<pre><code class="language-lua">local active_page = waypane.state("page1")
+
+local my_stack = Stack({
+  visible_page = active_page,
+  transition_type = "slide-left-right",
+  transition_duration = 300,
+  pages = {
+    {
+      name = "page1",
+      widget = Label({ text = "This is Page 1" }),
+    },
+    {
+      name = "page2",
+      widget = Label({ text = "Welcome to Page 2" }),
+    },
+  },
+})
+
+local controls = Container({
+  orientation = "horizontal",
+  spacing = 10,
+  children = {
+    Button({
+      child = Label({ text = "Go to Page 1" }),
+      on_click = function() active_page:set("page1") end,
+    }),
+    Button({
+      child = Label({ text = "Go to Page 2" }),
+      on_click = function() active_page:set("page2") end,
+    }),
+  }
 })
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
