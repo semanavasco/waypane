@@ -37,7 +37,7 @@ impl LuaType for bool {
     }
 }
 
-impl_lua_type!("number" for i16, i32, i128, u16, u64, f32, f64, usize);
+impl_lua_type!("number" for i16, i32, i128, u16, u32, u64, f32, f64, usize);
 
 impl<T> LuaType for Rc<T>
 where
