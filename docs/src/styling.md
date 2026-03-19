@@ -2,6 +2,9 @@
 
 `waypane` uses standard CSS for styling its widgets. This provides a powerful and flexible way to customize the appearance of your desktop environment.
 
+> [!NOTE]
+> You can use the `--watch-css` flag to automatically reload the CSS file when it changes, allowing for rapid development and testing of your styles.
+
 ## Applying CSS
 
 You can apply CSS by providing a path to a CSS file when creating your shell object. This stylesheet will be applied to all windows.
