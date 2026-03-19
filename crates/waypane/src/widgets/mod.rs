@@ -5,6 +5,7 @@ mod image;
 mod label;
 mod progress_bar;
 mod slider;
+mod stack;
 
 use crate::{
     dynamic::MaybeReactive,
