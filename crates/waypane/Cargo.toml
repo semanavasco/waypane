@@ -23,8 +23,8 @@ inventory = "0.3.22"
 mlua = { version = "0.11.6", features = ["lua54", "send"] }
 tracing = "0.1.44"
 tracing-subscriber = { version = "0.3.22", features = ["env-filter"] }
-# waypane-macros = { version = "0.0.1-alpha.1", path = "../waypane-macros" }
-waypane-macros = "0.0.1-alpha.1"
+waypane-macros = { version = "0.0.1-alpha.1", path = "../waypane-macros" }
+# waypane-macros = "0.0.1-alpha.1"
 
 [features]
 default = []
