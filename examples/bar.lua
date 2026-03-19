@@ -113,12 +113,10 @@ shell:window("main-bar", {
           active_properties = {
             class_list = { "ws-active", "ws-btn" },
             sensitive = false,
-            focusable = false,
             valign = "center",
           },
           inactive_properties = {
             class_list = { "ws-inactive", "ws-btn" },
-            focusable = false,
             valign = "center",
           },
         }),

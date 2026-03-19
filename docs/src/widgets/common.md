@@ -26,7 +26,7 @@ Every widget in `waypane` shares a set of common properties that you can use to 
 | Property    | Type                        | Default | Description                                                                         |
 | ----------- | --------------------------- | ------- | ----------------------------------------------------------------------------------- |
 | `visible`   | `boolean \| State<boolean>` | `true`  | Whether the widget is visible.                                                      |
-| `focusable` | `boolean \| State<boolean>` | `true`  | Whether the widget can receive keyboard focus.                                      |
+| `focusable` | `boolean \| State<boolean>` | `false` | Whether the widget can receive keyboard focus.                                      |
 | `tooltip`   | `string \| State<string>`   |         | Tooltip markup text for the widget.                                                 |
 | `sensitive` | `boolean \| State<boolean>` | `true`  | Whether the widget should be sensitive to user input.                               |
 | `on_scroll` | `function(dx, dy)`          |         | Function to execute when scrolling over the widget. Receives (dx, dy) as arguments. |

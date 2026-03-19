@@ -52,7 +52,7 @@ waypane.hyprland = {}
 ---@field hexpand ? boolean | State Whether the widget should expand to fill available horizontal space. (Default: false)
 ---@field vexpand ? boolean | State Whether the widget should expand to fill available vertical space. (Default: false)
 ---@field visible ? boolean | State Whether the widget is visible. (Default: true)
----@field focusable ? boolean | State Whether the widget can receive keyboard focus. (Default: true)
+---@field focusable ? boolean | State Whether the widget can receive keyboard focus. (Default: false)
 ---@field tooltip ? string | State Optional tooltip markup text for the widget.
 ---@field margins ? Margins | State Optional margins around the widget.
 ---@field width_request ? number | State Optional width request for the widget. (Default: - 1)
@@ -83,7 +83,7 @@ local State = {}
 ---@field hexpand ? boolean | State Whether the widget should expand to fill available horizontal space. (Default: false)
 ---@field vexpand ? boolean | State Whether the widget should expand to fill available vertical space. (Default: false)
 ---@field visible ? boolean | State Whether the widget is visible. (Default: true)
----@field focusable ? boolean | State Whether the widget can receive keyboard focus. (Default: true)
+---@field focusable ? boolean | State Whether the widget can receive keyboard focus. (Default: false)
 ---@field tooltip ? string | State Optional tooltip markup text for the widget.
 ---@field margins ? Margins | State Optional margins around the widget.
 ---@field width_request ? number | State Optional width request for the widget. (Default: - 1)
@@ -105,7 +105,7 @@ local Widget = {}
 ---@field hexpand ? boolean | State Whether the widget should expand to fill available horizontal space. (Default: false)
 ---@field vexpand ? boolean | State Whether the widget should expand to fill available vertical space. (Default: false)
 ---@field visible ? boolean | State Whether the widget is visible. (Default: true)
----@field focusable ? boolean | State Whether the widget can receive keyboard focus. (Default: true)
+---@field focusable ? boolean | State Whether the widget can receive keyboard focus. (Default: false)
 ---@field tooltip ? string | State Optional tooltip markup text for the widget.
 ---@field margins ? Margins | State Optional margins around the widget.
 ---@field width_request ? number | State Optional width request for the widget. (Default: - 1)
@@ -124,7 +124,7 @@ local ProgressBarWidget = {}
 ---@field hexpand ? boolean | State Whether the widget should expand to fill available horizontal space. (Default: false)
 ---@field vexpand ? boolean | State Whether the widget should expand to fill available vertical space. (Default: false)
 ---@field visible ? boolean | State Whether the widget is visible. (Default: true)
----@field focusable ? boolean | State Whether the widget can receive keyboard focus. (Default: true)
+---@field focusable ? boolean | State Whether the widget can receive keyboard focus. (Default: false)
 ---@field tooltip ? string | State Optional tooltip markup text for the widget.
 ---@field margins ? Margins | State Optional margins around the widget.
 ---@field width_request ? number | State Optional width request for the widget. (Default: - 1)
@@ -172,7 +172,7 @@ local Anchors = {}
 ---@field hexpand ? boolean | State Whether the widget should expand to fill available horizontal space. (Default: false)
 ---@field vexpand ? boolean | State Whether the widget should expand to fill available vertical space. (Default: false)
 ---@field visible ? boolean | State Whether the widget is visible. (Default: true)
----@field focusable ? boolean | State Whether the widget can receive keyboard focus. (Default: true)
+---@field focusable ? boolean | State Whether the widget can receive keyboard focus. (Default: false)
 ---@field tooltip ? string | State Optional tooltip markup text for the widget.
 ---@field margins ? Margins | State Optional margins around the widget.
 ---@field width_request ? number | State Optional width request for the widget. (Default: - 1)
@@ -240,7 +240,7 @@ local Shell = {}
 ---@field hexpand ? boolean | State Whether the widget should expand to fill available horizontal space. (Default: false)
 ---@field vexpand ? boolean | State Whether the widget should expand to fill available vertical space. (Default: false)
 ---@field visible ? boolean | State Whether the widget is visible. (Default: true)
----@field focusable ? boolean | State Whether the widget can receive keyboard focus. (Default: true)
+---@field focusable ? boolean | State Whether the widget can receive keyboard focus. (Default: false)
 ---@field tooltip ? string | State Optional tooltip markup text for the widget.
 ---@field margins ? Margins | State Optional margins around the widget.
 ---@field width_request ? number | State Optional width request for the widget. (Default: - 1)
@@ -277,7 +277,7 @@ local CancelHandle = {}
 ---@field hexpand ? boolean | State Whether the widget should expand to fill available horizontal space. (Default: false)
 ---@field vexpand ? boolean | State Whether the widget should expand to fill available vertical space. (Default: false)
 ---@field visible ? boolean | State Whether the widget is visible. (Default: true)
----@field focusable ? boolean | State Whether the widget can receive keyboard focus. (Default: true)
+---@field focusable ? boolean | State Whether the widget can receive keyboard focus. (Default: false)
 ---@field tooltip ? string | State Optional tooltip markup text for the widget.
 ---@field margins ? Margins | State Optional margins around the widget.
 ---@field width_request ? number | State Optional width request for the widget. (Default: - 1)
@@ -302,7 +302,7 @@ local SliderWidget = {}
 ---@field hexpand ? boolean | State Whether the widget should expand to fill available horizontal space. (Default: false)
 ---@field vexpand ? boolean | State Whether the widget should expand to fill available vertical space. (Default: false)
 ---@field visible ? boolean | State Whether the widget is visible. (Default: true)
----@field focusable ? boolean | State Whether the widget can receive keyboard focus. (Default: true)
+---@field focusable ? boolean | State Whether the widget can receive keyboard focus. (Default: false)
 ---@field tooltip ? string | State Optional tooltip markup text for the widget.
 ---@field margins ? Margins | State Optional margins around the widget.
 ---@field width_request ? number | State Optional width request for the widget. (Default: - 1)
@@ -320,7 +320,7 @@ local HyprlandWsContainerWidget = {}
 ---@field hexpand ? boolean | State Whether the widget should expand to fill available horizontal space. (Default: false)
 ---@field vexpand ? boolean | State Whether the widget should expand to fill available vertical space. (Default: false)
 ---@field visible ? boolean | State Whether the widget is visible. (Default: true)
----@field focusable ? boolean | State Whether the widget can receive keyboard focus. (Default: true)
+---@field focusable ? boolean | State Whether the widget can receive keyboard focus. (Default: false)
 ---@field tooltip ? string | State Optional tooltip markup text for the widget.
 ---@field margins ? Margins | State Optional margins around the widget.
 ---@field width_request ? number | State Optional width request for the widget. (Default: - 1)
@@ -342,7 +342,7 @@ local HyprlandActiveWindowLabelWidget = {}
 ---@field hexpand ? boolean | State Whether the widget should expand to fill available horizontal space. (Default: false)
 ---@field vexpand ? boolean | State Whether the widget should expand to fill available vertical space. (Default: false)
 ---@field visible ? boolean | State Whether the widget is visible. (Default: true)
----@field focusable ? boolean | State Whether the widget can receive keyboard focus. (Default: true)
+---@field focusable ? boolean | State Whether the widget can receive keyboard focus. (Default: false)
 ---@field tooltip ? string | State Optional tooltip markup text for the widget.
 ---@field margins ? Margins | State Optional margins around the widget.
 ---@field width_request ? number | State Optional width request for the widget. (Default: - 1)
@@ -364,7 +364,7 @@ local ContainerWidget = {}
 ---@field hexpand ? boolean | State Whether the widget should expand to fill available horizontal space. (Default: false)
 ---@field vexpand ? boolean | State Whether the widget should expand to fill available vertical space. (Default: false)
 ---@field visible ? boolean | State Whether the widget is visible. (Default: true)
----@field focusable ? boolean | State Whether the widget can receive keyboard focus. (Default: true)
+---@field focusable ? boolean | State Whether the widget can receive keyboard focus. (Default: false)
 ---@field tooltip ? string | State Optional tooltip markup text for the widget.
 ---@field margins ? Margins | State Optional margins around the widget.
 ---@field width_request ? number | State Optional width request for the widget. (Default: - 1)
