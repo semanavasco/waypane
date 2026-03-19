@@ -1,128 +1,6 @@
 -- Example status bar using waypane
 
--- state ---------------------------------------------------------------------
-
-local function create_state(monitor)
-  local active_workspace = waypane.state(1)
-  local active_window_title = waypane.state("")
-
-  local function update_active_workspace()
-    local monitors = waypane.hyprland.getMonitors() or {}
-    for _, monitor_info in ipairs(monitors) do
-      if monitor_info.focused then
-        active_workspace:set(monitor_info.active_workspace.id)
-        return
-      end
-    end
-  end
-
-  local function load_initial_state()
-    update_active_workspace()
-
-    local window = waypane.hyprland.getActiveWindow() or {}
-    if window and window.title then
-      active_window_title:set(window.title)
-    end
-  end
-
-  load_initial_state()
-
-  return {
-    monitor = monitor,
-    active_workspace = active_workspace,
-    active_window_title = active_window_title,
-  },
-    update_active_workspace
-end
-
 -- widgets -------------------------------------------------------------------
-
-local function workspace_button(id, is_active)
-  return Button({
-    child = Label({
-      text = tostring(id),
-      class_list = { is_active and "ws-active" or "ws-inactive" },
-      valign = "center",
-    }),
-    sensitive = not is_active,
-    class_list = { "ws-btn" },
-    valign = "center",
-    focusable = false,
-    on_click = function()
-      waypane.hyprland.switchWorkspace(id)
-    end,
-  })
-end
-
-local function workspaces_widget(state, update_active_workspace)
-  local children_state = waypane.state({})
-
-  local function rebuild_workspaces()
-    update_active_workspace()
-
-    local workspaces = waypane.hyprland.getWorkspaces() or {}
-    table.sort(workspaces, function(a, b)
-      return a.workspace.id < b.workspace.id
-    end)
-
-    local btns = {}
-    for _, ws_info in ipairs(workspaces) do
-      local on_my_monitor = not state.monitor or ws_info.monitor == state.monitor.name
-
-      if on_my_monitor then
-        local id = ws_info.workspace.id
-        if type(id) == "number" and id > 0 then
-          table.insert(btns, workspace_button(id, id == state.active_workspace:get()))
-        end
-      end
-    end
-    children_state:set(btns)
-  end
-
-  -- Rebuild whenever workspace events fire
-  waypane.onSignal({
-    "hyprland::workspace_changed",
-    "hyprland::workspace_added",
-    "hyprland::workspace_deleted",
-    "hyprland::workspace_moved",
-    "hyprland::workspace_renamed",
-    "hyprland::active_monitor_changed",
-  }, function()
-    rebuild_workspaces()
-  end)
-
-  -- Initial build
-  rebuild_workspaces()
-
-  return Container({
-    id = "workspaces",
-    orientation = "horizontal",
-    spacing = 4,
-    valign = "center",
-    children = children_state,
-    on_scroll = function(_, dy)
-      if dy < 0 then
-        waypane.hyprland.switchWorkspaceRelative(-1)
-      else
-        waypane.hyprland.switchWorkspaceRelative(1)
-      end
-    end,
-  })
-end
-
-local function title_widget(state)
-  waypane.onSignal("hyprland::active_window", function(window)
-    if window and window.title then
-      state.active_window_title:set(window.title)
-    end
-  end)
-
-  return Label({
-    text = state.active_window_title,
-    id = "window-title",
-    valign = "center",
-  })
-end
 
 local function clock_widget()
   local time_state = waypane.state(os.date("%H:%M"))
@@ -223,16 +101,31 @@ shell:window("main-bar", {
   anchors = { top = true, left = true, right = true },
 
   layout = function(monitor)
-    local state, update_active_workspace = create_state(monitor)
-
     return Container({
       id = "bar",
       orientation = "horizontal",
       spacing = 8,
       valign = "center",
       children = {
-        workspaces_widget(state, update_active_workspace),
-        title_widget(state),
+        HyprlandWsContainer({
+          orientation = "horizontal",
+          monitor = monitor.name,
+          active_properties = {
+            class_list = { "ws-active", "ws-btn" },
+            sensitive = false,
+            focusable = false,
+            valign = "center",
+          },
+          inactive_properties = {
+            class_list = { "ws-inactive", "ws-btn" },
+            focusable = false,
+            valign = "center",
+          },
+        }),
+        HyprlandActiveWindowLabel({
+          id = "window-title",
+          valign = "center",
+        }),
         spacer(),
         clock_widget(),
         date_widget(),

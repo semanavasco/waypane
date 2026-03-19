@@ -34,7 +34,7 @@ Detailed workspace information, returned by `getWorkspaces()`.
 
 ### `HyprlandWindow`
 
-Basic window information, used in the `hyprland::active_window` signal data.
+Basic window information, used in the `hyprland::active_window_changed` signal data.
 
 | Field   | Type     | Description              |
 | ------- | -------- | ------------------------ |
@@ -112,6 +112,19 @@ Active monitor information, used in the `hyprland::active_monitor_changed` signa
 - **`toggleFullscreen()`**: Toggles the fullscreen state of the active window.
 - **`killActiveWindow()`**: Closes the currently focused window.
 
+### Example: Workspace Switcher
+
+```lua
+local function workspace_button(id)
+  return Button({
+    child = Label({ text = tostring(id) }),
+    on_click = function()
+      waypane.hyprland.switchWorkspace(id)
+    end,
+  })
+end
+```
+
 ## Signals
 
 You can subscribe to these events using `waypane.onSignal()`.
@@ -130,19 +143,60 @@ You can subscribe to these events using `waypane.onSignal()`.
 
 | Signal                             | Data Type               | Description                                              |
 | ---------------------------------- | ----------------------- | -------------------------------------------------------- |
-| `hyprland::active_window`          | `HyprlandWindow`        | Fired when the focused window changes.                   |
+| `hyprland::active_window_changed`  | `HyprlandWindow`        | Fired when the focused window changes.                   |
 | `hyprland::fullscreen_changed`     | `boolean`               | Fired when the active window's fullscreen state toggles. |
 | `hyprland::active_monitor_changed` | `HyprlandActiveMonitor` | Fired when focus moves to a different monitor.           |
 
-## Example: Workspace Switcher
+## Widgets
+
+The Hyprland module provides specialized widgets that automatically react to compositor events.
+
+### `HyprlandActiveWindowLabelWidget`
+
+A specialized version of the [`Label`](../widgets/label.md) widget that automatically updates its text to show the title of the currently focused window.
+
+It supports all [common widget properties](../widgets/common.md).
+
+#### Example
 
 ```lua
-local function workspace_button(id)
-  return Button({
-    child = Label({ text = tostring(id) }),
-    on_click = function()
-      waypane.hyprland.switchWorkspace(id)
-    end,
-  })
-end
+local title = HyprlandActiveWindowLabel({
+  id = "window-title",
+  valign = "center",
+})
+```
+
+### `HyprlandWsContainerWidget`
+
+A specialized version of the [`Container`](../widgets/container.md) widget that displays a list of Hyprland workspace buttons. It automatically updates its children whenever workspace or monitor state changes.
+
+It supports all [common widget properties](../widgets/common.md).
+
+#### Properties
+
+| Property                | Type          | Description                                                                                                                        |
+| ----------------------- | ------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| `orientation`           | `Orientation` | The layout orientation of the buttons (`"horizontal"` or `"vertical"`).                                                            |
+| `spacing`               | `number`      | The amount of space between buttons in pixels. Default is `0`.                                                                     |
+| `monitor`               | `string?`     | An optional monitor name to filter workspaces by. If `nil`, workspaces from all monitors are shown.                                |
+| `active_properties`     | `Widget?`     | Optional widget properties to apply to active workspace buttons. **(DO NOT PASS A WIDGET DIRECTLY, ONLY ITS COMMON PROPERTIES)**   |
+| `inactive_properties`   | `Widget?`     | Optional widget properties to apply to inactive workspace buttons. **(DO NOT PASS A WIDGET DIRECTLY, ONLY ITS COMMON PROPERTIES)** |
+| `persistent_workspaces` | `number[]?`   | A list of workspace IDs that should always be shown, even if they have no windows.                                                 |
+| `hide_empty`            | `boolean`     | Whether to hide workspaces that have no windows and are not active. Default is `false`.                                            |
+
+#### Example
+
+```lua
+local workspaces = HyprlandWsContainer({
+  orientation = "horizontal",
+  spacing = 5,
+  monitor = "eDP-1", -- Only show workspaces for this monitor
+  persistent_workspaces = { 1, 2, 3, 4, 5 }, -- Always show at least these
+  active_properties = {
+    class_list = { "ws-button", "active" },
+  },
+  inactive_properties = {
+    class_list = { "ws-button" },
+  },
+})
 ```

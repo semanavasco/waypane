@@ -1,3 +1,4 @@
+use super::{utils::call_dispatch, workspaces::Workspace};
 use hyprland::{
     data::{Client, FullscreenMode},
     dispatch::{DispatchType, FullscreenType},
@@ -5,8 +6,6 @@ use hyprland::{
 };
 use mlua::{IntoLua, Lua, Value as LuaValue};
 use waypane_macros::{LuaClass, lua_func};
-
-use super::{utils::call_dispatch, workspaces::Workspace};
 
 /// Basic information about a window, including its title and class.
 #[derive(LuaClass)]
@@ -49,13 +48,13 @@ pub struct ActiveWindowInfo {
     /// Basic information about the workspace the active window is on.
     pub workspace: Workspace,
     /// The width of the window in pixels.
-    width: i16,
+    pub width: i16,
     /// The height of the window in pixels.
-    height: i16,
+    pub height: i16,
     /// The x-coordinate of the window's top-left corner.
-    x: i16,
+    pub x: i16,
     /// The y-coordinate of the window's top-left corner.
-    y: i16,
+    pub y: i16,
     /// Whether the window is currently floating.
     pub floating: bool,
     /// Whether the window is currently in fullscreen mode.

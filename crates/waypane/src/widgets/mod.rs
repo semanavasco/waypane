@@ -124,7 +124,7 @@ impl Properties {
     ///
     /// Used turbofish syntax extensively to provide defaults for all properties without crashing
     /// if they are missing from the Lua table but still crashing if they are of the wrong type.
-    fn parse(table: &mlua::Table) -> mlua::Result<Self> {
+    pub fn parse(table: &mlua::Table) -> mlua::Result<Self> {
         let lua = LUA
             .get()
             .ok_or_else(|| mlua::Error::RuntimeError("Lua instance not initialized".to_string()))?;

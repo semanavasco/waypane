@@ -1,5 +1,6 @@
 pub mod monitors;
 pub mod utils;
+mod widgets;
 pub mod windows;
 pub mod workspaces;
 
@@ -67,7 +68,7 @@ fn enqueue_event(
 ///   Data: `HyprlandWorkspace`
 /// - `hyprland::workspace_renamed` : Emitted when a workspace is given a new name.
 ///   Data: `HyprlandWorkspace`
-/// - `hyprland::active_window` : Emitted when the focused window changes.
+/// - `hyprland::active_window_changed` : Emitted when the focused window changes.
 ///   Data: `HyprlandWindow`
 /// - `hyprland::fullscreen_changed` : Emitted when the active window's fullscreen state toggles.
 ///   Data: `boolean`
@@ -94,7 +95,7 @@ pub enum HyprlandEvent {
 
     /// Emitted when the focused window changes.
     ///
-    /// Signal: `hyprland::active_window`
+    /// Signal: `hyprland::active_window_changed`
     ActiveWindowChanged(Window),
 
     /// Emitted when the fullscreen state of the active window toggles.
@@ -186,7 +187,7 @@ pub fn start_listener() -> Receiver<(String, HyprlandEvent)> {
         );
 
         // Window events
-        add_event!(add_active_window_changed_handler, "active_window", ev => {
+        add_event!(add_active_window_changed_handler, "active_window_changed", ev => {
             let (title, class) = ev.map_or((String::new(), String::new()), |w| (w.title, w.class));
             HyprlandEvent::ActiveWindowChanged(Window { title, class })
         });

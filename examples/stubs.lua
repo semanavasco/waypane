@@ -21,7 +21,7 @@ waypane = {}
 --- Data: `HyprlandWorkspace`
 --- - `hyprland::workspace_renamed` : Emitted when a workspace is given a new name.
 --- Data: `HyprlandWorkspace`
---- - `hyprland::active_window` : Emitted when the focused window changes.
+--- - `hyprland::active_window_changed` : Emitted when the focused window changes.
 --- Data: `HyprlandWindow`
 --- - `hyprland::fullscreen_changed` : Emitted when the active window's fullscreen state toggles.
 --- Data: `boolean`
@@ -255,6 +255,10 @@ local StackWidget = {}
 ---@field widget Widget The widget to display on this page.
 local StackPage = {}
 
+--- A handle that can be used to cancel a scheduled task or a signal subscription.
+---@class CancelHandle
+local CancelHandle = {}
+
 --- A widget that allows users to select a value from a range by sliding a handle.
 ---@class SliderWidget : Widget
 ---@field value ? number | State The current value of the slider. (Default: 0.0)
@@ -282,9 +286,48 @@ local StackPage = {}
 ---@field on_scroll ? function Optional function to execute when scrolling over the widget. Receives (dx, dy) as arguments.
 local SliderWidget = {}
 
---- A handle that can be used to cancel a scheduled task or a signal subscription.
----@class CancelHandle
-local CancelHandle = {}
+--- A container widget that displays a list of workspace buttons in Hyprland.
+---@class HyprlandWsContainerWidget : Widget
+---@field orientation Orientation The orientation of the container.
+---@field spacing ? number The spacing between children in the container, in pixels. (Default: 0)
+---@field monitor ? string An optional monitor name to filter workspaces by.
+---@field active_properties ? Widget Optional widget properties to apply to active workspace buttons. **(DO NOT PASS A WIDGET DIRECTLY, ONLY ITS COMMON PROPERTIES)**
+---@field inactive_properties ? Widget Optional widget properties to apply to inactive workspace buttons. **(DO NOT PASS A WIDGET DIRECTLY, ONLY ITS COMMON PROPERTIES)**
+---@field persistent_workspaces ? number[] A list of workspace IDs that should always be shown, even if they have no windows.
+---@field hide_empty ? boolean Whether to hide workspaces that have no windows and are not active. (Default: false)
+---@field id ? string | State Optional widget ID, used for CSS styling and querying.
+---@field class_list ? string[] | State Optional list of CSS classes applied to the widget.
+---@field halign ? Alignment | State Optional horizontal alignment for the widget.
+---@field valign ? Alignment | State Optional vertical alignment for the widget.
+---@field hexpand ? boolean | State Whether the widget should expand to fill available horizontal space. (Default: false)
+---@field vexpand ? boolean | State Whether the widget should expand to fill available vertical space. (Default: false)
+---@field visible ? boolean | State Whether the widget is visible. (Default: true)
+---@field focusable ? boolean | State Whether the widget can receive keyboard focus. (Default: true)
+---@field tooltip ? string | State Optional tooltip markup text for the widget.
+---@field margins ? Margins | State Optional margins around the widget.
+---@field width_request ? number | State Optional width request for the widget. (Default: - 1)
+---@field height_request ? number | State Optional height request for the widget. (Default: - 1)
+---@field sensitive ? boolean | State Whether the widget should be sensitive to user input. (Default: true)
+---@field on_scroll ? function Optional function to execute when scrolling over the widget. Receives (dx, dy) as arguments.
+local HyprlandWsContainerWidget = {}
+
+--- A label widget that displays the title of the currently active window in Hyprland.
+---@class HyprlandActiveWindowLabelWidget : Widget
+---@field id ? string | State Optional widget ID, used for CSS styling and querying.
+---@field class_list ? string[] | State Optional list of CSS classes applied to the widget.
+---@field halign ? Alignment | State Optional horizontal alignment for the widget.
+---@field valign ? Alignment | State Optional vertical alignment for the widget.
+---@field hexpand ? boolean | State Whether the widget should expand to fill available horizontal space. (Default: false)
+---@field vexpand ? boolean | State Whether the widget should expand to fill available vertical space. (Default: false)
+---@field visible ? boolean | State Whether the widget is visible. (Default: true)
+---@field focusable ? boolean | State Whether the widget can receive keyboard focus. (Default: true)
+---@field tooltip ? string | State Optional tooltip markup text for the widget.
+---@field margins ? Margins | State Optional margins around the widget.
+---@field width_request ? number | State Optional width request for the widget. (Default: - 1)
+---@field height_request ? number | State Optional height request for the widget. (Default: - 1)
+---@field sensitive ? boolean | State Whether the widget should be sensitive to user input. (Default: true)
+---@field on_scroll ? function Optional function to execute when scrolling over the widget. Receives (dx, dy) as arguments.
+local HyprlandActiveWindowLabelWidget = {}
 
 --- A container widget that can hold multiple child widgets, arranged either horizontally or
 --- vertically.
@@ -524,6 +567,16 @@ function Stack(config) end
 ---@param config SliderWidget The configuration table for the SliderWidget widget.
 ---@return Widget widget The constructed widget.
 function Slider(config) end
+
+--- A label widget that displays the title of the currently active window in Hyprland.
+---@param config HyprlandActiveWindowLabelWidget The configuration table for the HyprlandActiveWindowLabelWidget widget.
+---@return Widget widget The constructed widget.
+function HyprlandActiveWindowLabel(config) end
+
+--- A container widget that displays a list of workspace buttons in Hyprland.
+---@param config HyprlandWsContainerWidget The configuration table for the HyprlandWsContainerWidget widget.
+---@return Widget widget The constructed widget.
+function HyprlandWsContainer(config) end
 
 --- A container widget that can hold multiple child widgets, arranged either horizontally or
 --- vertically.
