@@ -20,6 +20,7 @@
   - [Image](./widgets/image.md)
   - [ProgressBar](./widgets/progress_bar.md)
   - [Slider](./widgets/slider.md)
+  - [Stack](./widgets/stack.md)
 
 - [Styling](./styling.md)
 

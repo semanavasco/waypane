@@ -41,6 +41,11 @@ Creates a `ProgressBar` widget for visualizing progress.
 Creates a `Slider` widget for selecting a value from a range.
 [See Slider for more details](../widgets/slider.md).
 
+### `Stack(props)`
+
+Creates a `Stack` widget for holding multiple children and showing one at a time.
+[See Stack for more details](../widgets/stack.md).
+
 ## Usage Example
 
 ```lua

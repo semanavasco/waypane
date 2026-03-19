@@ -11,6 +11,7 @@ Widgets are the building blocks of your `waypane` UI. Each widget represents a s
 - **[Image](./image.md)**: A widget that displays an image from a file path.
 - **[ProgressBar](./progress_bar.md)**: A widget that displays a progress bar.
 - **[Slider](./slider.md)**: A widget that allows users to select a value from a range by sliding a handle.
+- **[Stack](./stack.md)**: A container widget that shows one child at a time with optional transitions.
 
 ## [Common Properties](./common.md)
 
