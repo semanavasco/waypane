@@ -1392,23 +1392,12 @@ dependencies = [
  "mlua",
  "tracing",
  "tracing-subscriber",
- "waypane-macros 0.0.1-alpha.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "waypane-macros",
 ]
 
 [[package]]
 name = "waypane-macros"
 version = "0.0.1-alpha.1"
-dependencies = [
- "proc-macro2",
- "quote",
- "syn",
-]
-
-[[package]]
-name = "waypane-macros"
-version = "0.0.1-alpha.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "15e44a52fe57a852e2ac0a31d4b1f753b20bdf6c14c58fda4c4b2187b9bd8009"
 dependencies = [
  "proc-macro2",
  "quote",
