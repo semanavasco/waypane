@@ -211,7 +211,16 @@ pub fn derive_lua_enum(input: TokenStream) -> TokenStream {
 
     if let Data::Enum(enum_data) = &input.data {
         for variant in &enum_data.variants {
-            let variant_name = variant.ident.to_string().to_lowercase();
+            let variant_ident_str = variant.ident.to_string();
+
+            let mut variant_name = String::new();
+            for (i, c) in variant_ident_str.chars().enumerate() {
+                if i > 0 && c.is_uppercase() {
+                    variant_name.push('-');
+                }
+                variant_name.extend(c.to_lowercase());
+            }
+
             variants.push(format!("\"{}\"", variant_name));
         }
     } else {
