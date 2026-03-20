@@ -36,10 +36,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-a286ff21.js";
+            window.path_to_searchindex_js = "searchindex-dfd13190.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-91c23d47.js"></script>
+        <script src="toc-fee3c0b1.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -296,6 +296,7 @@ local my_label = Label({
 <li><strong><a href="#state-management">State Management</a></strong>: How to create and use reactive state to build dynamic UIs.</li>
 <li><strong><a href="#timers">Timers</a></strong>: Working with intervals and timeouts for time-based updates.</li>
 <li><strong><a href="#signals">Signals</a></strong>: Subscribing to and emitting events to react to the desktop environment.</li>
+<li><strong><a href="#shell-commands">Shell Commands</a></strong>: Executing and polling external shell commands.</li>
 </ul>
 <h2 id="the-waypane-table"><a class="header" href="#the-waypane-table">The <code>waypane</code> Table</a></h2>
 <p>Most of the core functionality is organized under the global <code>waypane</code> table. This includes functions for creating the shell, managing state, and interacting with modules like Hyprland.</p>
@@ -641,6 +642,43 @@ end)
 </ul>
 <h2 id="built-in-signals"><a class="header" href="#built-in-signals">Built-in Signals</a></h2>
 <p>Modules (like Hyprland), may emit signals automatically. For a full list of these, see the <a href="#hyprland-module">Hyprland Module</a> documentation.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="shell-commands"><a class="header" href="#shell-commands">Shell Commands</a></h1>
+<p><code>waypane</code> provides helper functions to execute shell commands and poll for their output. These are useful for integrating external scripts or system information into your desktop environment.</p>
+<h2 id="waypaneexeccmd-callback"><a class="header" href="#waypaneexeccmd-callback"><code>waypane.exec(cmd, callback)</code></a></h2>
+<p>Executes a shell command asynchronously.</p>
+<ul>
+<li><strong><code>cmd</code></strong>: The shell command string to execute.</li>
+<li><strong><code>callback</code></strong>: (Optional) A function that receives <code>(stdout, stderr)</code> as arguments when the command finishes.</li>
+</ul>
+<h3 id="usage-example-1"><a class="header" href="#usage-example-1">Usage Example</a></h3>
+<pre><code class="language-lua">-- Execute a command without waiting for its output
+waypane.exec("pkill hyprpaper")
+
+-- Execute a command and handle its output
+waypane.exec("uptime -p", function(stdout, stderr)
+    if stdout ~= "" then
+        print("Uptime: " .. stdout)
+    end
+end)
+</code></pre>
+<h2 id="waypanepollcmd-callback-interval"><a class="header" href="#waypanepollcmd-callback-interval"><code>waypane.poll(cmd, callback, interval)</code></a></h2>
+<p>Executes a shell command repeatedly at a given interval and calls a callback with its output.</p>
+<ul>
+<li><strong><code>cmd</code></strong>: The shell command string to poll.</li>
+<li><strong><code>callback</code></strong>: A function that receives <code>(stdout, stderr)</code> as arguments after each command execution.</li>
+<li><strong><code>interval</code></strong>: The time in milliseconds to wait between executions.</li>
+<li><strong>Returns</strong>: A <a href="#cancelhandle"><code>CancelHandle</code></a> that can be used to stop the polling.</li>
+</ul>
+<h3 id="usage-example-1-1"><a class="header" href="#usage-example-1-1">Usage Example</a></h3>
+<pre><code class="language-lua">-- Poll for memory usage every 5 seconds
+local mem_poll = waypane.poll("free -h | awk '/^Mem:/ {print $3 \" / \" $2}'", function(stdout, stderr)
+    print("Memory Usage: " .. stdout)
+end, 5000)
+
+-- Later, stop polling:
+mem_poll:cancel()
+</code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="widgets-1"><a class="header" href="#widgets-1">Widgets</a></h1>
 <p>Widgets are the building blocks of your <code>waypane</code> UI. Each widget represents a single element, such as a text label, a clickable button, or a container for other widgets.</p>

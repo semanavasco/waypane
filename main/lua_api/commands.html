@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Common Properties - waypane documentation</title>
+        <title>Shell Commands - waypane documentation</title>
 
 
         <!-- Custom HTML head -->
@@ -174,83 +174,52 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <h1 id="common-widget-properties"><a class="header" href="#common-widget-properties">Common Widget Properties</a></h1>
-<p>Every widget in <code>waypane</code> shares a set of common properties that you can use to customize its appearance, layout, and behavior. These properties are always available when you’re defining a widget.</p>
-<h2 id="basic-properties"><a class="header" href="#basic-properties">Basic Properties</a></h2>
-<div class="table-wrapper">
-<table>
-<thead>
-<tr><th>Property</th><th>Type</th><th>Description</th></tr>
-</thead>
-<tbody>
-<tr><td><code>id</code></td><td><code>string | State&lt;string&gt;</code></td><td>Widget ID, used for CSS styling and querying.</td></tr>
-<tr><td><code>class_list</code></td><td><code>string[] | State&lt;string[]&gt;</code></td><td>List of CSS classes applied to the widget.</td></tr>
-</tbody>
-</table>
-</div>
-<h2 id="layout-properties"><a class="header" href="#layout-properties">Layout Properties</a></h2>
-<div class="table-wrapper">
-<table>
-<thead>
-<tr><th>Property</th><th>Type</th><th>Default</th><th>Description</th></tr>
-</thead>
-<tbody>
-<tr><td><code>halign</code></td><td><code>"start" | "center" | "end" | "fill" | "baseline" | State</code></td><td></td><td>Horizontal alignment for the widget.</td></tr>
-<tr><td><code>valign</code></td><td><code>"start" | "center" | "end" | "fill" | "baseline" | State</code></td><td></td><td>Vertical alignment for the widget.</td></tr>
-<tr><td><code>hexpand</code></td><td><code>boolean | State&lt;boolean&gt;</code></td><td><code>false</code></td><td>Whether the widget expands to fill available horizontal space.</td></tr>
-<tr><td><code>vexpand</code></td><td><code>boolean | State&lt;boolean&gt;</code></td><td><code>false</code></td><td>Whether the widget expands to fill available vertical space.</td></tr>
-<tr><td><code>margins</code></td><td><a href="../lua_api/shell_windows.html#margins"><code>Margins</code></a><code> | State</code></td><td></td><td>Margins around the widget.</td></tr>
-<tr><td><code>width_request</code></td><td><code>number | State&lt;number&gt;</code></td><td><code>-1</code></td><td>Width request for the widget.</td></tr>
-<tr><td><code>height_request</code></td><td><code>number | State&lt;number&gt;</code></td><td><code>-1</code></td><td>Height request for the widget.</td></tr>
-</tbody>
-</table>
-</div>
-<h2 id="behavior-properties"><a class="header" href="#behavior-properties">Behavior Properties</a></h2>
-<div class="table-wrapper">
-<table>
-<thead>
-<tr><th>Property</th><th>Type</th><th>Default</th><th>Description</th></tr>
-</thead>
-<tbody>
-<tr><td><code>visible</code></td><td><code>boolean | State&lt;boolean&gt;</code></td><td><code>true</code></td><td>Whether the widget is visible.</td></tr>
-<tr><td><code>focusable</code></td><td><code>boolean | State&lt;boolean&gt;</code></td><td><code>false</code></td><td>Whether the widget can receive keyboard focus.</td></tr>
-<tr><td><code>tooltip</code></td><td><code>string | State&lt;string&gt;</code></td><td></td><td>Tooltip markup text for the widget.</td></tr>
-<tr><td><code>sensitive</code></td><td><code>boolean | State&lt;boolean&gt;</code></td><td><code>true</code></td><td>Whether the widget should be sensitive to user input.</td></tr>
-<tr><td><code>on_scroll</code></td><td><code>function(dx, dy)</code></td><td></td><td>Function to execute when scrolling over the widget. Receives (dx, dy) as arguments.</td></tr>
-</tbody>
-</table>
-</div>
-<h2 id="css-styling"><a class="header" href="#css-styling">CSS Styling</a></h2>
-<p>All widgets can be styled using standard CSS. You can target them by their ID (<code>#my-widget</code>) or their classes (<code>.my-class</code>).</p>
-<pre><code class="language-lua">local my_label = Label({
-  id = "status-label",
-  class_list = { "important", "alert" },
-  text = "Status: OK",
-})
+                        <h1 id="shell-commands"><a class="header" href="#shell-commands">Shell Commands</a></h1>
+<p><code>waypane</code> provides helper functions to execute shell commands and poll for their output. These are useful for integrating external scripts or system information into your desktop environment.</p>
+<h2 id="waypaneexeccmd-callback"><a class="header" href="#waypaneexeccmd-callback"><code>waypane.exec(cmd, callback)</code></a></h2>
+<p>Executes a shell command asynchronously.</p>
+<ul>
+<li><strong><code>cmd</code></strong>: The shell command string to execute.</li>
+<li><strong><code>callback</code></strong>: (Optional) A function that receives <code>(stdout, stderr)</code> as arguments when the command finishes.</li>
+</ul>
+<h3 id="usage-example"><a class="header" href="#usage-example">Usage Example</a></h3>
+<pre><code class="language-lua">-- Execute a command without waiting for its output
+waypane.exec("pkill hyprpaper")
+
+-- Execute a command and handle its output
+waypane.exec("uptime -p", function(stdout, stderr)
+    if stdout ~= "" then
+        print("Uptime: " .. stdout)
+    end
+end)
 </code></pre>
-<p>In your CSS file:</p>
-<pre><code class="language-css">#status-label {
-  color: #fff;
-}
+<h2 id="waypanepollcmd-callback-interval"><a class="header" href="#waypanepollcmd-callback-interval"><code>waypane.poll(cmd, callback, interval)</code></a></h2>
+<p>Executes a shell command repeatedly at a given interval and calls a callback with its output.</p>
+<ul>
+<li><strong><code>cmd</code></strong>: The shell command string to poll.</li>
+<li><strong><code>callback</code></strong>: A function that receives <code>(stdout, stderr)</code> as arguments after each command execution.</li>
+<li><strong><code>interval</code></strong>: The time in milliseconds to wait between executions.</li>
+<li><strong>Returns</strong>: A <a href="./timers.html#cancelhandle"><code>CancelHandle</code></a> that can be used to stop the polling.</li>
+</ul>
+<h3 id="usage-example-1"><a class="header" href="#usage-example-1">Usage Example</a></h3>
+<pre><code class="language-lua">-- Poll for memory usage every 5 seconds
+local mem_poll = waypane.poll("free -h | awk '/^Mem:/ {print $3 \" / \" $2}'", function(stdout, stderr)
+    print("Memory Usage: " .. stdout)
+end, 5000)
 
-.important {
-  font-weight: bold;
-}
-
-.alert {
-  color: #ff0000;
-}
+-- Later, stop polling:
+mem_poll:cancel()
 </code></pre>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="../widgets/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="../lua_api/signals.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                             </a>
 
-                            <a rel="next prefetch" href="../widgets/label.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="../widgets/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                             </a>
 
@@ -260,11 +229,11 @@
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="../widgets/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="../lua_api/signals.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                     </a>
 
-                    <a rel="next prefetch" href="../widgets/label.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="../widgets/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                     </a>
             </nav>
