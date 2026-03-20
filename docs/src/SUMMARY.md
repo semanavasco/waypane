@@ -10,6 +10,7 @@
   - [State Management](./lua_api/state.md)
   - [Timers](./lua_api/timers.md)
   - [Signals](./lua_api/signals.md)
+  - [Shell Commands](./lua_api/commands.md)
 
 - [Widgets](./widgets/README.md)
   - [Common Properties](./widgets/common.md)

@@ -92,6 +92,10 @@ local State = {}
 ---@field on_scroll ? function Optional function to execute when scrolling over the widget. Receives (dx, dy) as arguments.
 local Widget = {}
 
+--- A handle that can be used to cancel a scheduled task or a signal subscription.
+---@class CancelHandle
+local CancelHandle = {}
+
 --- A widget that displays a progress bar.
 ---@class ProgressBarWidget : Widget
 ---@field fraction ? number | State The fraction of the progress bar that is filled, between 0.0 and 1.0. (Default: 0.0)
@@ -254,10 +258,6 @@ local StackWidget = {}
 ---@field name string The name of the page, used to identify it when switching between pages.
 ---@field widget Widget The widget to display on this page.
 local StackPage = {}
-
---- A handle that can be used to cancel a scheduled task or a signal subscription.
----@class CancelHandle
-local CancelHandle = {}
 
 --- A widget that allows users to select a value from a range by sliding a handle.
 ---@class SliderWidget : Widget
@@ -424,6 +424,11 @@ function waypane.onSignal(signals, callback) end
 ---@param data ? any Optional data to include with the signal. Can be any Lua value.
 function waypane.emitSignal(signal, data) end
 
+--- Creates a new shell configuration.
+---@param config table The global shell configuration.
+---@return Shell shell The shell object.
+function waypane.shell(config) end
+
 --- Creates a new state binding with a transform function that maps the state value to a new value.
 ---@param transform function A function that transforms the state value and returns the transformed result.
 ---@return State state A new state handle with the transform applied.
@@ -460,6 +465,9 @@ function State:set(value) end
 ---@return any value The current value of the state.
 function State:get() end
 
+--- Cancels the scheduled task or signal subscription.
+function CancelHandle:cancel() end
+
 --- Schedules the provided callback to be called repeatedly at the specified interval (in ms).
 ---@param callback function The callback to call after `interval` ms have passed.
 ---@param interval number The interval in milliseconds to wait before calling the callback.
@@ -487,18 +495,25 @@ function waypane.hyprland.killActiveWindow() end
 --- Toggles the fullscreen state of the currently active window in Hyprland.
 function waypane.hyprland.toggleFullscreen() end
 
---- Creates a new shell configuration.
----@param config table The global shell configuration.
----@return Shell shell The shell object.
-function waypane.shell(config) end
-
 --- Adds a new window definition to the shell configuration.
 ---@param name string The unique name of the window.
 ---@param config Window The configuration for this window.
 function Shell:window(name, config) end
 
---- Cancels the scheduled task or signal subscription.
-function CancelHandle:cancel() end
+--- Executes a shell command asynchronously.
+--- 
+--- If a callback is provided, it will be called with the command's stdout and stderr once it
+--- finishes.
+---@param cmd string The shell command to execute.
+---@param callback ? function Optional callback function(stdout, stderr) to call when the command finishes.
+function waypane.exec(cmd, callback) end
+
+--- Polls a shell command at a regular interval and calls the provided callback.
+---@param cmd string The shell command to execute.
+---@param callback function The callback function(stdout, stderr) to call after each poll.
+---@param interval number The polling interval in milliseconds.
+---@return CancelHandle handle A handle that can be used to cancel the poll with :cancel().
+function waypane.poll(cmd, callback, interval) end
 
 --- Toggles a special workspace (scratchpad) with the given name. If no name is provided,
 --- the default special workspace is used.

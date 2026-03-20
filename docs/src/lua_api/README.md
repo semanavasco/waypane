@@ -9,6 +9,7 @@ This section covers the core components of the Lua API:
 - **[State Management](./state.md)**: How to create and use reactive state to build dynamic UIs.
 - **[Timers](./timers.md)**: Working with intervals and timeouts for time-based updates.
 - **[Signals](./signals.md)**: Subscribing to and emitting events to react to the desktop environment.
+- **[Shell Commands](./commands.md)**: Executing and polling external shell commands.
 
 ## The `waypane` Table
 
