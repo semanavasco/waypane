@@ -426,7 +426,7 @@ function waypane.emitSignal(signal, data) end
 
 --- Creates a new state binding with a transform function that maps the state value to a new value.
 ---@param transform function A function that transforms the state value and returns the transformed result.
----@return table
+---@return State state A new state handle with the transform applied.
 function State:as(transform) end
 
 --- Creates a new reactive state with the given initial value.
@@ -457,7 +457,7 @@ function waypane.state(initial) end
 function State:set(value) end
 
 --- Retrieves the current value of a reactive state.
----@return any
+---@return any value The current value of the state.
 function State:get() end
 
 --- Schedules the provided callback to be called repeatedly at the specified interval (in ms).

@@ -157,6 +157,7 @@ impl State {
 
 /// Retrieves the current value of a reactive state.
 #[lua_func(name = "get", class = "State", skip = "lua", skip = "this")]
+#[ret(doc = "value The current value of the state.")]
 fn state_get(lua: &Lua, this: Table) -> mlua::Result<LuaValue> {
     let id = this.get::<usize>("__state_id")?;
     let s = State {
@@ -180,6 +181,10 @@ fn state_set(lua: &Lua, this: Table, value: LuaValue) -> mlua::Result<()> {
 #[arg(
     name = "transform",
     doc = "A function that transforms the state value and returns the transformed result."
+)]
+#[ret(
+    ty = "State",
+    doc = "state A new state handle with the transform applied."
 )]
 fn state_as(lua: &Lua, this: Table, transform: LuaFn) -> mlua::Result<Table> {
     let id = this.get::<usize>("__state_id")?;
