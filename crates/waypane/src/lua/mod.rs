@@ -76,6 +76,16 @@ pub fn register_lua(lua: &Lua) -> Result<()> {
         lua.create_function(|_, (sig, data)| dynamic::signals::emit_signal(sig, data))?,
     )?;
 
+    waypane.set(
+        "exec",
+        lua.create_function(|_, (cmd, cb)| dynamic::commands::exec(cmd, cb))?,
+    )?;
+
+    waypane.set(
+        "poll",
+        lua.create_function(|lua, (cmd, cb, ms)| dynamic::commands::poll(lua, cmd, cb, ms))?,
+    )?;
+
     // Inject Lua bindings for the window manager, if any are enabled
     // They are injected under a `waypane.<wm_name>` table, e.g. `waypane.hyprland`
     #[allow(clippy::non_minimal_cfg)]

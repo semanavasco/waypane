@@ -4,10 +4,12 @@
 //! - **[`state`]**: Reactive data bindings (`waypane.state()`).
 //! - **[`signals`]**: A global pub-sub event bus (`waypane.emitSignal()`, `waypane.onSignal()`).
 //! - **[`timer`]**: GLib-backed asynchronous intervals (`waypane.setInterval()`).
+//! - **[`commands`]**: Asynchronous shell command execution (`waypane.exec()`, `waypane.poll()`).
 //!
 //! Widget properties use the [`MaybeReactive`] bridge to seamlessly accept either static values or
 //! reactive `State` bindings directly from the Lua configuration.
 
+pub mod commands;
 pub mod signals;
 pub mod state;
 pub mod timer;
