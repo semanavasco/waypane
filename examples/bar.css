@@ -59,6 +59,12 @@ window {
 
 /* -- clock -------------------------------------------------------------------- */
 
+#backlight {
+  color: #f9e2af;
+  font-size: 12px;
+  padding: 0 4px;
+}
+
 #clock {
   color: #89b4fa;
   font-weight: bold;

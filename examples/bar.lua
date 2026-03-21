@@ -84,6 +84,24 @@ local function date_widget()
   })
 end
 
+local function backlight_widget()
+  local brightness = waypane.backlight.level()
+  return Label({
+    text = brightness:as(function(v)
+      return string.format("󰃠 %d%%", v)
+    end),
+    id = "backlight",
+    valign = "center",
+    on_scroll = function(_, dy)
+      if dy < 0 then
+        waypane.exec("brightnessctl set +2%")
+      elseif dy > 0 then
+        waypane.exec("brightnessctl set 2%-")
+      end
+    end,
+  })
+end
+
 local function spacer()
   return Container({ orientation = "horizontal", hexpand = true })
 end
@@ -125,6 +143,7 @@ shell:window("main-bar", {
           valign = "center",
         }),
         spacer(),
+        backlight_widget(),
         clock_widget(),
         date_widget(),
       },

@@ -9,7 +9,7 @@ At its core, all reactive data in `waypane` is represented by a `State` handle. 
 You can read the current value of any `State` at any time using the `:get()` method:
 
 ```lua
--- Example: A hypothetical module returning a read-only State for hardware brightness
+-- Example: Backlight module returns a read-only State for hardware brightness
 local brightness = waypane.backlight.level()
 
 -- Read the current hardware value
@@ -21,7 +21,7 @@ print(brightness:get()) -- Output: e.g., 50
 The true power of a `State` handle is that you can pass it directly into widget properties instead of static values. When the state changes in the background, the widget property will automatically update without any extra code.
 
 ```lua
--- Example: Using our hypothetical read-only state
+-- Example: Using a read-only state from backlight
 local brightness = waypane.backlight.level()
 
 -- A simple progress bar that automatically tracks your screen brightness
@@ -35,7 +35,7 @@ local slider = ProgressBar({
 Often, raw state data needs to be formatted before it is displayed. You can create a "derived" state using the `:as()` method. This method takes a function that receives the raw state value and returns the formatted result.
 
 ```lua
--- Example: Using our hypothetical read-only state
+-- Example: Using a read-only state from backlight
 local brightness = waypane.backlight.level()
 
 local label = Label({

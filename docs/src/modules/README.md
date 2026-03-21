@@ -4,6 +4,7 @@
 
 ## Built-in Modules
 
+- **[Backlight](./backlight.md)**: Reactive access to the current screen brightness as a `State`.
 - **[Hyprland](./hyprland.md)**: Deep integration with the Hyprland window manager, allowing you to react to workspace changes, window focus, and more.
 
 ## Using Modules
@@ -11,6 +12,9 @@
 Modules are available as sub-tables of the global `waypane` table.
 
 ```lua
+-- Using the Backlight module
+local brightness = waypane.backlight.level()
+
 -- Using the Hyprland module
 local workspaces = waypane.hyprland.getWorkspaces()
 ```

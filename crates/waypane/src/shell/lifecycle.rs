@@ -34,7 +34,7 @@ pub fn run_app(shell: Shell, watch_css: bool) -> ExitCode {
     app.connect_activate(move |app| {
         #[allow(clippy::non_minimal_cfg)]
         #[cfg(any(feature = "hyprland"))]
-        crate::modules::wm::start_listener();
+        crate::modules::start_listeners();
 
         let display = match gdk::Display::default() {
             Some(d) => d,

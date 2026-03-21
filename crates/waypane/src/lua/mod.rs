@@ -86,11 +86,10 @@ pub fn register_lua(lua: &Lua) -> Result<()> {
         lua.create_function(|lua, (cmd, cb, ms)| dynamic::commands::poll(lua, cmd, cb, ms))?,
     )?;
 
-    // Inject Lua bindings for the window manager, if any are enabled
-    // They are injected under a `waypane.<wm_name>` table, e.g. `waypane.hyprland`
-    #[allow(clippy::non_minimal_cfg)]
-    #[cfg(any(feature = "hyprland"))]
-    crate::modules::wm::register_lua(lua, &waypane)?;
+    // Inject Lua bindings for the enabled modules
+    // They are injected under a `waypane.<module>` table, e.g. `waypane.hyprland`
+    #[cfg(any(feature = "backlight", feature = "hyprland"))]
+    crate::modules::register_lua(lua, &waypane)?;
 
     Ok(())
 }

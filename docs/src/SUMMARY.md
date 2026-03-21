@@ -26,4 +26,5 @@
 - [Styling](./styling.md)
 
 - [Modules](./modules/README.md)
+  - [Backlight](./modules/backlight.md)
   - [Hyprland](./modules/hyprland.md)
