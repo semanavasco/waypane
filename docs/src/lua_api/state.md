@@ -1,76 +1,88 @@
 # State Management
 
-Reactive state is at the heart of `waypane`. It allows you to create data points that your widgets can "watch", automatically updating themselves whenever the data changes.
+Reactive state is at the heart of `waypane`. It allows you to bind dynamic data points directly to your widgets so they automatically update themselves whenever the underlying data changes.
 
-## Creating State
+## The Base Type: `State` (Read-Only)
 
-You can create a new state object using the `waypane.state()` function. You can provide an initial value for the state.
+At its core, all reactive data in `waypane` is represented by a `State` handle. The base `State` type is **read-only** (`:get()`, `:as()`). It is commonly used for data managed by the system or a background module (like your battery level, current workspace, or screen brightness).
+
+You can read the current value of any `State` at any time using the `:get()` method:
 
 ```lua
-local my_state = waypane.state("initial value")
+-- Example: A hypothetical module returning a read-only State for hardware brightness
+local brightness = waypane.backlight.level()
+
+-- Read the current hardware value
+print(brightness:get()) -- Output: e.g., 50
 ```
 
-## Getting and Setting State
+### Binding State to Widgets
 
-State objects have `get()` and `set()` methods:
+The true power of a `State` handle is that you can pass it directly into widget properties instead of static values. When the state changes in the background, the widget property will automatically update without any extra code.
 
-- `my_state:get()`: Returns the current value of the state.
-- `my_state:set(new_value)`: Updates the state with a new value and triggers updates for any bound widgets.
+```lua
+-- Example: Using our hypothetical read-only state
+local brightness = waypane.backlight.level()
+
+-- A simple progress bar that automatically tracks your screen brightness
+local slider = ProgressBar({
+  fraction = brightness,
+})
+```
+
+### Transforming State
+
+Often, raw state data needs to be formatted before it is displayed. You can create a "derived" state using the `:as()` method. This method takes a function that receives the raw state value and returns the formatted result.
+
+```lua
+-- Example: Using our hypothetical read-only state
+local brightness = waypane.backlight.level()
+
+local label = Label({
+  -- Transform the raw integer (50) into a formatted string ("Brightness: 50%")
+  text = brightness:as(function(val)
+    return string.format("Brightness: %d%%", val)
+  end)
+})
+```
+
+## Creating Custom Data: `MutableState`
+
+While hardware and system modules provide read-only `State` handles, you will often want to create your own reactive variables (like a custom counter, a toggle switch, or parsed script output).
+
+You can create a new, writable state object using the `waypane.state()` function. This returns a `MutableState`.
+
+```lua
+-- Create a new mutable state with an initial value of 0
+local count = waypane.state(0)
+```
+
+Because `MutableState` is just an extension of `State`, it inherits `:get()` and `:as()`, and can be bound to widgets exactly like a read-only state. However, it also gains the `:set()` method, allowing your Lua scripts to update the value and trigger UI redraws.
 
 ```lua
 local count = waypane.state(0)
 
-print(count:get()) -- Output: 0
-
-count:set(1)
-print(count:get()) -- Output: 1
-```
-
-## Binding State to Widgets
-
-Many widget properties (like a Label's `text` or a Container's `children`) can accept a state object instead of a static value. When the state changes, the widget property will automatically update.
-
-```lua
-local title_state = waypane.state("My Widget")
-
 local my_label = Label({
-  text = title_state,
+  text = count:as(function(c) return "Count: " .. tostring(c) end)
 })
 
--- Later...
-title_state:set("Updated Title") -- The label's text will automatically update to "Updated Title"
+-- Later, in a button click or a waypane.setInterval timer...
+count:set(count:get() + 1) -- This automatically updates the label's text!
 ```
 
-## Transforming State
+> [!NOTE]
+> Any widget property that accepts a `State` will seamlessly accept a `MutableState`.
 
-You can create a "transformed" version of a state object using the `:as()` method. This allows you to derive a new value from an existing state without manually managing multiple state objects.
-
-The `:as()` method takes a function that receives the current state value and returns the transformed value.
-
-```lua
-local count = waypane.state(5)
-
--- Create a derived state that formats the count
-local label_text = count:as(function(val)
-  return "The count is: " .. tostring(val)
-end)
-
-local my_label = Label({
-  text = label_text,
-})
-
--- Later...
-count:set(10) -- The label will automatically update to "The count is: 10"
-```
-
-## Dynamic Children
+## Advanced: Dynamic Children
 
 Containers can also use reactive state for their `children` property. This is a powerful way to create dynamic lists or grids of widgets that can grow or shrink based on external data.
 
 ```lua
+-- We use a MutableState here so we can add items to it later
 local items = waypane.state({ "A", "B", "C" })
 
 local my_container = Container({
+  -- The :as() transform maps the data array into an array of UI Widgets
   children = items:as(function(list)
     local labels = {}
     for _, item in ipairs(list) do

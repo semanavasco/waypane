@@ -7,7 +7,7 @@
 //! - **[`commands`]**: Asynchronous shell command execution (`waypane.exec()`, `waypane.poll()`).
 //!
 //! Widget properties use the [`MaybeReactive`] bridge to seamlessly accept either static values or
-//! reactive `State` bindings directly from the Lua configuration.
+//! reactive state bindings (`State` / `MutableState`) directly from the Lua configuration.
 
 pub mod commands;
 pub mod signals;
@@ -22,7 +22,7 @@ use state::{State, StateId};
 use std::{borrow::Cow, cell::RefCell, rc::Rc};
 use waypane_macros::{LuaClass, lua_func};
 
-/// A widget property that is either a plain static value or bound to a reactive [`State`].
+/// A widget property that is either a plain static value or bound to a reactive state handle.
 pub enum MaybeReactive<T> {
     /// A plain value of type `T`, resolved at config parse time.
     Static(T),
@@ -45,7 +45,7 @@ where
     T: FromLua,
 {
     fn from_lua(value: LuaValue, lua: &Lua) -> mlua::Result<Self> {
-        // Check if the value is a State handle (table with __state_id)
+        // Check if the value is a state handle (read-only or mutable)
         if let LuaValue::Table(ref t) = value
             && let Ok(state_id) = t.get::<StateId>("__state_id")
         {
@@ -82,7 +82,7 @@ where
     ///
     /// - If `Static`: the value is applied once immediately.
     /// - If `Bound`: the current state value is applied immediately, then a subscriber is
-    ///   registered so future `state:set()` calls automatically re-apply the property.
+    ///   registered so future state updates automatically re-apply the property.
     ///   The subscription is cleaned up when the widget is destroyed.
     pub fn bind<W, F>(&self, widget: &W, prop_name: &'static str, mut apply_fn: F) -> Result<()>
     where

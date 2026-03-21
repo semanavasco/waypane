@@ -9,6 +9,9 @@ pub type StateId = usize;
 /// Receives the new Lua value.
 pub type StateSubscriber = Rc<dyn Fn(LuaValue)>;
 
+const STATE_ID_KEY: &str = "__state_id";
+const TRANSFORM_KEY: &str = "__transform";
+
 /// A reactive value with its current data and list of subscribers.
 struct StateEntry {
     /// The current value, stored as a key into the Lua registry so it stays rooted.
@@ -93,21 +96,39 @@ thread_local! {
     static STATE_REGISTRY: RefCell<StateRegistry> = RefCell::new(StateRegistry::default());
 }
 
-/// A handle to a reactive state entry. Contains the state ID and an optional transform function.
-/// Can be used on properties that support it (e.g. `label.text`) to provide dynamic values that
-/// automatically update when the state changes.
-/// Provides methods to either read, write or bind with/out a transform function.
+/// Internal Rust representation of a reactive state handle.
 ///
-/// # INTERNAL USE ONLY
-/// Not intended for direct use. Should only be constructed via the `waypane.state()` Lua
-/// function, which ensures the state is properly registered and rooted in the Lua registry.
-#[derive(LuaClass)]
+/// This struct is used by the bridge and widgets to track state subscriptions and
+/// transformations. It is not exposed directly to Lua; instead, a Lua table with
+/// a specialized metatable is used as the handle.
 pub struct State {
-    /// The ID of this state in the registry.
+    /// The unique ID of the state in the registry.
     pub id: StateId,
-    /// An optional Lua transform function applied when this state is used as a binding.
-    /// Stored as a registry key so it survives across Lua calls.
+    /// An optional transformation applied to the state value when bound to a property.
     pub transform: Option<mlua::RegistryKey>,
+}
+
+/// A handle to a reactive state entry.
+///
+/// State handles can be bound to widget properties (e.g., `Label.text`) to create
+/// reactive UIs that update automatically when the underlying data changes.
+///
+/// State handles support reading the current value with `:get()` and creating derived bindings
+/// with `:as(transform)`.
+#[derive(LuaClass)]
+#[lua_class(name = "State")]
+pub struct StateStub {}
+
+/// A mutable handle to a reactive state entry.
+///
+/// Mutable handles support writing new values with `:set(value)`, which updates the state and
+/// notifies all subscribers. This is returned by `waypane.state(initial)`.
+#[derive(LuaClass)]
+#[lua_class(name = "MutableState")]
+#[allow(dead_code)]
+pub struct MutableStateStub {
+    #[lua_attr(parent)]
+    _state: StateStub,
 }
 
 impl State {
@@ -155,28 +176,26 @@ impl State {
     }
 }
 
-/// Retrieves the current value of a reactive state.
+/// Helper function to extract state ID and apply transform if present.
+fn get_state_value(lua: &Lua, this: &Table) -> mlua::Result<LuaValue> {
+    let id = this.get::<StateId>(STATE_ID_KEY)?;
+    let raw = STATE_REGISTRY.with(|r| r.borrow().get(id, lua))?;
+
+    if let Some(transform) = this.get::<Option<mlua::Function>>(TRANSFORM_KEY)? {
+        transform.call::<LuaValue>(raw)
+    } else {
+        Ok(raw)
+    }
+}
+
+/// Retrieves the current value of a state.
 #[lua_func(name = "get", class = "State", skip = "lua", skip = "this")]
 #[ret(doc = "value The current value of the state.")]
 fn state_get(lua: &Lua, this: Table) -> mlua::Result<LuaValue> {
-    let id = this.get::<usize>("__state_id")?;
-    let s = State {
-        id,
-        transform: None,
-    };
-    s.get(lua)
+    get_state_value(lua, &this)
 }
 
-/// Updates the value of a reactive state and notifies all subscribers.
-#[lua_func(name = "set", class = "State", skip = "lua", skip = "this")]
-#[arg(name = "value", doc = "The new value to set for the state.")]
-fn state_set(lua: &Lua, this: Table, value: LuaValue) -> mlua::Result<()> {
-    let id = this.get::<usize>("__state_id")?;
-    State::set(lua, id, value)?;
-    Ok(())
-}
-
-/// Creates a new state binding with a transform function that maps the state value to a new value.
+/// Creates a new (read-only) state binding with a transform function.
 #[lua_func(name = "as", class = "State", skip = "lua", skip = "this")]
 #[arg(
     name = "transform",
@@ -184,14 +203,22 @@ fn state_set(lua: &Lua, this: Table, value: LuaValue) -> mlua::Result<()> {
 )]
 #[ret(
     ty = "State",
-    doc = "state A new state handle with the transform applied."
+    doc = "state a new state handle with the transform applied."
 )]
 fn state_as(lua: &Lua, this: Table, transform: LuaFn) -> mlua::Result<Table> {
-    let id = this.get::<usize>("__state_id")?;
-    let binding = lua.create_table()?;
-    binding.set("__state_id", id)?;
-    binding.set("__transform", transform)?;
+    let id = this.get::<StateId>(STATE_ID_KEY)?;
+    let binding = create_state_table(lua, id, false)?;
+    binding.set(TRANSFORM_KEY, transform)?;
     Ok(binding)
+}
+
+/// Updates the value of a mutable reactive state and notifies all subscribers.
+#[lua_func(name = "set", class = "MutableState", skip = "lua", skip = "this")]
+#[arg(name = "value", doc = "The new value to set for the state.")]
+fn mutable_state_set(lua: &Lua, this: Table, value: LuaValue) -> mlua::Result<()> {
+    let id = this.get::<StateId>(STATE_ID_KEY)?;
+    State::set(lua, id, value)?;
+    Ok(())
 }
 
 /// Creates a new reactive state with the given initial value.
@@ -215,13 +242,18 @@ fn state_as(lua: &Lua, this: Table, transform: LuaFn) -> mlua::Result<Table> {
 /// ```
 #[lua_func(name = "state", skip = "lua", module = "waypane")]
 #[arg(name = "initial", doc = "The initial value of the state.")]
-#[ret(ty = "State", doc = "state A reactive state handle.")]
+#[ret(ty = "MutableState", doc = "state A mutable reactive state handle.")]
 pub fn state(lua: &Lua, initial: LuaValue) -> mlua::Result<Table> {
     let state = State::create(lua, initial)?;
-    let state_id = state.id;
+    create_state_table(lua, state.id, true)
+}
 
+/// Helper function to create a Lua table representing a state handle, with appropriate metatable
+/// methods. The table always provides `:get()` and `:as()`. When `mutable` is true, `:set()` is
+/// also included.
+pub fn create_state_table(lua: &Lua, id: StateId, mutable: bool) -> mlua::Result<Table> {
     let table = lua.create_table()?;
-    table.set("__state_id", state_id)?;
+    table.set(STATE_ID_KEY, id)?;
 
     let metatable = lua.create_table()?;
 
@@ -231,18 +263,20 @@ pub fn state(lua: &Lua, initial: LuaValue) -> mlua::Result<Table> {
     )?;
 
     metatable.set(
-        "set",
-        lua.create_function(move |lua, (this, value): (Table, LuaValue)| {
-            state_set(lua, this, value)
-        })?,
-    )?;
-
-    metatable.set(
         "as",
         lua.create_function(move |lua, (this, transform): (Table, LuaFn)| {
             state_as(lua, this, transform)
         })?,
     )?;
+
+    if mutable {
+        metatable.set(
+            "set",
+            lua.create_function(move |lua, (this, value): (Table, LuaValue)| {
+                mutable_state_set(lua, this, value)
+            })?,
+        )?;
+    }
 
     metatable.set("__index", metatable.clone())?;
     table.set_metatable(Some(metatable))?;

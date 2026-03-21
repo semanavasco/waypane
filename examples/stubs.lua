@@ -61,18 +61,22 @@ waypane.hyprland = {}
 ---@field on_scroll ? function Optional function to execute when scrolling over the widget. Receives (dx, dy) as arguments.
 local ButtonWidget = {}
 
---- A handle to a reactive state entry. Contains the state ID and an optional transform function.
---- Can be used on properties that support it (e.g. `label.text`) to provide dynamic values that
---- automatically update when the state changes.
---- Provides methods to either read, write or bind with/out a transform function.
+--- A handle to a reactive state entry.
 --- 
---- # INTERNAL USE ONLY
---- Not intended for direct use. Should only be constructed via the `waypane.state()` Lua
---- function, which ensures the state is properly registered and rooted in the Lua registry.
+--- State handles can be bound to widget properties (e.g., `Label.text`) to create
+--- reactive UIs that update automatically when the underlying data changes.
+--- 
+--- State handles support reading the current value with `:get()` and creating derived bindings
+--- with `:as(transform)`.
 ---@class State
----@field id number The ID of this state in the registry.
----@field transform ? function An optional Lua transform function applied when this state is used as a binding. Stored as a registry key so it survives across Lua calls.
 local State = {}
+
+--- A mutable handle to a reactive state entry.
+--- 
+--- Mutable handles support writing new values with `:set(value)`, which updates the state and
+--- notifies all subscribers. This is returned by `waypane.state(initial)`.
+---@class MutableState : State
+local MutableState = {}
 
 --- Common properties shared by all widgets (layout, CSS classes, IDs, etc).
 ---@class Widget
@@ -428,11 +432,6 @@ function waypane.onSignal(signals, callback) end
 ---@param data ? any Optional data to include with the signal. Can be any Lua value.
 function waypane.emitSignal(signal, data) end
 
---- Creates a new state binding with a transform function that maps the state value to a new value.
----@param transform function A function that transforms the state value and returns the transformed result.
----@return State state A new state handle with the transform applied.
-function State:as(transform) end
-
 --- Creates a new reactive state with the given initial value.
 --- Can be used on properties that support it (e.g. `label.text`) to provide dynamic values that
 --- automatically update when the state changes.
@@ -453,14 +452,19 @@ function State:as(transform) end
 --- end, 1000) -- repeat every 1000 ms
 --- ```
 ---@param initial any The initial value of the state.
----@return State state A reactive state handle.
+---@return MutableState state A mutable reactive state handle.
 function waypane.state(initial) end
 
---- Updates the value of a reactive state and notifies all subscribers.
----@param value any The new value to set for the state.
-function State:set(value) end
+--- Creates a new (read-only) state binding with a transform function.
+---@param transform function A function that transforms the state value and returns the transformed result.
+---@return State state a new state handle with the transform applied.
+function State:as(transform) end
 
---- Retrieves the current value of a reactive state.
+--- Updates the value of a mutable reactive state and notifies all subscribers.
+---@param value any The new value to set for the state.
+function MutableState:set(value) end
+
+--- Retrieves the current value of a state.
 ---@return any value The current value of the state.
 function State:get() end
 

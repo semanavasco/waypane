@@ -33,7 +33,7 @@ Many widget properties can be **reactive**, meaning they automatically update wh
 
 ## Reactive State
 
-`State` is a core part of waypane's dynamic nature. By using `waypane.state()`, you can create observable data points that widgets can subscribe to. When the state changes, any widget property bound to that state will automatically refresh.
+`State` is the parent handle type for waypane's reactive bindings. By using `waypane.state()`, you create a `MutableState` (a subtype of `State`) that widgets can subscribe to. When the state changes, any widget property bound to that state will automatically refresh.
 
 ```lua
 local time = waypane.state(os.date("%H:%M"))
