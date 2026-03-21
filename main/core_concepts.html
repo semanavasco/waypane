@@ -35,7 +35,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-78fa783e.js";
+            window.path_to_searchindex_js = "searchindex-c38b850b.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-fee3c0b1.js"></script>
@@ -195,7 +195,7 @@ return shell
 <p><code>Widgets</code> are the building blocks of your UI. waypane provides a variety of built-in widgets like <code>Label</code>, <code>Button</code>, <code>Container</code>, <code>Icon</code>, and more. Widgets are declarative, meaning you describe their state and properties, and waypane handles the rendering and updates.</p>
 <p>Many widget properties can be <strong>reactive</strong>, meaning they automatically update when the underlying data changes.</p>
 <h2 id="reactive-state"><a class="header" href="#reactive-state">Reactive State</a></h2>
-<p><code>State</code> is a core part of waypane’s dynamic nature. By using <code>waypane.state()</code>, you can create observable data points that widgets can subscribe to. When the state changes, any widget property bound to that state will automatically refresh.</p>
+<p><code>State</code> is the parent handle type for waypane’s reactive bindings. By using <code>waypane.state()</code>, you create a <code>MutableState</code> (a subtype of <code>State</code>) that widgets can subscribe to. When the state changes, any widget property bound to that state will automatically refresh.</p>
 <pre><code class="language-lua">local time = waypane.state(os.date("%H:%M"))
 
 -- Later, when `time`'s internal value changes, the label will update automatically
