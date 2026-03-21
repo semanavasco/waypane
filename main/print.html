@@ -36,10 +36,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-c38b850b.js";
+            window.path_to_searchindex_js = "searchindex-323b3a0b.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-fee3c0b1.js"></script>
+        <script src="toc-d788510a.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -477,7 +477,7 @@ local my_button = Button({
 <h2 id="the-base-type-state-read-only"><a class="header" href="#the-base-type-state-read-only">The Base Type: <code>State</code> (Read-Only)</a></h2>
 <p>At its core, all reactive data in <code>waypane</code> is represented by a <code>State</code> handle. The base <code>State</code> type is <strong>read-only</strong> (<code>:get()</code>, <code>:as()</code>). It is commonly used for data managed by the system or a background module (like your battery level, current workspace, or screen brightness).</p>
 <p>You can read the current value of any <code>State</code> at any time using the <code>:get()</code> method:</p>
-<pre><code class="language-lua">-- Example: A hypothetical module returning a read-only State for hardware brightness
+<pre><code class="language-lua">-- Example: Backlight module returns a read-only State for hardware brightness
 local brightness = waypane.backlight.level()
 
 -- Read the current hardware value
@@ -485,7 +485,7 @@ print(brightness:get()) -- Output: e.g., 50
 </code></pre>
 <h3 id="binding-state-to-widgets"><a class="header" href="#binding-state-to-widgets">Binding State to Widgets</a></h3>
 <p>The true power of a <code>State</code> handle is that you can pass it directly into widget properties instead of static values. When the state changes in the background, the widget property will automatically update without any extra code.</p>
-<pre><code class="language-lua">-- Example: Using our hypothetical read-only state
+<pre><code class="language-lua">-- Example: Using a read-only state from backlight
 local brightness = waypane.backlight.level()
 
 -- A simple progress bar that automatically tracks your screen brightness
@@ -495,7 +495,7 @@ local slider = ProgressBar({
 </code></pre>
 <h3 id="transforming-state"><a class="header" href="#transforming-state">Transforming State</a></h3>
 <p>Often, raw state data needs to be formatted before it is displayed. You can create a “derived” state using the <code>:as()</code> method. This method takes a function that receives the raw state value and returns the formatted result.</p>
-<pre><code class="language-lua">-- Example: Using our hypothetical read-only state
+<pre><code class="language-lua">-- Example: Using a read-only state from backlight
 local brightness = waypane.backlight.level()
 
 local label = Label({
@@ -1259,15 +1259,44 @@ local controls = Container({
 <p><code>waypane</code> can be extended with modules that provide integration with external tools and services. These modules typically expose a set of Lua functions and signals.</p>
 <h2 id="built-in-modules"><a class="header" href="#built-in-modules">Built-in Modules</a></h2>
 <ul>
+<li><strong><a href="#backlight-module">Backlight</a></strong>: Reactive access to the current screen brightness as a <code>State</code>.</li>
 <li><strong><a href="#hyprland-module">Hyprland</a></strong>: Deep integration with the Hyprland window manager, allowing you to react to workspace changes, window focus, and more.</li>
 </ul>
 <h2 id="using-modules"><a class="header" href="#using-modules">Using Modules</a></h2>
 <p>Modules are available as sub-tables of the global <code>waypane</code> table.</p>
-<pre><code class="language-lua">-- Using the Hyprland module
+<pre><code class="language-lua">-- Using the Backlight module
+local brightness = waypane.backlight.level()
+
+-- Using the Hyprland module
 local workspaces = waypane.hyprland.getWorkspaces()
 </code></pre>
 <h2 id="community-modules"><a class="header" href="#community-modules">Community Modules</a></h2>
 <p>In the future, <code>waypane</code> may support a plugin system or a community-driven set of modules. If you’re interested in developing your own module, check out the source code of the Hyprland module as a reference.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="backlight-module"><a class="header" href="#backlight-module">Backlight Module</a></h1>
+<p>The <code>backlight</code> module provides reactive access to the current screen backlight level.</p>
+<p>It is exposed under <code>waypane.backlight</code>.</p>
+<h2 id="function"><a class="header" href="#function">Function</a></h2>
+<ul>
+<li><strong><code>level()</code></strong> -&gt; <code>State</code>: Returns a read-only reactive <code>State</code> containing the current backlight percentage (<code>0</code> to <code>100</code>).</li>
+</ul>
+<h2 id="behavior"><a class="header" href="#behavior">Behavior</a></h2>
+<ul>
+<li>Reads from Linux sysfs backlight interfaces (<code>/sys/class/backlight/*</code>).</li>
+<li>Automatically updates when brightness changes.</li>
+<li>If no supported backlight device is found, it still returns a valid <code>State</code> initialized to <code>0</code>.</li>
+</ul>
+<h2 id="example-1"><a class="header" href="#example-1">Example</a></h2>
+<pre><code class="language-lua">local brightness = waypane.backlight.level()
+
+local widget = Container({
+  orientation = "horizontal",
+  children = {
+    ProgressBar({ fraction = brightness:as(function(v) return v / 100 end) }),
+    Label({ text = brightness:as(function(v) return string.format("%d%%", v) end) }),
+  },
+})
+</code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="hyprland-module"><a class="header" href="#hyprland-module">Hyprland Module</a></h1>
 <p>The <code>hyprland</code> module provides deep integration with the Hyprland window manager. It allows you to query the state of workspaces, windows, and monitors, as well as dispatch commands and react to compositor events via signals.</p>
@@ -1449,7 +1478,7 @@ end
 <h3 id="hyprlandactivewindowlabelwidget"><a class="header" href="#hyprlandactivewindowlabelwidget"><code>HyprlandActiveWindowLabelWidget</code></a></h3>
 <p>A specialized version of the <a href="#label"><code>Label</code></a> widget that automatically updates its text to show the title of the currently focused window.</p>
 <p>It supports all <a href="#common-widget-properties">common widget properties</a>.</p>
-<h4 id="example-1"><a class="header" href="#example-1">Example</a></h4>
+<h4 id="example-2"><a class="header" href="#example-2">Example</a></h4>
 <pre><code class="language-lua">local title = HyprlandActiveWindowLabel({
   id = "window-title",
   valign = "center",
