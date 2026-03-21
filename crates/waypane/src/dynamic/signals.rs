@@ -91,6 +91,10 @@ pub fn on_signal(lua: &Lua, signals: StringOrStrings, callback: LuaFn) -> mlua::
 }
 
 /// Emit a signal with the given name and optional data payload.
+///
+/// Signals in the `::` namespace are reserved for native module events (e.g.,
+/// `hyprland::workspace_changed`) and cannot be emitted from Lua. Attempting to do so will result
+/// in an error.
 #[lua_func(name = "emitSignal", module = "waypane")]
 #[arg(name = "signal", doc = "The name of the signal to emit.")]
 #[arg(
@@ -98,6 +102,16 @@ pub fn on_signal(lua: &Lua, signals: StringOrStrings, callback: LuaFn) -> mlua::
     doc = "Optional data to include with the signal. Can be any Lua value."
 )]
 pub fn emit_signal(signal: String, data: Option<LuaValue>) -> mlua::Result<()> {
+    // Prevent emitting signals in the reserved `::` namespace, which is used for native module
+    // events. This avoids confusion and potential conflicts between user-defined signals and
+    // native events.
+    if signal.contains("::") {
+        return Err(mlua::Error::RuntimeError(format!(
+            "Cannot emit reserved internal signal: '{}'. The '::' namespace is restricted to native modules.",
+            signal
+        )));
+    }
+
     let data = data.unwrap_or(LuaValue::Nil);
     let callbacks = SIGNAL_BUS.with(|bus| bus.borrow().callbacks_for(&signal));
     for cb in callbacks {

@@ -33,6 +33,9 @@ Emits a custom signal with the given name and an optional data payload.
 - **signal** (`string`): The name of the signal to emit.
 - **data** (`any`): Optional data to include with the signal. Can be any Lua value.
 
+> [!IMPORTANT]
+> Signals in the `::` namespace are reserved for native module events (e.g., `hyprland::workspace_changed`) and cannot be emitted from Lua. Attempting to do so will result in an error.
+
 **Example:**
 
 ```lua

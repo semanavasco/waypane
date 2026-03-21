@@ -92,10 +92,6 @@ local State = {}
 ---@field on_scroll ? function Optional function to execute when scrolling over the widget. Receives (dx, dy) as arguments.
 local Widget = {}
 
---- A handle that can be used to cancel a scheduled task or a signal subscription.
----@class CancelHandle
-local CancelHandle = {}
-
 --- A widget that displays a progress bar.
 ---@class ProgressBarWidget : Widget
 ---@field fraction ? number | State The fraction of the progress bar that is filled, between 0.0 and 1.0. (Default: 0.0)
@@ -136,6 +132,10 @@ local ProgressBarWidget = {}
 ---@field sensitive ? boolean | State Whether the widget should be sensitive to user input. (Default: true)
 ---@field on_scroll ? function Optional function to execute when scrolling over the widget. Receives (dx, dy) as arguments.
 local LabelWidget = {}
+
+--- A handle that can be used to cancel a scheduled task or a signal subscription.
+---@class CancelHandle
+local CancelHandle = {}
 
 --- A window that can be instantiated on one or more monitors.
 ---@class Window
@@ -420,14 +420,13 @@ local HyprlandMonitorInfo = {}
 function waypane.onSignal(signals, callback) end
 
 --- Emit a signal with the given name and optional data payload.
+--- 
+--- Signals in the `::` namespace are reserved for native module events (e.g.,
+--- `hyprland::workspace_changed`) and cannot be emitted from Lua. Attempting to do so will result
+--- in an error.
 ---@param signal string The name of the signal to emit.
 ---@param data ? any Optional data to include with the signal. Can be any Lua value.
 function waypane.emitSignal(signal, data) end
-
---- Creates a new shell configuration.
----@param config table The global shell configuration.
----@return Shell shell The shell object.
-function waypane.shell(config) end
 
 --- Creates a new state binding with a transform function that maps the state value to a new value.
 ---@param transform function A function that transforms the state value and returns the transformed result.
@@ -465,8 +464,10 @@ function State:set(value) end
 ---@return any value The current value of the state.
 function State:get() end
 
---- Cancels the scheduled task or signal subscription.
-function CancelHandle:cancel() end
+--- Creates a new shell configuration.
+---@param config table The global shell configuration.
+---@return Shell shell The shell object.
+function waypane.shell(config) end
 
 --- Schedules the provided callback to be called repeatedly at the specified interval (in ms).
 ---@param callback function The callback to call after `interval` ms have passed.
@@ -479,6 +480,9 @@ function waypane.setInterval(callback, interval) end
 ---@param time number The time in milliseconds to wait before calling the callback.
 ---@return CancelHandle handle A handle that can be used to cancel the scheduled callback with :cancel().
 function waypane.setTimeout(callback, time) end
+
+--- Cancels the scheduled task or signal subscription.
+function CancelHandle:cancel() end
 
 --- Toggles the floating state of the currently active window in Hyprland.
 function waypane.hyprland.toggleFloating() end

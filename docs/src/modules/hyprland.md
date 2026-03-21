@@ -129,6 +129,9 @@ end
 
 You can subscribe to these events using `waypane.onSignal()`.
 
+> [!NOTE]
+> These signals are emitted by the Hyprland module. Since they are in the `::` namespace, they cannot be manually emitted from Lua using `waypane.emitSignal()`.
+
 ### Workspace Events
 
 | Signal                        | Data Type           | Description                                         |
