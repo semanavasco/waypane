@@ -16,7 +16,9 @@ use std::path::{Path, PathBuf};
 /// The path can be either absolute or relative to the config file directory.
 /// If `watch` is true, the function will monitor the CSS file for changes and reload it
 /// automatically when it is modified.
-pub fn load(path: &str, watch: bool) -> Result<()> {
+/// Returns a `gio::FileMonitor` if watching is enabled, which should be kept alive to continue
+/// monitoring.
+pub fn load(path: &str, watch: bool) -> Result<Option<gio::FileMonitor>> {
     let provider = CssProvider::new();
 
     let path = PathBuf::from(path);
@@ -63,9 +65,8 @@ pub fn load(path: &str, watch: bool) -> Result<()> {
             }
         ));
 
-        // Prevent the monitor from being dropped, which would stop it from working
-        Box::leak(Box::new(monitor));
+        return Ok(Some(monitor));
     }
 
-    Ok(())
+    Ok(None)
 }

@@ -9,7 +9,7 @@ use gtk4::{
     prelude::{Cast, DisplayExt, GtkWindowExt, MonitorExt, WidgetExt},
 };
 use gtk4_layer_shell::{Edge, LayerShell};
-use std::rc::Rc;
+use std::{cell::RefCell, rc::Rc};
 
 /// Initializes and runs the GTK application based on the provided shell configuration.
 pub fn run_app(shell: Shell, watch_css: bool) -> ExitCode {
@@ -19,13 +19,21 @@ pub fn run_app(shell: Shell, watch_css: bool) -> ExitCode {
         .build();
 
     // Load style on startup
+    let css_monitor = Rc::new(RefCell::new(None));
+    let css_monitor_clone = Rc::clone(&css_monitor);
     let style_path = shell.style.clone();
     app.connect_startup(move |_| {
         if let Some(style_path) = &style_path {
             tracing::info!("Loading style from {}", style_path);
 
-            if let Err(e) = style::load(style_path, watch_css) {
-                tracing::error!("Failed to load style: {}", e);
+            match style::load(style_path, watch_css) {
+                Ok(Some(monitor)) => {
+                    *css_monitor_clone.borrow_mut() = Some(monitor);
+                }
+                Ok(None) => {}
+                Err(e) => {
+                    tracing::error!("Failed to load style: {}", e);
+                }
             }
         }
     });
