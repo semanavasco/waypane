@@ -19,10 +19,10 @@ pub fn exec(cmd: String, callback: Option<LuaFn>) -> mlua::Result<()> {
         let (tx, rx) = async_channel::bounded::<(String, String)>(1);
 
         gtk4::glib::MainContext::default().spawn_local(async move {
-            if let Ok((stdout, stderr)) = rx.recv().await {
-                if let Err(e) = cb.call::<()>((stdout, stderr)) {
-                    tracing::error!("Error in exec callback: {}", e);
-                }
+            if let Ok((stdout, stderr)) = rx.recv().await
+                && let Err(e) = cb.call::<()>((stdout, stderr))
+            {
+                tracing::error!("Error in exec callback: {}", e);
             }
         });
 
@@ -110,5 +110,5 @@ pub fn poll(lua: &Lua, cmd: String, callback: LuaFn, interval: u64) -> mlua::Res
         glib::ControlFlow::Continue
     });
 
-    Ok(create_cancel_handle(lua, source_id)?)
+    create_cancel_handle(lua, source_id)
 }

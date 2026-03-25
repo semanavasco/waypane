@@ -55,12 +55,9 @@ pub fn load(path: &str, watch: bool) -> Result<Option<gio::FileMonitor>> {
                     return;
                 }
 
-                match event_type {
-                    gio::FileMonitorEvent::Changed => {
-                        tracing::debug!("CSS file changed, reloading...");
-                        provider.load_from_path(&path);
-                    }
-                    _ => {}
+                if event_type == gio::FileMonitorEvent::Changed {
+                    tracing::debug!("CSS file changed, reloading...");
+                    provider.load_from_path(&path);
                 }
             }
         ));
