@@ -1,7 +1,6 @@
-use std::collections::{HashMap, HashSet};
-
 use proc_macro::TokenStream;
 use quote::quote;
+use std::collections::{HashMap, HashSet};
 use syn::{
     Attribute, Data, DeriveInput, Expr, Fields, FnArg, Lit, LitStr, Meta, Pat, ReturnType,
     parse::Parser, parse_macro_input,
@@ -201,27 +200,53 @@ fn extract_doc(attrs: &[Attribute]) -> String {
     docs.join("\n")
 }
 
-#[proc_macro_derive(LuaEnum)]
+#[proc_macro_derive(LuaEnum, attributes(lua))]
 pub fn derive_lua_enum(input: TokenStream) -> TokenStream {
     let input = parse_macro_input!(input as DeriveInput);
     let name = &input.ident;
     let name_str = name.to_string();
     let enum_doc = extract_doc(&input.attrs);
-    let mut variants = Vec::new();
+
+    let mut variants_metadata = Vec::new();
+    let mut lua_match_arms = Vec::new();
 
     if let Data::Enum(enum_data) = &input.data {
         for variant in &enum_data.variants {
-            let variant_ident_str = variant.ident.to_string();
+            let variant_ident = &variant.ident;
+            let variant_ident_str = variant_ident.to_string();
 
-            let mut variant_name = String::new();
-            for (i, c) in variant_ident_str.chars().enumerate() {
-                if i > 0 && c.is_uppercase() {
-                    variant_name.push('-');
+            // Allow variant name override via #[lua(name = "some-name")]
+            let mut lua_variant_name = None;
+            for attr in &variant.attrs {
+                if attr.path().is_ident("lua") {
+                    let _ = attr.parse_nested_meta(|meta| {
+                        if meta.path.is_ident("name") {
+                            let value = meta.value()?;
+                            let s: LitStr = value.parse()?;
+                            lua_variant_name = Some(s.value());
+                        }
+                        Ok(())
+                    });
                 }
-                variant_name.extend(c.to_lowercase());
             }
 
-            variants.push(format!("\"{}\"", variant_name));
+            // Default to kebab-case if no override
+            let lua_name = lua_variant_name.unwrap_or_else(|| {
+                let mut s = String::new();
+                for (i, c) in variant_ident_str.chars().enumerate() {
+                    if i > 0 && c.is_uppercase() {
+                        s.push('-');
+                    }
+                    s.extend(c.to_lowercase());
+                }
+                s
+            });
+
+            // Store for stubs and match arms
+            variants_metadata.push(format!("\"{}\"", lua_name));
+            lua_match_arms.push(quote! {
+                #name::#variant_ident => #lua_name,
+            });
         }
     } else {
         return syn::Error::new_spanned(name, "LuaEnum can only be derived on enums")
@@ -229,9 +254,18 @@ pub fn derive_lua_enum(input: TokenStream) -> TokenStream {
             .into();
     }
 
-    let lua_type_variants = variants.join(" | ");
+    let lua_type_variants = variants_metadata.join(" | ");
 
     let expanded = quote! {
+        impl mlua::IntoLua for #name {
+            fn into_lua(self, lua: &mlua::Lua) -> mlua::Result<mlua::Value> {
+                let s = match self {
+                    #(#lua_match_arms)*
+                };
+                s.into_lua(lua)
+            }
+        }
+
         impl crate::lua::stubs::LuaType for #name {
             fn lua_type() -> std::borrow::Cow<'static, str> {
                 std::borrow::Cow::Borrowed(#name_str)
