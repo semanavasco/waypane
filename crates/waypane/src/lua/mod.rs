@@ -52,6 +52,11 @@ pub fn register_lua(lua: &Lua) -> Result<()> {
     waypane.set("state", lua.create_function(dynamic::state::state)?)?;
 
     waypane.set(
+        "combine",
+        lua.create_function(|lua, states| dynamic::state::combine(lua, states))?,
+    )?;
+
+    waypane.set(
         "shell",
         lua.create_function(|_, config: Table| waypane::shell(config))?,
     )?;

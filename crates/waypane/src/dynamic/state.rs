@@ -248,6 +248,61 @@ pub fn state(lua: &Lua, initial: LuaValue) -> mlua::Result<Table> {
     create_state_table(lua, state.id, true)
 }
 
+/// Combines multiple reactive states into a single read-only state.
+/// The resulting state contains an array of the current values of all input states.
+/// It updates whenever any of the input states change.
+///
+/// # Example:
+/// ```lua
+/// local s1 = waypane.state(1)
+/// local s2 = waypane.state(2)
+/// local combined = waypane.combine({ s1, s2 })
+///
+/// -- combined:get() -> { 1, 2 }
+/// ```
+#[lua_func(name = "combine", skip = "lua", module = "waypane")]
+#[arg(
+    name = "states",
+    doc = "An array of reactive state handles to combine."
+)]
+#[ret(ty = "State", doc = "state A read-only reactive state handle.")]
+pub fn combine(lua: &Lua, states: Vec<Table>) -> mlua::Result<Table> {
+    let mut state_ids = Vec::new();
+    for table in states {
+        let id = table.get::<StateId>(STATE_ID_KEY)?;
+        state_ids.push(id);
+    }
+
+    let get_values = |lua: &Lua, ids: &[StateId]| -> mlua::Result<LuaValue> {
+        let mut values = Vec::new();
+        for &id in ids {
+            values.push(STATE_REGISTRY.with(|r| r.borrow().get(id, lua))?);
+        }
+        Ok(LuaValue::Table(lua.create_sequence_from(values)?))
+    };
+
+    let initial_values = get_values(lua, &state_ids)?;
+    let combined_state = State::create(lua, initial_values)?;
+    let combined_id = combined_state.id;
+
+    let state_ids_clone = state_ids.clone();
+    for &id in &state_ids {
+        let state_ids_inner = state_ids_clone.clone();
+        let subscriber = Rc::new(move |_: LuaValue| {
+            let Some(lua) = crate::lua::LUA.get() else {
+                return;
+            };
+            if let Ok(new_values) = get_values(lua, &state_ids_inner) {
+                State::set(lua, combined_id, new_values).ok();
+            }
+        });
+
+        STATE_REGISTRY.with(|r| r.borrow_mut().subscribe(id, subscriber));
+    }
+
+    create_state_table(lua, combined_id, false)
+}
+
 /// Helper function to create a Lua table representing a state handle, with appropriate metatable
 /// methods. The table always provides `:get()` and `:as()`. When `mutable` is true, `:set()` is
 /// also included.
