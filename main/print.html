@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-6907e0ef.js";
+            window.path_to_searchindex_js = "searchindex-8616c1e7.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-5f29bdba.js"></script>
@@ -545,6 +545,23 @@ local my_container = Container({
 local current = items:get()
 table.insert(current, "D")
 items:set(current)
+</code></pre>
+<h2 id="combining-multiple-states"><a class="header" href="#combining-multiple-states">Combining Multiple States</a></h2>
+<p>Sometimes a widget property needs to react to changes from multiple independent states. You can use <code>waypane.combine({ states... })</code> to create a new read-only state that aggregates multiple inputs into a single array.</p>
+<p>The combined state will update whenever <strong>any</strong> of its input states change.</p>
+<pre><code class="language-lua">local level = waypane.battery.level()
+local status = waypane.battery.status()
+
+-- Combine both into a single state handle
+local combined = waypane.combine({ level, status })
+
+-- The :as() transform receives an array containing the current values of { level, status }
+local label = Label({
+  text = combined:as(function(vals)
+    local l, s = vals[1], vals[2]
+    return string.format("Battery: %d%% (%s)", l, s)
+  end)
+})
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="timers"><a class="header" href="#timers">Timers</a></h1>
