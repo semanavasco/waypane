@@ -8,7 +8,7 @@ waypane = {}
 
 --- The `hyprland` module, which provides functions for querying Hyprland state and dispatching
 --- commands, as well as forwarding events from the Hyprland IPC listener.
---- 
+---
 --- ### Signals
 --- The following signals are emitted on the `waypane` signal bus:
 --- - `hyprland::workspace_changed` : Emitted when the user switches to a different workspace.
@@ -191,17 +191,17 @@ local Margins = {}
 local Anchors = {}
 
 --- A mutable handle to a reactive state entry.
---- 
+---
 --- Mutable handles support writing new values with `:set(value)`, which updates the state and
 --- notifies all subscribers. This is returned by `waypane.state(initial)`.
 ---@class MutableState : State
 local MutableState = {}
 
 --- A handle to a reactive state entry.
---- 
+---
 --- State handles can be bound to widget properties (e.g., `Label.text`) to create
 --- reactive UIs that update automatically when the underlying data changes.
---- 
+---
 --- State handles support reading the current value with `:get()` and creating derived bindings
 --- with `:as(transform)`.
 ---@class State
@@ -354,7 +354,7 @@ local HyprlandActiveWindowLabelWidget = {}
 local ContainerWidget = {}
 
 --- The top-level configuration for the waypane application shell.
---- 
+---
 --- A `Shell` acts as a container for global configuration (like the application title and styles)
 --- and a list of [`Window`] definitions that define the UI structure.
 ---@class Shell
@@ -454,7 +454,7 @@ function waypane.hyprland.getMonitors() end
 function waypane.poll(cmd, callback, interval) end
 
 --- Executes a shell command asynchronously.
---- 
+---
 --- If a callback is provided, it will be called with the command's stdout and stderr once it
 --- finishes.
 ---@param cmd string The shell command to execute.
@@ -462,7 +462,7 @@ function waypane.poll(cmd, callback, interval) end
 function waypane.exec(cmd, callback) end
 
 --- Emit a signal with the given name and optional data payload.
---- 
+---
 --- Signals in the `::` namespace are reserved for native module events (e.g.,
 --- `hyprland::workspace_changed`) and cannot be emitted from Lua. Attempting to do so will result
 --- in an error.
@@ -476,11 +476,6 @@ function waypane.emitSignal(signal, data) end
 ---@return CancelHandle handle A handle that can be used to cancel the signal subscription with :cancel().
 function waypane.onSignal(signals, callback) end
 
---- Creates a new shell configuration.
----@param config table The global shell configuration.
----@return Shell shell The shell object.
-function waypane.shell(config) end
-
 --- Retrieves the current value of a state.
 ---@return any value The current value of the state.
 function State:get() end
@@ -488,6 +483,22 @@ function State:get() end
 --- Updates the value of a mutable reactive state and notifies all subscribers.
 ---@param value any The new value to set for the state.
 function MutableState:set(value) end
+
+--- Combines multiple reactive states into a single read-only state.
+--- The resulting state contains an array of the current values of all input states.
+--- It updates whenever any of the input states change.
+---
+--- # Example:
+--- ```lua
+--- local s1 = waypane.state(1)
+--- local s2 = waypane.state(2)
+--- local combined = waypane.combine({ s1, s2 })
+---
+--- -- combined:get() -> { 1, 2 }
+--- ```
+---@param states table[] An array of reactive state handles to combine.
+---@return State state A read-only reactive state handle.
+function waypane.combine(states) end
 
 --- Creates a new (read-only) state binding with a transform function.
 ---@param transform function A function that transforms the state value and returns the transformed result.
@@ -497,16 +508,16 @@ function State:as(transform) end
 --- Creates a new reactive state with the given initial value.
 --- Can be used on properties that support it (e.g. `label.text`) to provide dynamic values that
 --- automatically update when the state changes.
---- 
+---
 --- # Example:
 --- ```lua
 --- local count = waypane.state(0)
---- 
+---
 --- -- ... inside layout:
 --- Label({ text = count:as(function(count)
 --- return "Count: " .. count
 --- end) }) -- bind state to label text with transform function
---- 
+---
 --- -- ... somewhere else in the code:
 --- waypane.setInterval(function()
 --- local current = count:get() -- read current state value
@@ -555,6 +566,11 @@ function waypane.hyprland.toggleSpecialWorkspace(workspace_name) end
 ---@param workspace_name string The name of the workspace to switch to.
 function waypane.hyprland.switchWorkspaceNamed(workspace_name) end
 
+--- Creates a new shell configuration.
+---@param config table The global shell configuration.
+---@return Shell shell The shell object.
+function waypane.shell(config) end
+
 --- Cancels the scheduled task or signal subscription.
 function CancelHandle:cancel() end
 
@@ -569,16 +585,16 @@ function Shell:window(name, config) end
 function waypane.battery.cycles(name) end
 
 --- Returns whether a battery device was detected on this system.
---- 
+---
 --- Useful for conditionally rendering battery widgets on devices that may or may not have a
 --- battery (e.g. desktops vs. laptops).
---- 
+---
 --- # Example
 --- ```lua
 --- if waypane.battery.is_present() then
 --- -- render battery widget
 --- end
---- 
+---
 --- -- Check for a specific device:
 --- if waypane.battery.is_present("BAT1") then
 --- -- render secondary battery widget

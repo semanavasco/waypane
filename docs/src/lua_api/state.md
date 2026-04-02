@@ -97,3 +97,25 @@ local current = items:get()
 table.insert(current, "D")
 items:set(current)
 ```
+
+## Combining Multiple States
+
+Sometimes a widget property needs to react to changes from multiple independent states. You can use `waypane.combine({ states... })` to create a new read-only state that aggregates multiple inputs into a single array.
+
+The combined state will update whenever **any** of its input states change.
+
+```lua
+local level = waypane.battery.level()
+local status = waypane.battery.status()
+
+-- Combine both into a single state handle
+local combined = waypane.combine({ level, status })
+
+-- The :as() transform receives an array containing the current values of { level, status }
+local label = Label({
+  text = combined:as(function(vals)
+    local l, s = vals[1], vals[2]
+    return string.format("Battery: %d%% (%s)", l, s)
+  end)
+})
+```

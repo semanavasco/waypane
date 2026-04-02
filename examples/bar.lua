@@ -103,27 +103,72 @@ local function backlight_widget()
 end
 
 local function battery_widget()
-  local function icon(status, battery)
-    if status == "charging" then
-      return "󰂄"
-    elseif status == "discharging" then
-      local icons = { "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹" }
-      local index = math.max(1, math.min(10, math.ceil(battery / 10)))
-      return icons[index]
-    else
-      return "󰂎"
-    end
+  local level = waypane.battery.level()
+  local status = waypane.battery.status()
+  local time_rem = waypane.battery.time_remaining()
+
+  local icons = {
+    discharging = { "󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹" },
+    charging = { "󰢟", "󰢜", "󰂆", "󰂇", "󰂈", "󰢝", "󰂉", "󰢞", "󰂊", "󰂋", "󰂅" },
+  }
+
+  local function get_icon(l, s)
+    local s_key = (s == "charging") and "charging" or "discharging"
+    local idx = math.floor(l / 10) + 1
+    return icons[s_key][idx] or "󰁹"
   end
 
-  local battery = waypane.battery.level("BAT0")
-  local status = waypane.battery.status("BAT0")
+  local function get_class(l, s)
+    local classes = { "battery" }
+    if s == "charging" then
+      table.insert(classes, "charging")
+    elseif l < 20 then
+      table.insert(classes, "warning")
+    end
+    return classes
+  end
 
   return Label({
-    text = battery:as(function(v)
-      return string.format("%s %d%%", icon(status:get(), v), v)
-    end),
     id = "battery",
     valign = "center",
+
+    text = waypane.combine({ level, status, time_rem }):as(function(v)
+      local l, s, t = v[1], v[2], v[3]
+      local base_text = string.format("%s %d%%", get_icon(l, s), l)
+
+      if s == "discharging" and t > 0 then
+        local h = math.floor(t)
+        local m = math.floor((t - h) * 60)
+        return string.format("%s (%dh%dm)", base_text, h, m)
+      end
+      return base_text
+    end),
+
+    class_list = waypane.combine({ level, status }):as(function(v)
+      return get_class(v[1], v[2])
+    end),
+    tooltip = waypane
+      .combine({ status, level, waypane.battery.power(), time_rem, waypane.battery.health(), waypane.battery.cycles() })
+      :as(function(v)
+        local s, l, p, t, h, c = v[1], v[2], v[3], v[4], v[5], v[6]
+        local time_str = ""
+
+        if t > 0 then
+          local hrs = math.floor(t)
+          local mins = math.floor((t - hrs) * 60)
+          time_str = string.format("\nTime: %dh %dm", hrs, mins)
+        end
+
+        return string.format(
+          "Status: %s\nLevel: %d%%\nPower: %.2fW%s\nHealth: %.0f%%\nCycles: %.0f",
+          s,
+          l,
+          p,
+          time_str,
+          h or 0,
+          c or 0
+        )
+      end),
   })
 end
 
