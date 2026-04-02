@@ -36,10 +36,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-323b3a0b.js";
+            window.path_to_searchindex_js = "searchindex-6907e0ef.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-d788510a.js"></script>
+        <script src="toc-5f29bdba.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -1260,6 +1260,7 @@ local controls = Container({
 <h2 id="built-in-modules"><a class="header" href="#built-in-modules">Built-in Modules</a></h2>
 <ul>
 <li><strong><a href="#backlight-module">Backlight</a></strong>: Reactive access to the current screen brightness as a <code>State</code>.</li>
+<li><strong><a href="#battery-module">Battery</a></strong>: Reactive access to battery level, charging status, power draw, and more.</li>
 <li><strong><a href="#hyprland-module">Hyprland</a></strong>: Deep integration with the Hyprland window manager, allowing you to react to workspace changes, window focus, and more.</li>
 </ul>
 <h2 id="using-modules"><a class="header" href="#using-modules">Using Modules</a></h2>
@@ -1296,6 +1297,66 @@ local widget = Container({
     Label({ text = brightness:as(function(v) return string.format("%d%%", v) end) }),
   },
 })
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="battery-module"><a class="header" href="#battery-module">Battery Module</a></h1>
+<p>The <code>battery</code> module provides reactive access to battery-related information, such as charge level, status, power draw, and more.</p>
+<p>It is exposed under <code>waypane.battery</code>.</p>
+<h3 id="batterystatus"><a class="header" href="#batterystatus"><code>BatteryStatus</code></a></h3>
+<p>Battery status as reported by sysfs or aggregated across multiple batteries.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Value</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>charging</code></td><td>The battery is charging</td></tr>
+<tr><td><code>discharging</code></td><td>The battery is discharging</td></tr>
+<tr><td><code>full</code></td><td>The battery is full</td></tr>
+<tr><td><code>not-charging</code></td><td>The battery is not charging (e.g. battery save mode)</td></tr>
+<tr><td><code>plugged</code></td><td>The AC adapter is online but the battery reports an unknown status</td></tr>
+<tr><td><code>unknown</code></td><td>The battery reports an unknown status</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="functions"><a class="header" href="#functions">Functions</a></h2>
+<p>All functions in the <code>battery</code> module take an optional <code>name</code> parameter to specify which battery to query (e.g. “BAT0”). If <code>name</code> is not provided, results will reflect the aggregate data of all detected batteries.</p>
+<ul>
+<li><strong><code>is_present(name?)</code></strong> -&gt; <code>boolean</code>: Returns <code>true</code> if a battery device is detected on the system.</li>
+<li><strong><code>level(name?)</code></strong> -&gt; <code>State</code>: Returns a read-only reactive <code>State</code> containing the current battery percentage (<code>0</code> to <code>100</code>).</li>
+<li><strong><code>status(name?)</code></strong> -&gt; <code>State</code>: Returns a read-only reactive <code>State</code> containing the current battery status. See <code>BatteryStatus</code> for possible values.</li>
+<li><strong><code>power(name?)</code></strong> -&gt; <code>State</code>: Returns a read-only reactive <code>State</code> containing the current power draw in Watts.</li>
+<li><strong><code>time_remaining(name?)</code></strong> -&gt; <code>State</code>: Returns a read-only reactive <code>State</code> containing the estimated time remaining until full/empty in hours.</li>
+<li><strong><code>cycles(name?)</code></strong> -&gt; <code>State</code>: Returns a read-only reactive <code>State</code> containing the battery cycle count.</li>
+<li><strong><code>health(name?)</code></strong> -&gt; <code>State</code>: Returns a read-only reactive <code>State</code> containing the battery health percentage (<code>0</code> to <code>100</code>).</li>
+<li><strong><code>energy(name?)</code></strong> -&gt; <code>State</code>: Returns a read-only reactive <code>State</code> containing the current energy in Wh.</li>
+<li><strong><code>voltage(name?)</code></strong> -&gt; <code>State</code>: Returns a read-only reactive <code>State</code> containing the current voltage in Volts.</li>
+</ul>
+<h2 id="behavior-1"><a class="header" href="#behavior-1">Behavior</a></h2>
+<ul>
+<li>Reads from Linux sysfs power supply interfaces (<code>/sys/class/power_supply/*</code>).</li>
+<li>Automatically updates when battery events occur (via <code>uevent</code> watcher).</li>
+<li>Provides a fallback periodic refresh every 30 seconds.</li>
+<li>Aggregates data across multiple batteries by default.</li>
+</ul>
+<h2 id="example-2"><a class="header" href="#example-2">Example</a></h2>
+<pre><code class="language-lua">local level = waypane.battery.level()
+local status = waypane.battery.status()
+
+local function battery_widget()
+  return Label({
+    text = level:as(function(l)
+      return string.format("󰁹 %d%%", l)
+    end),
+    tooltip = status,
+    valign = "center",
+  })
+end
+
+-- Only show the widget if a battery is present
+if waypane.battery.is_present() then
+  table.insert(bar_children, battery_widget())
+end
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="hyprland-module"><a class="header" href="#hyprland-module">Hyprland Module</a></h1>
@@ -1406,7 +1467,7 @@ local widget = Container({
 </tbody>
 </table>
 </div>
-<h2 id="functions"><a class="header" href="#functions">Functions</a></h2>
+<h2 id="functions-1"><a class="header" href="#functions-1">Functions</a></h2>
 <h3 id="querying-state"><a class="header" href="#querying-state">Querying State</a></h3>
 <ul>
 <li><strong><code>getWorkspaces()</code></strong> → <code>HyprlandWorkspaceInfo[]</code>: Returns a list of all current workspaces.</li>
@@ -1478,7 +1539,7 @@ end
 <h3 id="hyprlandactivewindowlabelwidget"><a class="header" href="#hyprlandactivewindowlabelwidget"><code>HyprlandActiveWindowLabelWidget</code></a></h3>
 <p>A specialized version of the <a href="#label"><code>Label</code></a> widget that automatically updates its text to show the title of the currently focused window.</p>
 <p>It supports all <a href="#common-widget-properties">common widget properties</a>.</p>
-<h4 id="example-2"><a class="header" href="#example-2">Example</a></h4>
+<h4 id="example-3"><a class="header" href="#example-3">Example</a></h4>
 <pre><code class="language-lua">local title = HyprlandActiveWindowLabel({
   id = "window-title",
   valign = "center",

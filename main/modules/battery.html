@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Modules - waypane documentation</title>
+        <title>Battery - waypane documentation</title>
 
 
         <!-- Custom HTML head -->
@@ -174,34 +174,75 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <h1 id="modules"><a class="header" href="#modules">Modules</a></h1>
-<p><code>waypane</code> can be extended with modules that provide integration with external tools and services. These modules typically expose a set of Lua functions and signals.</p>
-<h2 id="built-in-modules"><a class="header" href="#built-in-modules">Built-in Modules</a></h2>
+                        <h1 id="battery-module"><a class="header" href="#battery-module">Battery Module</a></h1>
+<p>The <code>battery</code> module provides reactive access to battery-related information, such as charge level, status, power draw, and more.</p>
+<p>It is exposed under <code>waypane.battery</code>.</p>
+<h3 id="batterystatus"><a class="header" href="#batterystatus"><code>BatteryStatus</code></a></h3>
+<p>Battery status as reported by sysfs or aggregated across multiple batteries.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Value</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td><code>charging</code></td><td>The battery is charging</td></tr>
+<tr><td><code>discharging</code></td><td>The battery is discharging</td></tr>
+<tr><td><code>full</code></td><td>The battery is full</td></tr>
+<tr><td><code>not-charging</code></td><td>The battery is not charging (e.g. battery save mode)</td></tr>
+<tr><td><code>plugged</code></td><td>The AC adapter is online but the battery reports an unknown status</td></tr>
+<tr><td><code>unknown</code></td><td>The battery reports an unknown status</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="functions"><a class="header" href="#functions">Functions</a></h2>
+<p>All functions in the <code>battery</code> module take an optional <code>name</code> parameter to specify which battery to query (e.g. “BAT0”). If <code>name</code> is not provided, results will reflect the aggregate data of all detected batteries.</p>
 <ul>
-<li><strong><a href="./backlight.html">Backlight</a></strong>: Reactive access to the current screen brightness as a <code>State</code>.</li>
-<li><strong><a href="./battery.html">Battery</a></strong>: Reactive access to battery level, charging status, power draw, and more.</li>
-<li><strong><a href="./hyprland.html">Hyprland</a></strong>: Deep integration with the Hyprland window manager, allowing you to react to workspace changes, window focus, and more.</li>
+<li><strong><code>is_present(name?)</code></strong> -&gt; <code>boolean</code>: Returns <code>true</code> if a battery device is detected on the system.</li>
+<li><strong><code>level(name?)</code></strong> -&gt; <code>State</code>: Returns a read-only reactive <code>State</code> containing the current battery percentage (<code>0</code> to <code>100</code>).</li>
+<li><strong><code>status(name?)</code></strong> -&gt; <code>State</code>: Returns a read-only reactive <code>State</code> containing the current battery status. See <code>BatteryStatus</code> for possible values.</li>
+<li><strong><code>power(name?)</code></strong> -&gt; <code>State</code>: Returns a read-only reactive <code>State</code> containing the current power draw in Watts.</li>
+<li><strong><code>time_remaining(name?)</code></strong> -&gt; <code>State</code>: Returns a read-only reactive <code>State</code> containing the estimated time remaining until full/empty in hours.</li>
+<li><strong><code>cycles(name?)</code></strong> -&gt; <code>State</code>: Returns a read-only reactive <code>State</code> containing the battery cycle count.</li>
+<li><strong><code>health(name?)</code></strong> -&gt; <code>State</code>: Returns a read-only reactive <code>State</code> containing the battery health percentage (<code>0</code> to <code>100</code>).</li>
+<li><strong><code>energy(name?)</code></strong> -&gt; <code>State</code>: Returns a read-only reactive <code>State</code> containing the current energy in Wh.</li>
+<li><strong><code>voltage(name?)</code></strong> -&gt; <code>State</code>: Returns a read-only reactive <code>State</code> containing the current voltage in Volts.</li>
 </ul>
-<h2 id="using-modules"><a class="header" href="#using-modules">Using Modules</a></h2>
-<p>Modules are available as sub-tables of the global <code>waypane</code> table.</p>
-<pre><code class="language-lua">-- Using the Backlight module
-local brightness = waypane.backlight.level()
+<h2 id="behavior"><a class="header" href="#behavior">Behavior</a></h2>
+<ul>
+<li>Reads from Linux sysfs power supply interfaces (<code>/sys/class/power_supply/*</code>).</li>
+<li>Automatically updates when battery events occur (via <code>uevent</code> watcher).</li>
+<li>Provides a fallback periodic refresh every 30 seconds.</li>
+<li>Aggregates data across multiple batteries by default.</li>
+</ul>
+<h2 id="example"><a class="header" href="#example">Example</a></h2>
+<pre><code class="language-lua">local level = waypane.battery.level()
+local status = waypane.battery.status()
 
--- Using the Hyprland module
-local workspaces = waypane.hyprland.getWorkspaces()
+local function battery_widget()
+  return Label({
+    text = level:as(function(l)
+      return string.format("󰁹 %d%%", l)
+    end),
+    tooltip = status,
+    valign = "center",
+  })
+end
+
+-- Only show the widget if a battery is present
+if waypane.battery.is_present() then
+  table.insert(bar_children, battery_widget())
+end
 </code></pre>
-<h2 id="community-modules"><a class="header" href="#community-modules">Community Modules</a></h2>
-<p>In the future, <code>waypane</code> may support a plugin system or a community-driven set of modules. If you’re interested in developing your own module, check out the source code of the Hyprland module as a reference.</p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="../styling.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="../modules/backlight.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                             </a>
 
-                            <a rel="next prefetch" href="../modules/backlight.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="../modules/hyprland.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                             </a>
 
@@ -211,11 +252,11 @@ local workspaces = waypane.hyprland.getWorkspaces()
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="../styling.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="../modules/backlight.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                     </a>
 
-                    <a rel="next prefetch" href="../modules/backlight.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="../modules/hyprland.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                     </a>
             </nav>
