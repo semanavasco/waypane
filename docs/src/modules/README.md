@@ -5,6 +5,7 @@
 ## Built-in Modules
 
 - **[Backlight](./backlight.md)**: Reactive access to the current screen brightness as a `State`.
+- **[Battery](./battery.md)**: Reactive access to battery level, charging status, power draw, and more.
 - **[Hyprland](./hyprland.md)**: Deep integration with the Hyprland window manager, allowing you to react to workspace changes, window focus, and more.
 
 ## Using Modules

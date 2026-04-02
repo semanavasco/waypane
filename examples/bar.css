@@ -65,6 +65,20 @@ window {
   padding: 0 4px;
 }
 
+#battery {
+  color: #a6e3a1;
+  font-size: 12px;
+  padding: 0 4px;
+}
+
+#battery.charging {
+  color: #fab387;
+}
+
+#battery.warning {
+  color: #f38ba8;
+}
+
 #clock {
   color: #89b4fa;
   font-weight: bold;

@@ -88,7 +88,7 @@ pub fn register_lua(lua: &Lua) -> Result<()> {
 
     // Inject Lua bindings for the enabled modules
     // They are injected under a `waypane.<module>` table, e.g. `waypane.hyprland`
-    #[cfg(any(feature = "backlight", feature = "hyprland"))]
+    #[cfg(any(feature = "backlight", feature = "hyprland", feature = "battery"))]
     crate::modules::register_lua(lua, &waypane)?;
 
     Ok(())

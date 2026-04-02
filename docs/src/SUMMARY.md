@@ -27,4 +27,5 @@
 
 - [Modules](./modules/README.md)
   - [Backlight](./modules/backlight.md)
+  - [Battery](./modules/battery.md)
   - [Hyprland](./modules/hyprland.md)

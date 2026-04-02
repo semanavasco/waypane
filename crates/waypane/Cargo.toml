@@ -31,4 +31,5 @@ waypane-macros = { version = "0.0.1-alpha.1", path = "../waypane-macros" }
 default = []
 
 backlight = ["dep:notify"]
+battery = ["dep:notify"]
 hyprland = ["dep:hyprland"]

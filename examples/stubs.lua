@@ -32,6 +32,13 @@ waypane.hyprland = {}
 --- The `backlight` module exposes reactive screen-brightness state under `waypane.backlight`.
 waypane.backlight = {}
 
+--- The `battery` module exposes many battery-related states under `waypane.battery`, such as
+--- current charge percentage, charging status, and time remaining until full/empty.
+waypane.battery = {}
+
+--- Transition types for the Stack widget.
+---@alias StackTransitionType "none" | "crossfade" | "slide-right" | "slide-left" | "slide-up" | "slide-down" | "slide-left-right" | "slide-up-down" | "over-up" | "over-down" | "over-left" | "over-right" | "under-up" | "under-down" | "under-left" | "under-right" | "over-up-down" | "over-left-right" | "rotate-left" | "rotate-right" | "rotate-left-right"
+
 --- The z-level layer where the window will be placed.
 ---@alias Layer "background" | "bottom" | "top" | "overlay"
 
@@ -41,8 +48,245 @@ waypane.backlight = {}
 --- Alignment for widgets within their parent container.
 ---@alias Alignment "start" | "center" | "end" | "fill" | "baseline"
 
---- Transition types for the Stack widget.
----@alias StackTransitionType "none" | "crossfade" | "slide-right" | "slide-left" | "slide-up" | "slide-down" | "slide-left-right" | "slide-up-down" | "over-up" | "over-down" | "over-left" | "over-right" | "under-up" | "under-down" | "under-left" | "under-right" | "over-up-down" | "over-left-right" | "rotate-left" | "rotate-right" | "rotate-left-right"
+--- Battery status as reported by sysfs or aggregated across multiple batteries.
+---@alias BatteryStatus "charging" | "discharging" | "full" | "not-charging" | "plugged" | "unknown"
+
+--- A widget that allows users to select a value from a range by sliding a handle.
+---@class SliderWidget : Widget
+---@field value ? number | State The current value of the slider. (Default: 0.0)
+---@field min ? number | State The minimum value of the slider. (Default: 0.0)
+---@field max ? number | State The maximum value of the slider. (Default: 100.0)
+---@field step ? number | State The step increment for the slider. (Default: 1.0)
+---@field page_step ? number | State The page step increment for the slider. (Default: 10.0)
+---@field digits ? number | State The number of decimal digits for the slider value. If `nil`, falls back to 1 digit.
+---@field draw_value ? boolean | State Whether to draw the current value next to the slider. (Default: true)
+---@field orientation ? Orientation | State The orientation of the slider. (Default: horizontal)
+---@field on_change function Function to execute when the slider value changes.
+---@field id ? string | State Optional widget ID, used for CSS styling and querying.
+---@field class_list ? string[] | State Optional list of CSS classes applied to the widget.
+---@field halign ? Alignment | State Optional horizontal alignment for the widget.
+---@field valign ? Alignment | State Optional vertical alignment for the widget.
+---@field hexpand ? boolean | State Whether the widget should expand to fill available horizontal space. (Default: false)
+---@field vexpand ? boolean | State Whether the widget should expand to fill available vertical space. (Default: false)
+---@field visible ? boolean | State Whether the widget is visible. (Default: true)
+---@field focusable ? boolean | State Whether the widget can receive keyboard focus. (Default: false)
+---@field tooltip ? string | State Optional tooltip markup text for the widget.
+---@field margins ? Margins | State Optional margins around the widget.
+---@field width_request ? number | State Optional width request for the widget. (Default: - 1)
+---@field height_request ? number | State Optional height request for the widget. (Default: - 1)
+---@field sensitive ? boolean | State Whether the widget should be sensitive to user input. (Default: true)
+---@field on_scroll ? function Optional function to execute when scrolling over the widget. Receives (dx, dy) as arguments.
+local SliderWidget = {}
+
+--- A container widget that can hold multiple child widgets, but only shows one at a time.
+---@class StackWidget : Widget
+---@field visible_page string | State The name of the currently visible page.
+---@field pages StackPage[] The child widgets contained within this container.
+---@field transition_type ? StackTransitionType | State The type of animation used when switching between pages. (Default: none)
+---@field transition_duration ? number | State The duration of the transition animation in milliseconds. (Default: 200)
+---@field interpolate_size ? boolean | State Whether the stack should interpolate its size when switching between pages. (Default: false)
+---@field id ? string | State Optional widget ID, used for CSS styling and querying.
+---@field class_list ? string[] | State Optional list of CSS classes applied to the widget.
+---@field halign ? Alignment | State Optional horizontal alignment for the widget.
+---@field valign ? Alignment | State Optional vertical alignment for the widget.
+---@field hexpand ? boolean | State Whether the widget should expand to fill available horizontal space. (Default: false)
+---@field vexpand ? boolean | State Whether the widget should expand to fill available vertical space. (Default: false)
+---@field visible ? boolean | State Whether the widget is visible. (Default: true)
+---@field focusable ? boolean | State Whether the widget can receive keyboard focus. (Default: false)
+---@field tooltip ? string | State Optional tooltip markup text for the widget.
+---@field margins ? Margins | State Optional margins around the widget.
+---@field width_request ? number | State Optional width request for the widget. (Default: - 1)
+---@field height_request ? number | State Optional height request for the widget. (Default: - 1)
+---@field sensitive ? boolean | State Whether the widget should be sensitive to user input. (Default: true)
+---@field on_scroll ? function Optional function to execute when scrolling over the widget. Receives (dx, dy) as arguments.
+local StackWidget = {}
+
+--- A page within a Stack widget, consisting of a name and a widget to display.
+---@class StackPage
+---@field name string The name of the page, used to identify it when switching between pages.
+---@field widget Widget The widget to display on this page.
+local StackPage = {}
+
+--- Information about the currently active window in Hyprland, including its title, class, PID,
+--- monitor, workspace, position, size, and other states.
+---@class HyprlandActiveWindowInfo
+---@field address string The unique hex address of the window.
+---@field title string The title of the active window.
+---@field initial_title string The initial title of the window when it was first created.
+---@field class string The class of the active window.
+---@field initial_class string The initial class of the window when it was first created.
+---@field pid number The process ID of the active window.
+---@field monitor ? number The ID of the monitor the active window is on, if available.
+---@field workspace HyprlandWorkspace Basic information about the workspace the active window is on.
+---@field width number The width of the window in pixels.
+---@field height number The height of the window in pixels.
+---@field x number The x-coordinate of the window's top-left corner.
+---@field y number The y-coordinate of the window's top-left corner.
+---@field floating boolean Whether the window is currently floating.
+---@field fullscreen boolean Whether the window is currently in fullscreen mode.
+local HyprlandActiveWindowInfo = {}
+
+--- Basic information about a window, including its title and class.
+---@class HyprlandWindow
+---@field title string The title of the window.
+---@field class string The class of the window.
+local HyprlandWindow = {}
+
+--- Information about a monitor in Hyprland, including its ID, name, resolution,
+--- position, and currently active workspace.
+---@class HyprlandMonitorInfo
+---@field id number The unique identifier for the monitor.
+---@field name string The name of the monitor, as configured in Hyprland.
+---@field focused boolean Whether this monitor is currently focused (i.e., has the active workspace).
+---@field width number The width of the monitor in pixels.
+---@field height number The height of the monitor in pixels.
+---@field x number The x-coordinate of the monitor's top-left corner.
+---@field y number The y-coordinate of the monitor's top-left corner.
+---@field refresh_rate number The refresh rate of the monitor in Hz.
+---@field scale number The UI scale factor for the monitor.
+---@field active_workspace HyprlandWorkspace Basic information about the currently active workspace on this monitor.
+local HyprlandMonitorInfo = {}
+
+--- Basic information about an active monitor, including its name and the name of the active
+--- workspace.
+---@class HyprlandActiveMonitor
+---@field monitor string The name of the monitor.
+---@field workspace ? string The name of the workspace on the monitor, if available.
+local HyprlandActiveMonitor = {}
+
+--- A clickable button widget.
+---@class ButtonWidget : Widget
+---@field on_click function Function to execute when the button is clicked.
+---@field child Widget The child widget to display inside the button.
+---@field id ? string | State Optional widget ID, used for CSS styling and querying.
+---@field class_list ? string[] | State Optional list of CSS classes applied to the widget.
+---@field halign ? Alignment | State Optional horizontal alignment for the widget.
+---@field valign ? Alignment | State Optional vertical alignment for the widget.
+---@field hexpand ? boolean | State Whether the widget should expand to fill available horizontal space. (Default: false)
+---@field vexpand ? boolean | State Whether the widget should expand to fill available vertical space. (Default: false)
+---@field visible ? boolean | State Whether the widget is visible. (Default: true)
+---@field focusable ? boolean | State Whether the widget can receive keyboard focus. (Default: false)
+---@field tooltip ? string | State Optional tooltip markup text for the widget.
+---@field margins ? Margins | State Optional margins around the widget.
+---@field width_request ? number | State Optional width request for the widget. (Default: - 1)
+---@field height_request ? number | State Optional height request for the widget. (Default: - 1)
+---@field sensitive ? boolean | State Whether the widget should be sensitive to user input. (Default: true)
+---@field on_scroll ? function Optional function to execute when scrolling over the widget. Receives (dx, dy) as arguments.
+local ButtonWidget = {}
+
+--- Margin in pixels from each edge of the monitor.
+---@class Margins
+---@field top ? number Margin from the top edge of the monitor, in pixels. (Default: 0)
+---@field right ? number Margin from the right edge of the monitor, in pixels. (Default: 0)
+---@field bottom ? number Margin from the bottom edge of the monitor, in pixels. (Default: 0)
+---@field left ? number Margin from the left edge of the monitor, in pixels. (Default: 0)
+local Margins = {}
+
+--- Anchor points for the window to stick to specific edges of the monitor.
+---@class Anchors
+---@field top ? boolean Whether to anchor the window to the top edge of the monitor. (Default: false)
+---@field right ? boolean Whether to anchor the window to the right edge of the monitor. (Default: false)
+---@field bottom ? boolean Whether to anchor the window to the bottom edge of the monitor. (Default: false)
+---@field left ? boolean Whether to anchor the window to the left edge of the monitor. (Default: false)
+local Anchors = {}
+
+--- A mutable handle to a reactive state entry.
+--- 
+--- Mutable handles support writing new values with `:set(value)`, which updates the state and
+--- notifies all subscribers. This is returned by `waypane.state(initial)`.
+---@class MutableState : State
+local MutableState = {}
+
+--- A handle to a reactive state entry.
+--- 
+--- State handles can be bound to widget properties (e.g., `Label.text`) to create
+--- reactive UIs that update automatically when the underlying data changes.
+--- 
+--- State handles support reading the current value with `:get()` and creating derived bindings
+--- with `:as(transform)`.
+---@class State
+local State = {}
+
+--- A simple widget that displays a text label.
+---@class LabelWidget : Widget
+---@field text string | State The text content of the label. Can be a static string or a dynamic expression that evaluates to a string.
+---@field id ? string | State Optional widget ID, used for CSS styling and querying.
+---@field class_list ? string[] | State Optional list of CSS classes applied to the widget.
+---@field halign ? Alignment | State Optional horizontal alignment for the widget.
+---@field valign ? Alignment | State Optional vertical alignment for the widget.
+---@field hexpand ? boolean | State Whether the widget should expand to fill available horizontal space. (Default: false)
+---@field vexpand ? boolean | State Whether the widget should expand to fill available vertical space. (Default: false)
+---@field visible ? boolean | State Whether the widget is visible. (Default: true)
+---@field focusable ? boolean | State Whether the widget can receive keyboard focus. (Default: false)
+---@field tooltip ? string | State Optional tooltip markup text for the widget.
+---@field margins ? Margins | State Optional margins around the widget.
+---@field width_request ? number | State Optional width request for the widget. (Default: - 1)
+---@field height_request ? number | State Optional height request for the widget. (Default: - 1)
+---@field sensitive ? boolean | State Whether the widget should be sensitive to user input. (Default: true)
+---@field on_scroll ? function Optional function to execute when scrolling over the widget. Receives (dx, dy) as arguments.
+local LabelWidget = {}
+
+--- Basic information about a workspace, including its ID and name.
+---@class HyprlandWorkspace
+---@field id number The unique identifier for the workspace.
+---@field name string The name of the workspace.
+local HyprlandWorkspace = {}
+
+--- Detailed information about a workspace in Hyprland, including its ID, name,
+--- associated monitor, number of windows, last focused window title, and whether it is fullscreen.
+---@class HyprlandWorkspaceInfo : HyprlandWorkspace
+---@field monitor string The name of the monitor this workspace is on.
+---@field windows number The number of windows currently on this workspace.
+---@field last_window_title string The title of the last focused window on this workspace.
+---@field fullscreen boolean Whether this workspace is currently in fullscreen mode.
+---@field monitor_id ? number The unique identifier of the monitor this workspace is on.
+---@field id number The unique identifier for the workspace.
+---@field name string The name of the workspace.
+local HyprlandWorkspaceInfo = {}
+
+--- Common properties shared by all widgets (layout, CSS classes, IDs, etc).
+---@class Widget
+---@field id ? string | State Optional widget ID, used for CSS styling and querying.
+---@field class_list ? string[] | State Optional list of CSS classes applied to the widget.
+---@field halign ? Alignment | State Optional horizontal alignment for the widget.
+---@field valign ? Alignment | State Optional vertical alignment for the widget.
+---@field hexpand ? boolean | State Whether the widget should expand to fill available horizontal space. (Default: false)
+---@field vexpand ? boolean | State Whether the widget should expand to fill available vertical space. (Default: false)
+---@field visible ? boolean | State Whether the widget is visible. (Default: true)
+---@field focusable ? boolean | State Whether the widget can receive keyboard focus. (Default: false)
+---@field tooltip ? string | State Optional tooltip markup text for the widget.
+---@field margins ? Margins | State Optional margins around the widget.
+---@field width_request ? number | State Optional width request for the widget. (Default: - 1)
+---@field height_request ? number | State Optional height request for the widget. (Default: - 1)
+---@field sensitive ? boolean | State Whether the widget should be sensitive to user input. (Default: true)
+---@field on_scroll ? function Optional function to execute when scrolling over the widget. Receives (dx, dy) as arguments.
+local Widget = {}
+
+--- A widget that displays an image from a file path.
+---@class ImageWidget : Widget
+---@field src string | State The file path to the image to display.
+---@field alternative_text ? string | State The alternative textual description for the picture.
+---@field keep_aspect_ratio ? boolean | State Whether to maintain the aspect ratio of the image. (Default: true)
+---@field can_shrink ? boolean | State Whether the image can be shrunk to smaller than its original size. (Default: true)
+---@field id ? string | State Optional widget ID, used for CSS styling and querying.
+---@field class_list ? string[] | State Optional list of CSS classes applied to the widget.
+---@field halign ? Alignment | State Optional horizontal alignment for the widget.
+---@field valign ? Alignment | State Optional vertical alignment for the widget.
+---@field hexpand ? boolean | State Whether the widget should expand to fill available horizontal space. (Default: false)
+---@field vexpand ? boolean | State Whether the widget should expand to fill available vertical space. (Default: false)
+---@field visible ? boolean | State Whether the widget is visible. (Default: true)
+---@field focusable ? boolean | State Whether the widget can receive keyboard focus. (Default: false)
+---@field tooltip ? string | State Optional tooltip markup text for the widget.
+---@field margins ? Margins | State Optional margins around the widget.
+---@field width_request ? number | State Optional width request for the widget. (Default: - 1)
+---@field height_request ? number | State Optional height request for the widget. (Default: - 1)
+---@field sensitive ? boolean | State Whether the widget should be sensitive to user input. (Default: true)
+---@field on_scroll ? function Optional function to execute when scrolling over the widget. Receives (dx, dy) as arguments.
+local ImageWidget = {}
+
+--- A handle that can be used to cancel a scheduled task or a signal subscription.
+---@class CancelHandle
+local CancelHandle = {}
 
 --- A container widget that displays a list of workspace buttons in Hyprland.
 ---@class HyprlandWsContainerWidget : Widget
@@ -87,45 +331,12 @@ local HyprlandWsContainerWidget = {}
 ---@field on_scroll ? function Optional function to execute when scrolling over the widget. Receives (dx, dy) as arguments.
 local HyprlandActiveWindowLabelWidget = {}
 
---- Anchor points for the window to stick to specific edges of the monitor.
----@class Anchors
----@field top ? boolean Whether to anchor the window to the top edge of the monitor. (Default: false)
----@field right ? boolean Whether to anchor the window to the right edge of the monitor. (Default: false)
----@field bottom ? boolean Whether to anchor the window to the bottom edge of the monitor. (Default: false)
----@field left ? boolean Whether to anchor the window to the left edge of the monitor. (Default: false)
-local Anchors = {}
-
---- Margin in pixels from each edge of the monitor.
----@class Margins
----@field top ? number Margin from the top edge of the monitor, in pixels. (Default: 0)
----@field right ? number Margin from the right edge of the monitor, in pixels. (Default: 0)
----@field bottom ? number Margin from the bottom edge of the monitor, in pixels. (Default: 0)
----@field left ? number Margin from the left edge of the monitor, in pixels. (Default: 0)
-local Margins = {}
-
---- Detailed information about a workspace in Hyprland, including its ID, name,
---- associated monitor, number of windows, last focused window title, and whether it is fullscreen.
----@class HyprlandWorkspaceInfo : HyprlandWorkspace
----@field monitor string The name of the monitor this workspace is on.
----@field windows number The number of windows currently on this workspace.
----@field last_window_title string The title of the last focused window on this workspace.
----@field fullscreen boolean Whether this workspace is currently in fullscreen mode.
----@field monitor_id ? number The unique identifier of the monitor this workspace is on.
----@field id number The unique identifier for the workspace.
----@field name string The name of the workspace.
-local HyprlandWorkspaceInfo = {}
-
---- Basic information about a workspace, including its ID and name.
----@class HyprlandWorkspace
----@field id number The unique identifier for the workspace.
----@field name string The name of the workspace.
-local HyprlandWorkspace = {}
-
---- A widget that displays a GTK icon.
----@class IconWidget : Widget
----@field name string | State The name of the icon to display (e.g. "audio-volume-high").
----@field size ? number | State The size of the icon in pixels. (Default: 24)
----@field use_fallback ? boolean | State Whether to use a fallback icon if the specified icon name is not found. (Default: true)
+--- A container widget that can hold multiple child widgets, arranged either horizontally or
+--- vertically.
+---@class ContainerWidget : Widget
+---@field orientation Orientation The orientation of the container.
+---@field spacing ? number The spacing between children in the container, in pixels. (Default: 0)
+---@field children ? Widget[] | State The child widgets contained within this container.
 ---@field id ? string | State Optional widget ID, used for CSS styling and querying.
 ---@field class_list ? string[] | State Optional list of CSS classes applied to the widget.
 ---@field halign ? Alignment | State Optional horizontal alignment for the widget.
@@ -140,7 +351,7 @@ local HyprlandWorkspace = {}
 ---@field height_request ? number | State Optional height request for the widget. (Default: - 1)
 ---@field sensitive ? boolean | State Whether the widget should be sensitive to user input. (Default: true)
 ---@field on_scroll ? function Optional function to execute when scrolling over the widget. Receives (dx, dy) as arguments.
-local IconWidget = {}
+local ContainerWidget = {}
 
 --- The top-level configuration for the waypane application shell.
 --- 
@@ -161,182 +372,6 @@ local Shell = {}
 ---@field refresh_rate number The refresh rate of the monitor in Hz.
 ---@field scale number The UI scale factor (e.g., 1.0, 2.0).
 local Monitor = {}
-
---- A simple widget that displays a text label.
----@class LabelWidget : Widget
----@field text string | State The text content of the label. Can be a static string or a dynamic expression that evaluates to a string.
----@field id ? string | State Optional widget ID, used for CSS styling and querying.
----@field class_list ? string[] | State Optional list of CSS classes applied to the widget.
----@field halign ? Alignment | State Optional horizontal alignment for the widget.
----@field valign ? Alignment | State Optional vertical alignment for the widget.
----@field hexpand ? boolean | State Whether the widget should expand to fill available horizontal space. (Default: false)
----@field vexpand ? boolean | State Whether the widget should expand to fill available vertical space. (Default: false)
----@field visible ? boolean | State Whether the widget is visible. (Default: true)
----@field focusable ? boolean | State Whether the widget can receive keyboard focus. (Default: false)
----@field tooltip ? string | State Optional tooltip markup text for the widget.
----@field margins ? Margins | State Optional margins around the widget.
----@field width_request ? number | State Optional width request for the widget. (Default: - 1)
----@field height_request ? number | State Optional height request for the widget. (Default: - 1)
----@field sensitive ? boolean | State Whether the widget should be sensitive to user input. (Default: true)
----@field on_scroll ? function Optional function to execute when scrolling over the widget. Receives (dx, dy) as arguments.
-local LabelWidget = {}
-
---- Common properties shared by all widgets (layout, CSS classes, IDs, etc).
----@class Widget
----@field id ? string | State Optional widget ID, used for CSS styling and querying.
----@field class_list ? string[] | State Optional list of CSS classes applied to the widget.
----@field halign ? Alignment | State Optional horizontal alignment for the widget.
----@field valign ? Alignment | State Optional vertical alignment for the widget.
----@field hexpand ? boolean | State Whether the widget should expand to fill available horizontal space. (Default: false)
----@field vexpand ? boolean | State Whether the widget should expand to fill available vertical space. (Default: false)
----@field visible ? boolean | State Whether the widget is visible. (Default: true)
----@field focusable ? boolean | State Whether the widget can receive keyboard focus. (Default: false)
----@field tooltip ? string | State Optional tooltip markup text for the widget.
----@field margins ? Margins | State Optional margins around the widget.
----@field width_request ? number | State Optional width request for the widget. (Default: - 1)
----@field height_request ? number | State Optional height request for the widget. (Default: - 1)
----@field sensitive ? boolean | State Whether the widget should be sensitive to user input. (Default: true)
----@field on_scroll ? function Optional function to execute when scrolling over the widget. Receives (dx, dy) as arguments.
-local Widget = {}
-
---- A clickable button widget.
----@class ButtonWidget : Widget
----@field on_click function Function to execute when the button is clicked.
----@field child Widget The child widget to display inside the button.
----@field id ? string | State Optional widget ID, used for CSS styling and querying.
----@field class_list ? string[] | State Optional list of CSS classes applied to the widget.
----@field halign ? Alignment | State Optional horizontal alignment for the widget.
----@field valign ? Alignment | State Optional vertical alignment for the widget.
----@field hexpand ? boolean | State Whether the widget should expand to fill available horizontal space. (Default: false)
----@field vexpand ? boolean | State Whether the widget should expand to fill available vertical space. (Default: false)
----@field visible ? boolean | State Whether the widget is visible. (Default: true)
----@field focusable ? boolean | State Whether the widget can receive keyboard focus. (Default: false)
----@field tooltip ? string | State Optional tooltip markup text for the widget.
----@field margins ? Margins | State Optional margins around the widget.
----@field width_request ? number | State Optional width request for the widget. (Default: - 1)
----@field height_request ? number | State Optional height request for the widget. (Default: - 1)
----@field sensitive ? boolean | State Whether the widget should be sensitive to user input. (Default: true)
----@field on_scroll ? function Optional function to execute when scrolling over the widget. Receives (dx, dy) as arguments.
-local ButtonWidget = {}
-
---- Information about the currently active window in Hyprland, including its title, class, PID,
---- monitor, workspace, position, size, and other states.
----@class HyprlandActiveWindowInfo
----@field address string The unique hex address of the window.
----@field title string The title of the active window.
----@field initial_title string The initial title of the window when it was first created.
----@field class string The class of the active window.
----@field initial_class string The initial class of the window when it was first created.
----@field pid number The process ID of the active window.
----@field monitor ? number The ID of the monitor the active window is on, if available.
----@field workspace HyprlandWorkspace Basic information about the workspace the active window is on.
----@field width number The width of the window in pixels.
----@field height number The height of the window in pixels.
----@field x number The x-coordinate of the window's top-left corner.
----@field y number The y-coordinate of the window's top-left corner.
----@field floating boolean Whether the window is currently floating.
----@field fullscreen boolean Whether the window is currently in fullscreen mode.
-local HyprlandActiveWindowInfo = {}
-
---- Basic information about a window, including its title and class.
----@class HyprlandWindow
----@field title string The title of the window.
----@field class string The class of the window.
-local HyprlandWindow = {}
-
---- A widget that displays an image from a file path.
----@class ImageWidget : Widget
----@field src string | State The file path to the image to display.
----@field alternative_text ? string | State The alternative textual description for the picture.
----@field keep_aspect_ratio ? boolean | State Whether to maintain the aspect ratio of the image. (Default: true)
----@field can_shrink ? boolean | State Whether the image can be shrunk to smaller than its original size. (Default: true)
----@field id ? string | State Optional widget ID, used for CSS styling and querying.
----@field class_list ? string[] | State Optional list of CSS classes applied to the widget.
----@field halign ? Alignment | State Optional horizontal alignment for the widget.
----@field valign ? Alignment | State Optional vertical alignment for the widget.
----@field hexpand ? boolean | State Whether the widget should expand to fill available horizontal space. (Default: false)
----@field vexpand ? boolean | State Whether the widget should expand to fill available vertical space. (Default: false)
----@field visible ? boolean | State Whether the widget is visible. (Default: true)
----@field focusable ? boolean | State Whether the widget can receive keyboard focus. (Default: false)
----@field tooltip ? string | State Optional tooltip markup text for the widget.
----@field margins ? Margins | State Optional margins around the widget.
----@field width_request ? number | State Optional width request for the widget. (Default: - 1)
----@field height_request ? number | State Optional height request for the widget. (Default: - 1)
----@field sensitive ? boolean | State Whether the widget should be sensitive to user input. (Default: true)
----@field on_scroll ? function Optional function to execute when scrolling over the widget. Receives (dx, dy) as arguments.
-local ImageWidget = {}
-
---- A handle that can be used to cancel a scheduled task or a signal subscription.
----@class CancelHandle
-local CancelHandle = {}
-
---- A handle to a reactive state entry.
---- 
---- State handles can be bound to widget properties (e.g., `Label.text`) to create
---- reactive UIs that update automatically when the underlying data changes.
---- 
---- State handles support reading the current value with `:get()` and creating derived bindings
---- with `:as(transform)`.
----@class State
-local State = {}
-
---- A mutable handle to a reactive state entry.
---- 
---- Mutable handles support writing new values with `:set(value)`, which updates the state and
---- notifies all subscribers. This is returned by `waypane.state(initial)`.
----@class MutableState : State
-local MutableState = {}
-
---- Basic information about an active monitor, including its name and the name of the active
---- workspace.
----@class HyprlandActiveMonitor
----@field monitor string The name of the monitor.
----@field workspace ? string The name of the workspace on the monitor, if available.
-local HyprlandActiveMonitor = {}
-
---- Information about a monitor in Hyprland, including its ID, name, resolution,
---- position, and currently active workspace.
----@class HyprlandMonitorInfo
----@field id number The unique identifier for the monitor.
----@field name string The name of the monitor, as configured in Hyprland.
----@field focused boolean Whether this monitor is currently focused (i.e., has the active workspace).
----@field width number The width of the monitor in pixels.
----@field height number The height of the monitor in pixels.
----@field x number The x-coordinate of the monitor's top-left corner.
----@field y number The y-coordinate of the monitor's top-left corner.
----@field refresh_rate number The refresh rate of the monitor in Hz.
----@field scale number The UI scale factor for the monitor.
----@field active_workspace HyprlandWorkspace Basic information about the currently active workspace on this monitor.
-local HyprlandMonitorInfo = {}
-
---- A page within a Stack widget, consisting of a name and a widget to display.
----@class StackPage
----@field name string The name of the page, used to identify it when switching between pages.
----@field widget Widget The widget to display on this page.
-local StackPage = {}
-
---- A container widget that can hold multiple child widgets, but only shows one at a time.
----@class StackWidget : Widget
----@field visible_page string | State The name of the currently visible page.
----@field pages StackPage[] The child widgets contained within this container.
----@field transition_type ? StackTransitionType | State The type of animation used when switching between pages. (Default: none)
----@field transition_duration ? number | State The duration of the transition animation in milliseconds. (Default: 200)
----@field interpolate_size ? boolean | State Whether the stack should interpolate its size when switching between pages. (Default: false)
----@field id ? string | State Optional widget ID, used for CSS styling and querying.
----@field class_list ? string[] | State Optional list of CSS classes applied to the widget.
----@field halign ? Alignment | State Optional horizontal alignment for the widget.
----@field valign ? Alignment | State Optional vertical alignment for the widget.
----@field hexpand ? boolean | State Whether the widget should expand to fill available horizontal space. (Default: false)
----@field vexpand ? boolean | State Whether the widget should expand to fill available vertical space. (Default: false)
----@field visible ? boolean | State Whether the widget is visible. (Default: true)
----@field focusable ? boolean | State Whether the widget can receive keyboard focus. (Default: false)
----@field tooltip ? string | State Optional tooltip markup text for the widget.
----@field margins ? Margins | State Optional margins around the widget.
----@field width_request ? number | State Optional width request for the widget. (Default: - 1)
----@field height_request ? number | State Optional height request for the widget. (Default: - 1)
----@field sensitive ? boolean | State Whether the widget should be sensitive to user input. (Default: true)
----@field on_scroll ? function Optional function to execute when scrolling over the widget. Receives (dx, dy) as arguments.
-local StackWidget = {}
 
 --- A widget that displays a progress bar.
 ---@class ProgressBarWidget : Widget
@@ -371,17 +406,11 @@ local ProgressBarWidget = {}
 ---@field layout any The layout of the window. Can be a table (static widget) or a function (monitor) -> widget.
 local Window = {}
 
---- A widget that allows users to select a value from a range by sliding a handle.
----@class SliderWidget : Widget
----@field value ? number | State The current value of the slider. (Default: 0.0)
----@field min ? number | State The minimum value of the slider. (Default: 0.0)
----@field max ? number | State The maximum value of the slider. (Default: 100.0)
----@field step ? number | State The step increment for the slider. (Default: 1.0)
----@field page_step ? number | State The page step increment for the slider. (Default: 10.0)
----@field digits ? number | State The number of decimal digits for the slider value. If `nil`, falls back to 1 digit.
----@field draw_value ? boolean | State Whether to draw the current value next to the slider. (Default: true)
----@field orientation ? Orientation | State The orientation of the slider. (Default: horizontal)
----@field on_change function Function to execute when the slider value changes.
+--- A widget that displays a GTK icon.
+---@class IconWidget : Widget
+---@field name string | State The name of the icon to display (e.g. "audio-volume-high").
+---@field size ? number | State The size of the icon in pixels. (Default: 24)
+---@field use_fallback ? boolean | State Whether to use a fallback icon if the specified icon name is not found. (Default: true)
 ---@field id ? string | State Optional widget ID, used for CSS styling and querying.
 ---@field class_list ? string[] | State Optional list of CSS classes applied to the widget.
 ---@field halign ? Alignment | State Optional horizontal alignment for the widget.
@@ -396,29 +425,26 @@ local Window = {}
 ---@field height_request ? number | State Optional height request for the widget. (Default: - 1)
 ---@field sensitive ? boolean | State Whether the widget should be sensitive to user input. (Default: true)
 ---@field on_scroll ? function Optional function to execute when scrolling over the widget. Receives (dx, dy) as arguments.
-local SliderWidget = {}
+local IconWidget = {}
 
---- A container widget that can hold multiple child widgets, arranged either horizontally or
---- vertically.
----@class ContainerWidget : Widget
----@field orientation Orientation The orientation of the container.
----@field spacing ? number The spacing between children in the container, in pixels. (Default: 0)
----@field children ? Widget[] | State The child widgets contained within this container.
----@field id ? string | State Optional widget ID, used for CSS styling and querying.
----@field class_list ? string[] | State Optional list of CSS classes applied to the widget.
----@field halign ? Alignment | State Optional horizontal alignment for the widget.
----@field valign ? Alignment | State Optional vertical alignment for the widget.
----@field hexpand ? boolean | State Whether the widget should expand to fill available horizontal space. (Default: false)
----@field vexpand ? boolean | State Whether the widget should expand to fill available vertical space. (Default: false)
----@field visible ? boolean | State Whether the widget is visible. (Default: true)
----@field focusable ? boolean | State Whether the widget can receive keyboard focus. (Default: false)
----@field tooltip ? string | State Optional tooltip markup text for the widget.
----@field margins ? Margins | State Optional margins around the widget.
----@field width_request ? number | State Optional width request for the widget. (Default: - 1)
----@field height_request ? number | State Optional height request for the widget. (Default: - 1)
----@field sensitive ? boolean | State Whether the widget should be sensitive to user input. (Default: true)
----@field on_scroll ? function Optional function to execute when scrolling over the widget. Receives (dx, dy) as arguments.
-local ContainerWidget = {}
+--- Returns information about the currently active window in Hyprland, including its title, class,
+--- PID, monitor, workspace, position, and size. If there is no active window, a nil value is
+--- returned.
+---@return HyprlandActiveWindowInfo | nil active_window A table containing information about the currently active window, or nil if there is no active window.
+function waypane.hyprland.getActiveWindow() end
+
+--- Closes the currently active window in Hyprland.
+function waypane.hyprland.killActiveWindow() end
+
+--- Toggles the fullscreen state of the currently active window in Hyprland.
+function waypane.hyprland.toggleFullscreen() end
+
+--- Toggles the floating state of the currently active window in Hyprland.
+function waypane.hyprland.toggleFloating() end
+
+--- Returns a list of Hyprland monitors, including their IDs, names, and focus status.
+---@return HyprlandMonitorInfo[] monitors A list of information about all connected monitors.
+function waypane.hyprland.getMonitors() end
 
 --- Polls a shell command at a regular interval and calls the provided callback.
 ---@param cmd string The shell command to execute.
@@ -435,24 +461,6 @@ function waypane.poll(cmd, callback, interval) end
 ---@param callback ? function Optional callback function(stdout, stderr) to call when the command finishes.
 function waypane.exec(cmd, callback) end
 
---- Schedules the provided callback to be called once after the specified time (in ms).
----@param callback function The callback to call after `time` ms have passed.
----@param time number The time in milliseconds to wait before calling the callback.
----@return CancelHandle handle A handle that can be used to cancel the scheduled callback with :cancel().
-function waypane.setTimeout(callback, time) end
-
---- Schedules the provided callback to be called repeatedly at the specified interval (in ms).
----@param callback function The callback to call after `interval` ms have passed.
----@param interval number The interval in milliseconds to wait before calling the callback.
----@return CancelHandle handle A handle that can be used to cancel the scheduled callback with :cancel().
-function waypane.setInterval(callback, interval) end
-
---- Listen for one or more signals and call the provided callback when they are emitted.
----@param signals string | string[] The signal or signals to listen for.
----@param callback function The callback to call when the signal(s) are emitted.
----@return CancelHandle handle A handle that can be used to cancel the signal subscription with :cancel().
-function waypane.onSignal(signals, callback) end
-
 --- Emit a signal with the given name and optional data payload.
 --- 
 --- Signals in the `::` namespace are reserved for native module events (e.g.,
@@ -462,66 +470,29 @@ function waypane.onSignal(signals, callback) end
 ---@param data ? any Optional data to include with the signal. Can be any Lua value.
 function waypane.emitSignal(signal, data) end
 
---- Moves the currently active window to the workspace with the given numerical ID without
---- switching focus to that workspace.
----@param workspace_id number The numerical ID of the workspace to move the window to.
-function waypane.hyprland.moveActiveToWorkspaceSilent(workspace_id) end
+--- Listen for one or more signals and call the provided callback when they are emitted.
+---@param signals string | string[] The signal or signals to listen for.
+---@param callback function The callback to call when the signal(s) are emitted.
+---@return CancelHandle handle A handle that can be used to cancel the signal subscription with :cancel().
+function waypane.onSignal(signals, callback) end
 
---- Moves the currently active window to the workspace with the given numerical ID.
----@param workspace_id number The numerical ID of the workspace to move the window to.
-function waypane.hyprland.moveActiveToWorkspace(workspace_id) end
-
---- Toggles a special workspace (scratchpad) with the given name. If no name is provided,
---- the default special workspace is used.
----@param workspace_name ? string Optional name of the special workspace to toggle. If nil, the default special workspace is used.
-function waypane.hyprland.toggleSpecialWorkspace(workspace_name) end
-
---- Switches the focus to the workspace with the given numerical ID.
----@param workspace_id number The numerical ID of the workspace to switch to.
-function waypane.hyprland.switchWorkspace(workspace_id) end
-
---- Switches the focus to the workspace with the given name.
----@param workspace_name string The name of the workspace to switch to.
-function waypane.hyprland.switchWorkspaceNamed(workspace_name) end
-
---- Switches the focus to a workspace relative to the current one (e.g., +1 or -1).
----@param offset number The relative offset from the current workspace (e.g., 1 for next, -1 for previous).
-function waypane.hyprland.switchWorkspaceRelative(offset) end
-
---- Returns a list of all current workspaces in Hyprland, including their IDs, names,
---- associated monitors, and status information.
----@return HyprlandWorkspaceInfo[] workspaces A list of information about all current workspaces.
-function waypane.hyprland.getWorkspaces() end
-
---- Switches the focus back to the previously active workspace.
-function waypane.hyprland.switchToPreviousWorkspace() end
-
---- Adds a new window definition to the shell configuration.
----@param name string The unique name of the window.
----@param config Window The configuration for this window.
-function Shell:window(name, config) end
-
---- Returns information about the currently active window in Hyprland, including its title, class,
---- PID, monitor, workspace, position, and size. If there is no active window, a nil value is
---- returned.
----@return HyprlandActiveWindowInfo | nil active_window A table containing information about the currently active window, or nil if there is no active window.
-function waypane.hyprland.getActiveWindow() end
-
---- Toggles the fullscreen state of the currently active window in Hyprland.
-function waypane.hyprland.toggleFullscreen() end
-
---- Toggles the floating state of the currently active window in Hyprland.
-function waypane.hyprland.toggleFloating() end
-
---- Closes the currently active window in Hyprland.
-function waypane.hyprland.killActiveWindow() end
-
---- Cancels the scheduled task or signal subscription.
-function CancelHandle:cancel() end
+--- Creates a new shell configuration.
+---@param config table The global shell configuration.
+---@return Shell shell The shell object.
+function waypane.shell(config) end
 
 --- Retrieves the current value of a state.
 ---@return any value The current value of the state.
 function State:get() end
+
+--- Updates the value of a mutable reactive state and notifies all subscribers.
+---@param value any The new value to set for the state.
+function MutableState:set(value) end
+
+--- Creates a new (read-only) state binding with a transform function.
+---@param transform function A function that transforms the state value and returns the transformed result.
+---@return State state a new state handle with the transform applied.
+function State:as(transform) end
 
 --- Creates a new reactive state with the given initial value.
 --- Can be used on properties that support it (e.g. `label.text`) to provide dynamic values that
@@ -546,75 +517,171 @@ function State:get() end
 ---@return MutableState state A mutable reactive state handle.
 function waypane.state(initial) end
 
---- Updates the value of a mutable reactive state and notifies all subscribers.
----@param value any The new value to set for the state.
-function MutableState:set(value) end
-
---- Creates a new (read-only) state binding with a transform function.
----@param transform function A function that transforms the state value and returns the transformed result.
----@return State state a new state handle with the transform applied.
-function State:as(transform) end
-
---- Returns a list of Hyprland monitors, including their IDs, names, and focus status.
----@return HyprlandMonitorInfo[] monitors A list of information about all connected monitors.
-function waypane.hyprland.getMonitors() end
-
 --- Returns a read-only state handle with current backlight percentage (0-100).
 ---@return State state A read-only state handle containing the current backlight percentage (0-100).
 function waypane.backlight.level() end
 
---- Creates a new shell configuration.
----@param config table The global shell configuration.
----@return Shell shell The shell object.
-function waypane.shell(config) end
+--- Switches the focus to the workspace with the given numerical ID.
+---@param workspace_id number The numerical ID of the workspace to switch to.
+function waypane.hyprland.switchWorkspace(workspace_id) end
 
---- A label widget that displays the title of the currently active window in Hyprland.
----@param config HyprlandActiveWindowLabelWidget The configuration table for the HyprlandActiveWindowLabelWidget widget.
----@return Widget widget The constructed widget.
-function HyprlandActiveWindowLabel(config) end
+--- Moves the currently active window to the workspace with the given numerical ID.
+---@param workspace_id number The numerical ID of the workspace to move the window to.
+function waypane.hyprland.moveActiveToWorkspace(workspace_id) end
 
---- A container widget that displays a list of workspace buttons in Hyprland.
----@param config HyprlandWsContainerWidget The configuration table for the HyprlandWsContainerWidget widget.
----@return Widget widget The constructed widget.
-function HyprlandWsContainer(config) end
+--- Switches the focus back to the previously active workspace.
+function waypane.hyprland.switchToPreviousWorkspace() end
 
---- A widget that displays a GTK icon.
----@param config IconWidget The configuration table for the IconWidget widget.
----@return Widget widget The constructed widget.
-function Icon(config) end
+--- Moves the currently active window to the workspace with the given numerical ID without
+--- switching focus to that workspace.
+---@param workspace_id number The numerical ID of the workspace to move the window to.
+function waypane.hyprland.moveActiveToWorkspaceSilent(workspace_id) end
 
---- A simple widget that displays a text label.
----@param config LabelWidget The configuration table for the LabelWidget widget.
----@return Widget widget The constructed widget.
-function Label(config) end
+--- Switches the focus to a workspace relative to the current one (e.g., +1 or -1).
+---@param offset number The relative offset from the current workspace (e.g., 1 for next, -1 for previous).
+function waypane.hyprland.switchWorkspaceRelative(offset) end
 
---- A clickable button widget.
----@param config ButtonWidget The configuration table for the ButtonWidget widget.
----@return Widget widget The constructed widget.
-function Button(config) end
+--- Returns a list of all current workspaces in Hyprland, including their IDs, names,
+--- associated monitors, and status information.
+---@return HyprlandWorkspaceInfo[] workspaces A list of information about all current workspaces.
+function waypane.hyprland.getWorkspaces() end
 
---- A widget that displays an image from a file path.
----@param config ImageWidget The configuration table for the ImageWidget widget.
----@return Widget widget The constructed widget.
-function Image(config) end
+--- Toggles a special workspace (scratchpad) with the given name. If no name is provided,
+--- the default special workspace is used.
+---@param workspace_name ? string Optional name of the special workspace to toggle. If nil, the default special workspace is used.
+function waypane.hyprland.toggleSpecialWorkspace(workspace_name) end
 
---- A container widget that can hold multiple child widgets, but only shows one at a time.
----@param config StackWidget The configuration table for the StackWidget widget.
----@return Widget widget The constructed widget.
-function Stack(config) end
+--- Switches the focus to the workspace with the given name.
+---@param workspace_name string The name of the workspace to switch to.
+function waypane.hyprland.switchWorkspaceNamed(workspace_name) end
 
---- A widget that displays a progress bar.
----@param config ProgressBarWidget The configuration table for the ProgressBarWidget widget.
----@return Widget widget The constructed widget.
-function ProgressBar(config) end
+--- Cancels the scheduled task or signal subscription.
+function CancelHandle:cancel() end
+
+--- Adds a new window definition to the shell configuration.
+---@param name string The unique name of the window.
+---@param config Window The configuration for this window.
+function Shell:window(name, config) end
+
+--- Returns a read-only state handle with battery cycle count.
+---@param name ? string Optional battery device name (e.g. `"BAT0"`). Aggregates all batteries when omitted.
+---@return State state A read-only state handle containing the battery cycle count.
+function waypane.battery.cycles(name) end
+
+--- Returns whether a battery device was detected on this system.
+--- 
+--- Useful for conditionally rendering battery widgets on devices that may or may not have a
+--- battery (e.g. desktops vs. laptops).
+--- 
+--- # Example
+--- ```lua
+--- if waypane.battery.is_present() then
+--- -- render battery widget
+--- end
+--- 
+--- -- Check for a specific device:
+--- if waypane.battery.is_present("BAT1") then
+--- -- render secondary battery widget
+--- end
+--- ```
+---@param name ? string Optional battery device name (e.g. `"BAT0"`). Checks for any battery when omitted.
+---@return boolean boolean `true` if the battery device was detected, `false` otherwise.
+function waypane.battery.is_present(name) end
+
+--- Returns a read-only state handle with current battery percentage (0-100).
+---@param name ? string Optional battery device name (e.g. `"BAT0"`). Aggregates all batteries when omitted.
+---@return State state A read-only state handle containing the current battery percentage (0-100).
+function waypane.battery.level(name) end
+
+--- Returns a read-only state handle with current energy in Wh.
+---@param name ? string Optional battery device name (e.g. `"BAT0"`). Aggregates all batteries when omitted.
+---@return State state A read-only state handle containing the current energy in Wh.
+function waypane.battery.energy(name) end
+
+--- Returns a read-only state handle with current voltage in Volts.
+---@param name ? string Optional battery device name (e.g. `"BAT0"`). Aggregates all batteries when omitted.
+---@return State state A read-only state handle containing the current voltage in Volts.
+function waypane.battery.voltage(name) end
+
+--- Returns a read-only state handle with current battery status (e.g. `"charging"`).
+---@param name ? string Optional battery device name (e.g. `"BAT0"`). Aggregates all batteries when omitted.
+---@return State state A read-only state handle containing the current battery status (e.g. `"charging"`).
+function waypane.battery.status(name) end
+
+--- Returns a read-only state handle with battery health percentage.
+---@param name ? string Optional battery device name (e.g. `"BAT0"`). Aggregates all batteries when omitted.
+---@return State state A read-only state handle containing the battery health percentage (0-100).
+function waypane.battery.health(name) end
+
+--- Returns a read-only state handle with time remaining in hours.
+---@param name ? string Optional battery device name (e.g. `"BAT0"`). Aggregates all batteries when omitted.
+---@return State state A read-only state handle containing the time remaining until full/empty (in hours).
+function waypane.battery.time_remaining(name) end
+
+--- Returns a read-only state handle with current power draw in Watts.
+---@param name ? string Optional battery device name (e.g. `"BAT0"`). Aggregates all batteries when omitted.
+---@return State state A read-only state handle containing the current power draw in Watts.
+function waypane.battery.power(name) end
+
+--- Schedules the provided callback to be called once after the specified time (in ms).
+---@param callback function The callback to call after `time` ms have passed.
+---@param time number The time in milliseconds to wait before calling the callback.
+---@return CancelHandle handle A handle that can be used to cancel the scheduled callback with :cancel().
+function waypane.setTimeout(callback, time) end
+
+--- Schedules the provided callback to be called repeatedly at the specified interval (in ms).
+---@param callback function The callback to call after `interval` ms have passed.
+---@param interval number The interval in milliseconds to wait before calling the callback.
+---@return CancelHandle handle A handle that can be used to cancel the scheduled callback with :cancel().
+function waypane.setInterval(callback, interval) end
 
 --- A widget that allows users to select a value from a range by sliding a handle.
 ---@param config SliderWidget The configuration table for the SliderWidget widget.
 ---@return Widget widget The constructed widget.
 function Slider(config) end
 
+--- A container widget that can hold multiple child widgets, but only shows one at a time.
+---@param config StackWidget The configuration table for the StackWidget widget.
+---@return Widget widget The constructed widget.
+function Stack(config) end
+
+--- A clickable button widget.
+---@param config ButtonWidget The configuration table for the ButtonWidget widget.
+---@return Widget widget The constructed widget.
+function Button(config) end
+
+--- A simple widget that displays a text label.
+---@param config LabelWidget The configuration table for the LabelWidget widget.
+---@return Widget widget The constructed widget.
+function Label(config) end
+
+--- A widget that displays an image from a file path.
+---@param config ImageWidget The configuration table for the ImageWidget widget.
+---@return Widget widget The constructed widget.
+function Image(config) end
+
+--- A container widget that displays a list of workspace buttons in Hyprland.
+---@param config HyprlandWsContainerWidget The configuration table for the HyprlandWsContainerWidget widget.
+---@return Widget widget The constructed widget.
+function HyprlandWsContainer(config) end
+
+--- A label widget that displays the title of the currently active window in Hyprland.
+---@param config HyprlandActiveWindowLabelWidget The configuration table for the HyprlandActiveWindowLabelWidget widget.
+---@return Widget widget The constructed widget.
+function HyprlandActiveWindowLabel(config) end
+
 --- A container widget that can hold multiple child widgets, arranged either horizontally or
 --- vertically.
 ---@param config ContainerWidget The configuration table for the ContainerWidget widget.
 ---@return Widget widget The constructed widget.
 function Container(config) end
+
+--- A widget that displays a progress bar.
+---@param config ProgressBarWidget The configuration table for the ProgressBarWidget widget.
+---@return Widget widget The constructed widget.
+function ProgressBar(config) end
+
+--- A widget that displays a GTK icon.
+---@param config IconWidget The configuration table for the IconWidget widget.
+---@return Widget widget The constructed widget.
+function Icon(config) end

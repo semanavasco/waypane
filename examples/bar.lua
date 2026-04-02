@@ -102,6 +102,31 @@ local function backlight_widget()
   })
 end
 
+local function battery_widget()
+  local function icon(status, battery)
+    if status == "charging" then
+      return "󰂄"
+    elseif status == "discharging" then
+      local icons = { "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹" }
+      local index = math.max(1, math.min(10, math.ceil(battery / 10)))
+      return icons[index]
+    else
+      return "󰂎"
+    end
+  end
+
+  local battery = waypane.battery.level("BAT0")
+  local status = waypane.battery.status("BAT0")
+
+  return Label({
+    text = battery:as(function(v)
+      return string.format("%s %d%%", icon(status:get(), v), v)
+    end),
+    id = "battery",
+    valign = "center",
+  })
+end
+
 local function spacer()
   return Container({ orientation = "horizontal", hexpand = true })
 end
@@ -119,34 +144,41 @@ shell:window("main-bar", {
   anchors = { top = true, left = true, right = true },
 
   layout = function(monitor)
+    local children = {
+      HyprlandWsContainer({
+        orientation = "horizontal",
+        monitor = monitor.name,
+        active_properties = {
+          class_list = { "ws-active", "ws-btn" },
+          sensitive = false,
+          valign = "center",
+        },
+        inactive_properties = {
+          class_list = { "ws-inactive", "ws-btn" },
+          valign = "center",
+        },
+      }),
+      HyprlandActiveWindowLabel({
+        id = "window-title",
+        valign = "center",
+      }),
+      spacer(),
+      backlight_widget(),
+    }
+
+    if waypane.battery.is_present() then
+      table.insert(children, battery_widget())
+    end
+
+    table.insert(children, clock_widget())
+    table.insert(children, date_widget())
+
     return Container({
       id = "bar",
       orientation = "horizontal",
       spacing = 8,
       valign = "center",
-      children = {
-        HyprlandWsContainer({
-          orientation = "horizontal",
-          monitor = monitor.name,
-          active_properties = {
-            class_list = { "ws-active", "ws-btn" },
-            sensitive = false,
-            valign = "center",
-          },
-          inactive_properties = {
-            class_list = { "ws-inactive", "ws-btn" },
-            valign = "center",
-          },
-        }),
-        HyprlandActiveWindowLabel({
-          id = "window-title",
-          valign = "center",
-        }),
-        spacer(),
-        backlight_widget(),
-        clock_widget(),
-        date_widget(),
-      },
+      children = children,
     })
   end,
 })
