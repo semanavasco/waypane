@@ -1,6 +1,15 @@
-[workspace]
-resolver = "2"
-members = [
-  "crates/waypane",
-  "crates/waypane-macros",
-]
+[package]
+name = "waypane"
+version = "0.0.1-rewrite"
+edition = "2024"
+description = "waypane aims to be a Wayland toolkit for building custom desktop widgets and bars in Lua"
+license = "MIT"
+repository = "https://github.com/semanavasco/waypane"
+documentation = "https://semanavasco.com/waypane"
+homepage = "https://semanavasco.com/waypane"
+readme = "../../README.md"
+keywords = ["wayland", "lua", "gtk4", "widgets", "unixporn"]
+categories = ["command-line-utilities", "gui"]
+rust-version = "1.92.0"
+
+[dependencies]
