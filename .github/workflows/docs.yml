@@ -94,3 +94,4 @@ jobs:
           publish_dir: ./staging
           publish_branch: docs
           keep_files: ${{ github.event.inputs.clean != 'true' }}
+          cname: waypane.semanavasco.com
